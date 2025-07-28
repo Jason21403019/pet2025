@@ -7,11 +7,11 @@ export default defineNuxtConfig({
     baseURL: process.env.NUXT_PUBLIC_BASE || "/",
     buildAssetsDir: "/_nuxt/",
     head: {
-      title: "幸福煙火轉一夏｜聯合新聞網",
+      title: "你家毛孩怎麼寵!問卷活動大調查",
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { charset: "utf-8" },
-        { name: "description", content: "幸福煙火轉一夏｜聯合新聞網" },
+        { name: "description", content: "你家毛孩怎麼寵!問卷活動大調查" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon" },

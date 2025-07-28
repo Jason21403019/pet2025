@@ -1,128 +1,121 @@
 <template>
-  <div class="questionnaire" v-if="isVisible">
-    <div class="questionnaire__wrapper">
+  <div class="ques" v-if="isVisible">
+    <div class="ques__wrap">
       <!-- 問卷標題 -->
-      <div class="questionnaire__header">
-        <h2 class="questionnaire__title">寵物飼主調查問卷</h2>
-        <p class="questionnaire__subtitle">
+      <div class="ques__head">
+        <h2 class="ques__title">寵物飼主調查問卷</h2>
+        <p class="ques__sub">
           感謝您參與我們的問卷調查，您的意見對我們非常重要
         </p>
       </div>
 
       <!-- 問卷表單 -->
-      <form @submit.prevent="submitQuestionnaire" class="questionnaire__form">
-        <div class="questionnaire__questions">
+      <form @submit.prevent="submit" class="ques__form">
+        <div class="ques__list">
           <div
-            v-for="(question, index) in allQuestionsWithStatus"
-            :key="question.id"
-            class="question"
+            v-for="(q, index) in allQuestions"
+            :key="q.id"
+            class="q"
             :class="{
-              'question--error': hasError(question.id),
-              'question--disabled': question.isSkipped,
+              'q--error': hasError(q.id),
+              'q--disabled': q.isSkipped,
             }"
           >
             <!-- 分類標題 -->
-            <div v-if="question.category" class="question__category">
-              {{ question.category }}
+            <div v-if="q.category" class="q__cat">
+              {{ q.category }}
             </div>
 
             <!-- 跳過提示 -->
-            <div v-if="question.isSkipped" class="question__skip">
-              <span class="question__skip-text">此題目已跳過</span>
+            <div v-if="q.isSkipped" class="q__skip">
+              <span class="q__skip-text">此題目已跳過</span>
             </div>
 
             <!-- 題目標題 -->
-            <div class="question__header">
-              <h3 class="question__title">
-                {{ index + 1 }}. {{ question.text }}
-                <span
-                  v-if="question.required && !question.isSkipped"
-                  class="question__required"
-                  >*</span
-                >
+            <div class="q__head">
+              <h3 class="q__title">
+                {{ index + 1 }}. {{ q.text }}
+                <span v-if="q.required && !q.isSkipped" class="q__req">*</span>
               </h3>
             </div>
 
             <!-- 選項區域 -->
-            <div class="question__options">
+            <div class="q__opts">
               <!-- 單選題 -->
-              <div v-if="question.type === 'single'" class="options">
+              <div v-if="q.type === 'single'" class="opts">
                 <label
-                  v-for="option in question.options"
-                  :key="option.value"
-                  class="option"
+                  v-for="opt in q.options"
+                  :key="opt.value"
+                  class="opt"
                   :class="{
-                    'option--selected': answers[question.id] === option.value,
-                    'option--disabled': question.isSkipped,
+                    'opt--selected': answers[q.id] === opt.text,
+                    'opt--disabled': q.isSkipped,
                   }"
                 >
                   <input
                     type="radio"
-                    :name="`question_${question.id}`"
-                    :value="option.value"
-                    v-model="answers[question.id]"
-                    @change="handleAnswerChange(question.id, option.value)"
-                    :disabled="question.isSkipped"
-                    class="option__input"
+                    :name="`q_${q.id}`"
+                    :value="opt.text"
+                    v-model="answers[q.id]"
+                    @change="handleSingle(q.id, opt.text, opt.value)"
+                    :disabled="q.isSkipped"
+                    class="opt__input"
                   />
-                  <span class="option__text">{{ option.text }}</span>
+                  <span class="opt__text">{{ opt.text }}</span>
                 </label>
               </div>
 
               <!-- 多選題 -->
-              <div v-else-if="question.type === 'multiple'" class="options">
+              <div v-else-if="q.type === 'multiple'" class="opts">
                 <label
-                  v-for="option in question.options"
-                  :key="option.value"
-                  class="option option--checkbox"
+                  v-for="opt in q.options"
+                  :key="opt.value"
+                  class="opt opt--check"
                   :class="{
-                    'option--selected': isOptionSelected(
-                      question.id,
-                      option.value,
-                    ),
-                    'option--disabled': question.isSkipped,
+                    'opt--selected': isOptSelected(q.id, opt.text),
+                    'opt--disabled': q.isSkipped,
                   }"
                 >
                   <input
                     type="checkbox"
-                    :value="option.value"
-                    v-model="answers[question.id]"
-                    @change="handleMultipleAnswerChange(question.id)"
-                    :disabled="question.isSkipped"
-                    class="option__input option__input--checkbox"
+                    :value="opt.text"
+                    v-model="answers[q.id]"
+                    @change="handleMultiple(q.id, opt.value)"
+                    :disabled="q.isSkipped"
+                    class="opt__input opt__input--check"
                   />
-                  <span class="option__text">{{ option.text }}</span>
+                  <span class="opt__text">{{ opt.text }}</span>
                 </label>
               </div>
             </div>
 
             <!-- 錯誤提示 -->
-            <div v-if="hasError(question.id)" class="question__error">
-              {{ getErrorMessage(question.id) }}
+            <div v-if="hasError(q.id)" class="q__error">
+              {{ getError(q.id) }}
             </div>
           </div>
         </div>
 
         <!-- 提交按鈕區域 -->
-        <div class="questionnaire__footer">
-          <div class="questionnaire__info">
-            <p class="questionnaire__note">
-              <span class="questionnaire__required">*</span> 為必填項目
+        <div class="ques__foot">
+          <div class="ques__info">
+            <p class="ques__note">
+              <span class="ques__req">*</span> 為必填項目
             </p>
-            <p class="questionnaire__privacy">
+            <p class="ques__privacy">
               我們將嚴格保護您的隱私，問卷資料僅用於研究分析
             </p>
           </div>
 
           <button
             type="submit"
-            class="questionnaire__submit"
-            :disabled="isSubmitting || !canSubmit"
-            :class="{ 'questionnaire__submit--loading': isSubmitting }"
+            class="ques__btn"
+            :disabled="submitting || !canSubmit"
+            :class="{ 'ques__btn--loading': submitting }"
           >
-            <span v-if="!isSubmitting">提交問卷</span>
-            <span v-else class="questionnaire__loading">
-              <span class="questionnaire__spinner"></span>
+            <span v-if="!submitting">提交問卷</span>
+            <span v-else class="ques__loading">
+              <span class="ques__spinner"></span>
               提交中...
             </span>
           </button>
@@ -149,7 +142,7 @@ const emit = defineEmits(["questionnaire-completed"]);
 // 響應式數據
 const answers = ref({});
 const errors = ref({});
-const isSubmitting = ref(false);
+const submitting = ref(false);
 
 // 問卷題目數據
 const questions = ref([
@@ -391,8 +384,17 @@ const questions = ref([
   },
 ]);
 
+// 輔助函數：根據選項的中文找到對應的 value
+const getValueByText = (questionId, text) => {
+  const question = questions.value.find((q) => q.id === questionId);
+  if (!question) return null;
+
+  const option = question.options.find((opt) => opt.text === text);
+  return option ? option.value : null;
+};
+
 // 計算屬性：所有題目帶有跳過狀態
-const allQuestionsWithStatus = computed(() => {
+const allQuestions = computed(() => {
   return questions.value.map((question) => {
     let isSkipped = false;
 
@@ -400,8 +402,14 @@ const allQuestionsWithStatus = computed(() => {
       const skipCondition = question.skipIf;
       const relatedAnswer = answers.value[skipCondition.questionId];
 
+      // 將中文答案轉換為 value 進行比較
+      const relatedValue = getValueByText(
+        skipCondition.questionId,
+        relatedAnswer,
+      );
+
       // 如果滿足跳題條件，則標記為跳過
-      isSkipped = skipCondition.answerValues.includes(relatedAnswer);
+      isSkipped = skipCondition.answerValues.includes(relatedValue);
     }
 
     return {
@@ -413,11 +421,11 @@ const allQuestionsWithStatus = computed(() => {
 
 // 計算屬性：檢查是否可以提交（只檢查未跳過且必填的題目）
 const canSubmit = computed(() => {
-  const requiredActiveQuestions = allQuestionsWithStatus.value.filter(
+  const requiredActive = allQuestions.value.filter(
     (q) => q.required && !q.isSkipped,
   );
 
-  return requiredActiveQuestions.every((question) => {
+  return requiredActive.every((question) => {
     const answer = answers.value[question.id];
 
     if (question.type === "multiple") {
@@ -428,9 +436,9 @@ const canSubmit = computed(() => {
   });
 });
 
-// 答案變更處理
-const handleAnswerChange = (questionId, value) => {
-  answers.value[questionId] = value;
+// 單選答案變更處理
+const handleSingle = (questionId, text, value) => {
+  answers.value[questionId] = text;
 
   // 清除該題目的錯誤
   if (errors.value[questionId]) {
@@ -442,7 +450,7 @@ const handleAnswerChange = (questionId, value) => {
 };
 
 // 多選題答案變更處理
-const handleMultipleAnswerChange = (questionId) => {
+const handleMultiple = (questionId, value) => {
   // 確保答案是數組格式
   if (!Array.isArray(answers.value[questionId])) {
     answers.value[questionId] = [];
@@ -468,9 +476,9 @@ const clearDependentAnswers = (changedQuestionId) => {
 };
 
 // 檢查多選題選項是否被選中
-const isOptionSelected = (questionId, optionValue) => {
+const isOptSelected = (questionId, optText) => {
   const answer = answers.value[questionId];
-  return Array.isArray(answer) && answer.includes(optionValue);
+  return Array.isArray(answer) && answer.includes(optText);
 };
 
 // 檢查題目是否有錯誤
@@ -479,16 +487,16 @@ const hasError = (questionId) => {
 };
 
 // 獲取錯誤訊息
-const getErrorMessage = (questionId) => {
+const getError = (questionId) => {
   return errors.value[questionId] || "";
 };
 
 // 驗證答案（只驗證未跳過的題目）
-const validateAnswers = () => {
+const validate = () => {
   errors.value = {};
   let isValid = true;
 
-  allQuestionsWithStatus.value.forEach((question) => {
+  allQuestions.value.forEach((question) => {
     // 只驗證未跳過且必填的題目
     if (question.required && !question.isSkipped) {
       const answer = answers.value[question.id];
@@ -509,31 +517,27 @@ const validateAnswers = () => {
 };
 
 // 提交問卷
-const submitQuestionnaire = async () => {
-  if (!validateAnswers()) {
+const submit = async () => {
+  if (!validate()) {
     // 滾動到第一個錯誤
-    const firstErrorElement = document.querySelector(".question--error");
-    if (firstErrorElement) {
-      firstErrorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    const firstError = document.querySelector(".q--error");
+    if (firstError) {
+      firstError.scrollIntoView({ behavior: "smooth", block: "center" });
     }
     return;
   }
 
-  isSubmitting.value = true;
+  submitting.value = true;
 
   try {
     // 整理提交數據
-    const activeQuestions = allQuestionsWithStatus.value.filter(
-      (q) => !q.isSkipped,
-    );
-    const skippedQuestions = allQuestionsWithStatus.value.filter(
-      (q) => q.isSkipped,
-    );
+    const activeQs = allQuestions.value.filter((q) => !q.isSkipped);
+    const skippedQs = allQuestions.value.filter((q) => q.isSkipped);
 
     const submitData = {
-      answers: answers.value,
-      completedQuestions: activeQuestions.map((q) => q.id),
-      skippedQuestions: skippedQuestions.map((q) => q.id),
+      answers: answers.value, // 現在包含的是中文答案
+      completedQuestions: activeQs.map((q) => q.id),
+      skippedQuestions: skippedQs.map((q) => q.id),
     };
 
     console.log("提交問卷數據:", submitData);
@@ -550,7 +554,7 @@ const submitQuestionnaire = async () => {
     console.error("提交問卷失敗:", error);
     // 這裡可以顯示錯誤提示
   } finally {
-    isSubmitting.value = false;
+    submitting.value = false;
   }
 };
 
@@ -565,15 +569,16 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.questionnaire {
+.ques {
+  margin-top: 80px;
   width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  // min-height: 100vh;
+  background: linear-gradient(135deg, #ceb788 0%, #e6e0d4 100%);
   padding: 40px 20px;
   box-sizing: border-box;
 }
 
-.questionnaire__wrapper {
+.ques__wrap {
   max-width: 800px;
   margin: 0 auto;
   background: white;
@@ -582,36 +587,36 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.questionnaire__header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.ques__head {
+  background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
   color: white;
   padding: 40px 30px;
   text-align: center;
 }
 
-.questionnaire__title {
+.ques__title {
   font-size: 28px;
   font-weight: bold;
   margin: 0 0 10px 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.questionnaire__subtitle {
+.ques__sub {
   font-size: 16px;
   margin: 0;
   opacity: 0.9;
   line-height: 1.5;
 }
 
-.questionnaire__form {
+.ques__form {
   padding: 40px 30px;
 }
 
-.questionnaire__questions {
+.ques__list {
   margin-bottom: 40px;
 }
 
-.question {
+.q {
   margin-bottom: 40px;
   padding: 30px;
   border: 2px solid #f0f0f0;
@@ -636,26 +641,26 @@ onMounted(() => {
     border-color: #e8e8e8;
     pointer-events: none;
 
-    .question__title {
+    .q__title {
       color: #999;
     }
 
-    .option__text {
+    .opt__text {
       color: #999;
     }
   }
 }
 
-.question__category {
+.q__cat {
   font-size: 18px;
   font-weight: bold;
-  color: #667eea;
+  color: #9eaec0;
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
 }
 
-.question__skip {
+.q__skip {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -665,17 +670,17 @@ onMounted(() => {
   border: 1px solid #d9d9d9;
 }
 
-.question__skip-text {
+.q__skip-text {
   font-size: 12px;
   color: #999;
   font-style: italic;
 }
 
-.question__header {
+.q__head {
   margin-bottom: 20px;
 }
 
-.question__title {
+.q__title {
   font-size: 18px;
   font-weight: 600;
   color: #333;
@@ -683,18 +688,18 @@ onMounted(() => {
   line-height: 1.4;
 }
 
-.question__required {
+.q__req {
   color: #ff4d4f;
   margin-left: 4px;
 }
 
-.options {
+.opts {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.option {
+.opt {
   display: flex;
   align-items: flex-start;
   padding: 15px 20px;
@@ -705,14 +710,14 @@ onMounted(() => {
   transition: all 0.3s ease;
 
   &:hover:not(&--disabled) {
-    border-color: #1890ff;
-    background: #f6f9ff;
+    border-color: #d4c5a9;
+    background: #faf8f4;
   }
 
   &--selected:not(&--disabled) {
-    border-color: #1890ff;
-    background: #e6f7ff;
-    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+    border-color: #d4c5a9;
+    background: #f5f2ec;
+    box-shadow: 0 2px 8px rgba(212, 197, 169, 0.3);
   }
 
   &--disabled {
@@ -720,18 +725,18 @@ onMounted(() => {
     border-color: #d9d9d9;
     cursor: not-allowed;
 
-    .option__text {
+    .opt__text {
       color: #bbb;
     }
   }
 }
 
-.option__input {
+.opt__input {
   margin-right: 12px;
   margin-top: 2px;
   width: 18px;
   height: 18px;
-  accent-color: #1890ff;
+  accent-color: #d4c5a9;
   flex-shrink: 0;
 
   &:disabled {
@@ -739,19 +744,19 @@ onMounted(() => {
     cursor: not-allowed;
   }
 
-  &--checkbox {
+  &--check {
     border-radius: 4px;
   }
 }
 
-.option__text {
+.opt__text {
   flex: 1;
   font-size: 16px;
   color: #333;
   line-height: 1.4;
 }
 
-.question__error {
+.q__error {
   margin-top: 8px;
   padding: 8px 12px;
   background: #fff2f2;
@@ -761,35 +766,35 @@ onMounted(() => {
   font-size: 14px;
 }
 
-.questionnaire__footer {
+.ques__foot {
   border-top: 1px solid #f0f0f0;
   padding-top: 30px;
   text-align: center;
 }
 
-.questionnaire__info {
+.ques__info {
   margin-bottom: 30px;
 }
 
-.questionnaire__note {
+.ques__note {
   font-size: 14px;
   color: #666;
   margin: 0 0 8px 0;
 }
 
-.questionnaire__required {
+.ques__req {
   color: #ff4d4f;
 }
 
-.questionnaire__privacy {
+.ques__privacy {
   font-size: 12px;
   color: #999;
   margin: 0;
   line-height: 1.4;
 }
 
-.questionnaire__submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.ques__btn {
+  background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
   color: white;
   border: none;
   padding: 18px 50px;
@@ -798,12 +803,12 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(158, 174, 192, 0.4);
   min-width: 200px;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 8px 25px rgba(158, 174, 192, 0.5);
   }
 
   &:disabled {
@@ -817,14 +822,14 @@ onMounted(() => {
   }
 }
 
-.questionnaire__loading {
+.ques__loading {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-.questionnaire__spinner {
+.ques__spinner {
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -844,49 +849,49 @@ onMounted(() => {
 
 // 響應式設計
 @media (max-width: 768px) {
-  .questionnaire {
+  .ques {
     padding: 20px 10px;
   }
 
-  .questionnaire__header {
+  .ques__head {
     padding: 30px 20px;
   }
 
-  .questionnaire__title {
+  .ques__title {
     font-size: 24px;
   }
 
-  .questionnaire__subtitle {
+  .ques__sub {
     font-size: 14px;
   }
 
-  .questionnaire__form {
+  .ques__form {
     padding: 30px 20px;
   }
 
-  .question {
+  .q {
     padding: 20px;
     margin-bottom: 30px;
   }
 
-  .question__title {
+  .q__title {
     font-size: 16px;
   }
 
-  .option {
+  .opt {
     padding: 12px 15px;
   }
 
-  .option__text {
+  .opt__text {
     font-size: 14px;
   }
 
-  .questionnaire__submit {
+  .ques__btn {
     padding: 15px 40px;
     font-size: 16px;
   }
 
-  .question__skip {
+  .q__skip {
     position: static;
     margin-bottom: 15px;
     display: inline-block;

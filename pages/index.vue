@@ -1,5 +1,5 @@
 <template>
-  <!-- <Banner @startDivination="startDivination" :loginUrl="loginUrl" /> -->
+  <Banner @startDivination="startDivination" :loginUrl="loginUrl" />
   <div class="divination-container">
     <!-- <PlayCount
       :count="totalPlayCount"
@@ -321,11 +321,11 @@ const TURNSTILE_SITE_KEY = config.public.turnstileSiteKey;
 function getApiUrl(endpoint) {
   const baseUrl = (() => {
     if (config.public.domain?.includes("lab-event")) {
-      return "https://lab-event.udn.com/bd_fate2025_test/fate2025php";
+      return "https://lab-event.udn.com/bd_pet2025/fate2025php";
     } else if (config.public.domain?.includes("event.udn")) {
       return "https://event.udn.com/bd_fate2025/fate2025php";
     } else {
-      return "https://lab-event.udn.com/bd_fate2025_test/fate2025php";
+      return "https://lab-event.udn.com/bd_pet2025/fate2025php";
     }
   })();
 
@@ -342,16 +342,16 @@ const loginUrl = computed(() => {
 
   let redirectUrl;
   if (hostname === "lab-event.udn.com") {
-    redirectUrl = "https://lab-event.udn.com/bd_fate2025_test/";
+    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
   } else if (hostname === "event.udn.com") {
     redirectUrl = "https://event.udn.com/bd_fate2025/";
   } else if (
     allowedHosts.includes(hostname) ||
     hostname.startsWith("localhost")
   ) {
-    redirectUrl = "https://lab-event.udn.com/bd_fate2025_test/";
+    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
   } else {
-    redirectUrl = "https://lab-event.udn.com/bd_fate2025_test/";
+    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
   }
 
   return `https://member.udn.com/member/login.jsp?site=bd_fate2025&again=y&redirect=${redirectUrl}`;
@@ -375,11 +375,7 @@ function isUrlSafe(url) {
       return false;
     }
 
-    const allowedPaths = [
-      "/member/login.jsp",
-      "/bd_fate2025/",
-      "/bd_fate2025_test/",
-    ];
+    const allowedPaths = ["/member/login.jsp", "/bd_fate2025/", "/bd_pet2025/"];
 
     const isValidPath = allowedPaths.some((path) =>
       urlObj.pathname.startsWith(path),
@@ -1311,18 +1307,17 @@ function logout() {
   if (typeof window === "undefined") return;
 
   try {
-    // 清除 cookie 的更全面方法
     const domains = [
-      "", // 無域名版本
-      window.location.hostname, // 當前域名
-      `.${window.location.hostname}`, // 帶點的當前域名
-      "udn.com", // 頂層域名
-      ".udn.com", // 帶點的頂層域名
+      "",
+      window.location.hostname,
+      `.${window.location.hostname}`,
+      "udn.com",
+      ".udn.com",
       "event.udn.com",
       "lab-event.udn.com",
     ];
 
-    const paths = ["/", "/bd_fate2025", "/bd_fate2025_test"];
+    const paths = ["/", "/bd_fate2025", "/bd_pet2025"];
     const cookieNames = ["udnmember", "um2", "nickname", "fg_mail"];
 
     // 對每個可能的域名和路徑嘗試清除 cookie
@@ -1383,7 +1378,7 @@ function clearCookiesAfterDivination() {
       ".lab-event.udn.com",
     ];
 
-    const paths = ["/", "/bd_fate2025/", "/bd_fate2025_test/"];
+    const paths = ["/", "/bd_fate2025/", "/bd_pet2025/"];
 
     domains.forEach((domain) => {
       paths.forEach((path) => {

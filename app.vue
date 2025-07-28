@@ -13,7 +13,7 @@
   </noscript>
 
   <!-- 只在非 admin 頁面顯示導覽列 -->
-  <!-- <Nav v-if="!isAdminPage" /> -->
+  <Nav v-if="!isAdminPage" />
   <NuxtPage />
 </template>
 
@@ -31,7 +31,8 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  background: url("/imgs/bg.jpg") top center;
+  // background: url("/imgs/bg.jpg") top center;
+  background: linear-gradient(135deg, #ceb788 0%, #e6e0d4 100%);
   background-repeat: no-repeat;
   font-family: "Noto Sans TC", sans-serif;
   @media (max-width: 768px) {

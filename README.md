@@ -7,7 +7,7 @@
 ## 網站網址
 
 - **正式環境**: [https://event.udn.com/bd_fate2025/](https://event.udn.com/bd_fate2025/)
-- **測試環境**: [https://lab-event.udn.com/bd_fate2025_test/](https://lab-event.udn.com/bd_fate2025_test/)
+- **測試環境**: [https://lab-event.udn.com/bd_pet2025/](https://lab-event.udn.com/bd_pet2025/)
 
 ## 技術架構
 

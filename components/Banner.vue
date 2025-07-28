@@ -1,12 +1,12 @@
 <template>
   <div class="banner">
     <!-- 煙火特效元素 -->
-    <div class="fireworks">
+    <!-- <div class="fireworks">
       <div class="firework firework-1"></div>
       <div class="firework firework-2"></div>
       <div class="firework firework-3"></div>
       <div class="firework firework-4"></div>
-    </div>
+    </div> -->
 
     <div class="banner__content">
       <!-- ref="contentRef" -->
@@ -41,7 +41,7 @@ async function handleDivination(event) {
 <style lang="scss">
 .banner {
   width: 100%;
-  background-image: url("/imgs/banner.png");
+  // background-image: url("/imgs/banner.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center top;
@@ -265,7 +265,7 @@ async function handleDivination(event) {
     border-radius: 50%;
     aspect-ratio: 1 / 1;
     cursor: pointer;
-    // border: 2px solid rgb(255, 255, 255);
+    border: 2px solid rgb(255, 255, 255);
     @media (max-width: 1535px) {
       right: 17.7%;
       top: 36%;

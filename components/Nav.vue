@@ -1,84 +1,154 @@
 <template>
   <nav class="navbar">
-    <Nav_container>
-      <div
-        class="navbar__content"
-        :class="{ 'navbar__content--scrolled': isScrolled }"
-      >
-        <div class="navbar__logo">
-          <NuxtLink to="https://udn.com/news/index" target="_blank">
-            <img
-              src="/imgs/logo.png"
-              alt="logo_udn_Logo"
-              class="navbar__logo-image"
-            />
-          </NuxtLink>
-        </div>
-
-        <div class="navbar__right">
-          <div
-            class="navbar__links"
-            :class="{ 'navbar__links--active': isMobileMenuOpen }"
-          >
-            <NuxtLink
-              to="#activity"
-              class="navbar__link"
-              @click="isMobileMenuOpen = false"
-              >活動辦法</NuxtLink
-            >
-            <NuxtLink
-              to="#prizes"
-              class="navbar__link"
-              @click="isMobileMenuOpen = false"
-              >獎品一覽</NuxtLink
-            >
-            <NuxtLink
-              to="/"
-              class="navbar__link navbar__link--button"
-              @click="handleWinnerListClick"
-              >中獎名單</NuxtLink
-            >
-          </div>
-
-          <div class="navbar__social">
-            <a
-              :href="facebookShareUrl"
-              target="_blank"
-              class="navbar__social-link navbar__social-link--facebook"
-              aria-label="分享到臉書"
-            >
-              <img
-                src="/imgs/share_fb.svg"
-                alt="Facebook"
-                class="navbar__social-icon"
-              />
-            </a>
-            <a
-              :href="lineShareUrl"
-              target="_blank"
-              class="navbar__social-link navbar__social-link--line"
-              aria-label="分享到LINE"
-            >
-              <img
-                src="/imgs/share_line.svg"
-                alt="LINE"
-                class="navbar__social-icon"
-              />
-            </a>
-          </div>
-
-          <div
-            class="navbar__hamburger"
-            :class="{ 'navbar__hamburger--active': isMobileMenuOpen }"
-            @click="toggleMobileMenu"
-          >
-            <span class="navbar__hamburger-line"></span>
-            <span class="navbar__hamburger-line"></span>
-            <span class="navbar__hamburger-line"></span>
-          </div>
+    <!-- 直接使用 navbar__content，不使用 Nav_container -->
+    <div
+      class="navbar__content"
+      :class="{ 'navbar__content--scrolled': isScrolled }"
+    >
+      <div class="navbar__logo">
+        <NuxtLink
+          to="https://udn.com/news/index"
+          target="_blank"
+          class="navbar__udn-logo"
+        >
+          <img
+            src="/imgs/logo.png"
+            alt="logo_udn_Logo"
+            class="navbar__udn-logo-image"
+          />
+        </NuxtLink>
+        <div class="navbar__pet-logo">
+          <img
+            src="/imgs/pet_logo.png"
+            alt="Pet Logo"
+            class="navbar__pet-logo-image"
+          />
         </div>
       </div>
-    </Nav_container>
+
+      <div class="navbar__right">
+        <!-- v-if="isLoggedIn" -->
+        <button @click="logout" class="navbar__logout" aria-label="登出">
+          登出
+        </button>
+
+        <div
+          class="navbar__links"
+          :class="{ 'navbar__links--active': isMobileMenuOpen }"
+        >
+          <NuxtLink
+            to="/"
+            class="navbar__link"
+            @click="isMobileMenuOpen = false"
+            >首頁</NuxtLink
+          >
+          <NuxtLink
+            to="#activity"
+            class="navbar__link"
+            @click="isMobileMenuOpen = false"
+            >活動辦法</NuxtLink
+          >
+
+          <div
+            class="navbar__dropdown"
+            @mouseenter="showDropdown = true"
+            @mouseleave="showDropdown = false"
+            @click="toggleDropdownMobile"
+          >
+            <span class="navbar__link navbar__link--dropdown">
+              毛孩百科全收錄
+              <svg
+                class="navbar__dropdown-arrow"
+                :class="{
+                  'navbar__dropdown-arrow--open':
+                    showDropdown || mobileDropdownOpen,
+                }"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+              >
+                <path
+                  d="M3 4.5L6 7.5L9 4.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <div
+              class="navbar__dropdown-menu"
+              :class="{
+                'navbar__dropdown-menu--show': showDropdown,
+                'navbar__dropdown-menu--mobile-show': mobileDropdownOpen,
+              }"
+            >
+              <NuxtLink
+                to="/pet-food-sounds"
+                class="navbar__dropdown-item"
+                @click="closeAllMenus"
+              >
+                毛孩貪吃聲音
+              </NuxtLink>
+              <NuxtLink
+                to="/pet-medical-sounds"
+                class="navbar__dropdown-item"
+                @click="closeAllMenus"
+              >
+                毛孩醫療聲音
+              </NuxtLink>
+              <a
+                href="https://example.com/pet-secrets"
+                target="_blank"
+                class="navbar__dropdown-item"
+                @click="closeAllMenus"
+              >
+                毛孩大揭密
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar__social">
+          <a
+            :href="facebookShareUrl"
+            target="_blank"
+            class="navbar__social-link navbar__social-link--facebook"
+            aria-label="分享到臉書"
+          >
+            <img
+              src="/imgs/share_fb.svg"
+              alt="Facebook"
+              class="navbar__social-icon"
+            />
+          </a>
+          <a
+            :href="lineShareUrl"
+            target="_blank"
+            class="navbar__social-link navbar__social-link--line"
+            aria-label="分享到LINE"
+          >
+            <img
+              src="/imgs/share_line.svg"
+              alt="LINE"
+              class="navbar__social-icon"
+            />
+          </a>
+        </div>
+
+        <div
+          class="navbar__hamburger"
+          :class="{ 'navbar__hamburger--active': isMobileMenuOpen }"
+          @click="toggleMobileMenu"
+        >
+          <span class="navbar__hamburger-line"></span>
+          <span class="navbar__hamburger-line"></span>
+          <span class="navbar__hamburger-line"></span>
+        </div>
+      </div>
+    </div>
 
     <div
       v-if="isMobileMenuOpen"
@@ -104,6 +174,11 @@ const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
 const showWinnerListPopup = ref(false);
 const scrollThreshold = 40;
+const isLoggedIn = ref(false);
+
+// 下拉選單狀態
+const showDropdown = ref(false);
+const mobileDropdownOpen = ref(false);
 
 const winnerListConfig = {
   announceDate: "2025年8月15日",
@@ -133,6 +208,25 @@ const winnerListPopupData = computed(() => {
 
 function toggleMobileMenu() {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  // 關閉手機版時也關閉下拉選單
+  if (!isMobileMenuOpen.value) {
+    mobileDropdownOpen.value = false;
+  }
+}
+
+// 手機版下拉選單切換
+function toggleDropdownMobile() {
+  // 只在手機版響應點擊
+  if (window.innerWidth <= 768) {
+    mobileDropdownOpen.value = !mobileDropdownOpen.value;
+  }
+}
+
+// 關閉所有選單
+function closeAllMenus() {
+  isMobileMenuOpen.value = false;
+  mobileDropdownOpen.value = false;
+  showDropdown.value = false;
 }
 
 function handleScroll() {
@@ -162,7 +256,7 @@ const getLastFortuneResult = () => {
 
 const baseShareUrl = computed(() => {
   const lastResult = getLastFortuneResult();
-  const baseUrl = "https://lab-event.udn.com/bd_fate2025_test";
+  const baseUrl = "https://lab-event.udn.com/bd_pet2025";
   return `${baseUrl}`;
 });
 
@@ -175,12 +269,81 @@ const lineShareUrl = computed(() => {
   return `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(baseShareUrl.value)}&text=${encodeURIComponent(shareText)}`;
 });
 
+// 獲取 Cookie 值
+function getCookieValue(name) {
+  if (typeof document === "undefined") return null;
+  const cookies = document.cookie.split(";");
+  for (let cookie of cookies) {
+    let parts = cookie.trim().split("=");
+    if (parts[0].trim() === name) {
+      return parts.slice(1).join("=");
+    }
+  }
+  return null;
+}
+
+// 更新登入狀態
+function updateLoginStatus() {
+  const udnmember = getCookieValue("udnmember");
+  const um2 = getCookieValue("um2");
+  isLoggedIn.value = !!(udnmember && um2);
+}
+
+// 登出功能
+function logout() {
+  if (typeof window === "undefined") return;
+
+  try {
+    const domains = [
+      "",
+      window.location.hostname,
+      `.${window.location.hostname}`,
+      "udn.com",
+      ".udn.com",
+      "event.udn.com",
+      "lab-event.udn.com",
+    ];
+
+    const paths = ["/", "/bd_fate2025", "/bd_pet2025"];
+    const cookieNames = ["udnmember", "um2", "nickname", "fg_mail"];
+
+    domains.forEach((domain) => {
+      paths.forEach((path) => {
+        cookieNames.forEach((name) => {
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? "; domain=" + domain : ""}`;
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? "; domain=" + domain : ""}; secure`;
+        });
+      });
+    });
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.includes("fate2025")) {
+        localStorage.removeItem(key);
+      }
+    }
+
+    localStorage.removeItem("login_checked");
+
+    localStorage.clear();
+
+    isLoggedIn.value = false;
+
+    console.log("已清除所有登入相關狀態");
+
+    window.location.reload();
+  } catch (e) {
+    console.error("清除 Cookie 過程中發生錯誤:", e);
+  }
+}
+
 onMounted(() => {
   if (window.scrollY > scrollThreshold) {
     isScrolled.value = true;
   }
 
   window.addEventListener("scroll", handleScroll);
+  updateLoginStatus();
 });
 
 onBeforeUnmount(() => {
@@ -205,31 +368,126 @@ onBeforeUnmount(() => {
     align-items: center;
     width: 100%;
     border-radius: 8px;
+    padding: 0 20px; // 統一padding，不依賴Nav_container
 
     &--scrolled {
-      background-color: rgba(109, 39, 234, 0.25);
+      background-color: rgba(158, 174, 192, 0.25);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 1px 1px 5px rgb(109, 39, 234);
+      box-shadow: 1px 1px 5px rgba(158, 174, 192, 0.8);
+    }
+
+    @media (max-width: 1600px) {
+      padding: 0 15px;
+    }
+
+    @media (max-width: 1200px) {
+      padding: 0 12px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 0 10px;
+    }
+
+    @media (max-width: 400px) {
+      padding: 0 8px;
     }
   }
 
   &__logo {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 160px;
-    padding: 4px 8px;
+    gap: 12px;
+    padding: 4px 0; // 改為上下padding
     transition: all 0.3s ease;
     background-color: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    @media (max-width: 480px) {
-      width: 130px;
+    flex-shrink: 0;
+
+    @media (max-width: 1100px) {
+      gap: 8px;
     }
+
+    @media (max-width: 768px) {
+      gap: 6px;
+    }
+
+    @media (max-width: 400px) {
+      gap: 4px;
+    }
+  }
+
+  // 寵物 logo 樣式
+  &__pet-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 4px;
+    flex-shrink: 0; // 防止被壓縮
+
+    &:hover {
+      transform: scale(1.05);
+      background: rgba(158, 174, 192, 0.1);
+      box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
+    }
+
     &-image {
-      display: block;
-      width: 100%;
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      transition: all 0.3s ease;
+
+      @media (max-width: 1100px) {
+        height: 35px;
+      }
+
+      @media (max-width: 768px) {
+        height: 30px;
+      }
+
+      @media (max-width: 400px) {
+        height: 25px;
+      }
+    }
+  }
+
+  // UDN logo 樣式
+  &__udn-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 4px;
+    flex-shrink: 0; // 防止被壓縮
+
+    &:hover {
+      transform: scale(1.05);
+      background: rgba(158, 174, 192, 0.1);
+      box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
+    }
+
+    &-image {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      transition: all 0.3s ease;
+
+      @media (max-width: 1100px) {
+        height: 35px;
+      }
+
+      @media (max-width: 768px) {
+        height: 30px;
+      }
+
+      @media (max-width: 400px) {
+        height: 25px;
+      }
     }
   }
 
@@ -237,57 +495,245 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding: 4px 8px;
+    padding: 4px 0; // 改為上下padding
     transition: all 0.3s ease;
     background-color: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    @media (max-width: 480px) {
+    flex-shrink: 1;
+    min-width: 0;
+
+    @media (max-width: 1200px) {
+      gap: 1.2rem;
+    }
+
+    @media (max-width: 1000px) {
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      gap: 0.8rem;
+    }
+
+    @media (max-width: 400px) {
       gap: 0.5rem;
+    }
+  }
+
+  &__logout {
+    background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 16px; // 保持16px
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(158, 174, 192, 0.3);
+    white-space: nowrap;
+    min-width: 60px;
+    flex-shrink: 0;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(158, 174, 192, 0.4);
+      background: linear-gradient(135deg, #8a9ba8 0%, #9eaec0 100%);
+    }
+
+    @media (max-width: 1000px) {
+      padding: 6px 12px;
+      font-size: 15px; // 輕微調整
+      min-width: 55px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 5px 10px;
+      font-size: 14px;
+      min-width: 50px;
+    }
+
+    @media (max-width: 400px) {
+      padding: 4px 8px;
+      font-size: 13px;
+      min-width: 45px;
     }
   }
 
   &__links {
     display: flex;
     align-items: center;
+    white-space: nowrap;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   &__link {
-    color: #fff;
+    color: #000;
     text-decoration: none;
-    font-size: 24px;
+    font-size: 16px; // 保持16px
     font-weight: 300;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     position: relative;
-    &:first-child {
-      padding-right: 12px;
-    }
-    &:last-child {
-      padding-left: 12px;
-    }
-    &:nth-child(2) {
-      padding: 0 12px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    white-space: nowrap;
+
+    // 只在極小螢幕稍微調整
+    @media (max-width: 900px) {
+      padding: 8px 12px;
     }
 
-    &:not(:last-child)::after {
-      content: "|";
-      position: absolute;
-      right: -2px;
-      top: 45%;
-      transform: translateY(-50%);
-      color: #fff;
+    @media (max-width: 800px) {
+      padding: 6px 10px;
     }
+
+    &:first-child {
+      margin-right: 4px;
+      @media (max-width: 1000px) {
+        margin-right: 2px;
+      }
+    }
+    &:last-child {
+      margin-left: 4px;
+      @media (max-width: 1000px) {
+        margin-left: 2px;
+      }
+    }
+    &:nth-child(2) {
+      margin: 0 4px;
+      @media (max-width: 1000px) {
+        margin: 0 2px;
+      }
+    }
+
+    &:not(&--dropdown):hover {
+      color: #fff;
+      background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
+    }
+
+    &--dropdown {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 12px;
+
+      @media (max-width: 900px) {
+        padding: 8px 12px;
+        gap: 3px;
+      }
+
+      @media (max-width: 800px) {
+        padding: 6px 10px;
+        gap: 2px;
+      }
+
+      &:hover {
+        color: #fff;
+        background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
+      }
+    }
+
     &--button {
       font-family: inherit;
 
       &:hover {
-        color: #f0f0f0;
+        color: #fff;
+        background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
       }
 
       &:focus {
-        outline: 2px solid rgba(255, 255, 255, 0.5);
+        outline: 2px solid rgba(158, 174, 192, 0.5);
         outline-offset: 2px;
         border-radius: 4px;
+      }
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(158, 174, 192, 0.4);
+    }
+  }
+
+  // 下拉選單樣式
+  &__dropdown {
+    position: relative;
+    display: inline-block;
+
+    &-arrow {
+      transition: transform 0.3s ease;
+
+      &--open {
+        transform: rotate(180deg);
+      }
+    }
+
+    &-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        135deg,
+        rgba(158, 174, 192, 0.95) 0%,
+        rgba(138, 155, 168, 0.95) 100%
+      );
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 8px 0;
+      margin-top: 8px;
+      min-width: 180px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(-10px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      overflow: hidden;
+
+      &--show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      &--mobile-show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    &-item {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 400;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: rgba(212, 197, 169, 0.3);
+        color: #fff;
+        padding-left: 24px;
       }
     }
   }
@@ -295,8 +741,14 @@ onBeforeUnmount(() => {
   &__social {
     display: flex;
     gap: 0.5rem;
-    @media (max-width: 480px) {
-      gap: 0rem;
+    flex-shrink: 0;
+
+    @media (max-width: 1000px) {
+      gap: 0.3rem;
+    }
+
+    @media (max-width: 400px) {
+      gap: 0.2rem;
     }
 
     &-link {
@@ -308,6 +760,16 @@ onBeforeUnmount(() => {
       border-radius: 50%;
       transition: all 0.3s ease;
 
+      @media (max-width: 1000px) {
+        width: 35px;
+        height: 35px;
+      }
+
+      @media (max-width: 400px) {
+        width: 30px;
+        height: 30px;
+      }
+
       &:hover {
         transform: scale(1.1);
       }
@@ -316,9 +778,15 @@ onBeforeUnmount(() => {
     &-icon {
       width: 36px;
       height: 36px;
-      @media (max-width: 480px) {
-        width: 28px;
-        height: 28px;
+
+      @media (max-width: 1000px) {
+        width: 30px;
+        height: 30px;
+      }
+
+      @media (max-width: 400px) {
+        width: 25px;
+        height: 25px;
       }
     }
   }
@@ -333,7 +801,13 @@ onBeforeUnmount(() => {
     cursor: pointer;
     z-index: 110;
     position: relative;
-    @media (max-width: 480px) {
+    flex-shrink: 0; // 防止被壓縮
+
+    @media (max-width: 768px) {
+      display: flex; // 在768px以下顯示
+    }
+
+    @media (max-width: 400px) {
       width: 25px;
       height: 25px;
     }
@@ -342,17 +816,26 @@ onBeforeUnmount(() => {
       display: block;
       height: 3px;
       width: 25px;
-      background-color: #fff;
+      background-color: #000; // 改成黑色更明顯
       border-radius: 2px;
       margin: 3px 0;
       transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
       transform-origin: center;
+
+      @media (max-width: 400px) {
+        width: 20px;
+        height: 2px;
+        margin: 2px 0;
+      }
     }
 
     &--active {
       .navbar__hamburger-line {
         &:nth-child(1) {
           transform: rotate(45deg) translate(6px, 6px);
+          @media (max-width: 400px) {
+            transform: rotate(45deg) translate(4px, 4px);
+          }
         }
 
         &:nth-child(2) {
@@ -362,6 +845,9 @@ onBeforeUnmount(() => {
 
         &:nth-child(3) {
           transform: rotate(-45deg) translate(6px, -6px);
+          @media (max-width: 400px) {
+            transform: rotate(-45deg) translate(4px, -4px);
+          }
         }
       }
     }
@@ -376,7 +862,7 @@ onBeforeUnmount(() => {
     background: linear-gradient(
       135deg,
       rgba(27, 3, 62, 0.6),
-      rgba(109, 39, 234, 0.4)
+      rgba(158, 174, 192, 0.4)
     );
     backdrop-filter: blur(5px) saturate(150%);
     -webkit-backdrop-filter: blur(5px) saturate(150%);
@@ -408,7 +894,7 @@ onBeforeUnmount(() => {
     }
 
     &__right {
-      gap: 1rem;
+      gap: 0.8rem;
       position: relative;
       z-index: 102;
     }
@@ -423,18 +909,19 @@ onBeforeUnmount(() => {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
+      right: 0; // 加入right確保滿寬
+      width: 100vw; // 使用viewport width
       height: auto;
-      min-height: 40vh;
+      min-height: 50vh;
       background: linear-gradient(
         135deg,
         rgba(27, 3, 62, 0.85),
-        rgba(109, 39, 234, 0.75)
+        rgba(158, 174, 192, 0.75)
       );
       backdrop-filter: blur(15px) saturate(100%);
       -webkit-backdrop-filter: blur(15px) saturate(100%);
-      border-radius: 10px;
-      padding: 60px 20px 40px;
+      border-radius: 0 0 10px 10px; // 只有下方圓角
+      padding: 80px 20px 40px; // 增加頂部padding避開導覽列
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
@@ -447,6 +934,7 @@ onBeforeUnmount(() => {
       opacity: 0;
       visibility: hidden;
       transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex; // 確保顯示
 
       &--active {
         transform: translateY(0);
@@ -456,22 +944,79 @@ onBeforeUnmount(() => {
     }
 
     &__link {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 24px;
+      color: #fff; // 手機版用白色文字
+      font-size: 22px;
       font-weight: 400;
-      padding: 16px 20px;
+      padding: 15px 30px;
       text-align: center;
       width: auto;
       border: none;
+      border-radius: 16px;
+      margin: 8px 0;
+      min-width: 200px; // 確保最小寬度
 
       &:hover {
         color: #fff;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        background: linear-gradient(135deg, #d4c5a9 0%, #9eaec0 100%);
+        transform: scale(1.05); // 縮小縮放避免跑版
+        box-shadow: 0 6px 20px rgba(212, 197, 169, 0.4);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
 
       &:not(:last-child)::after {
         display: none;
       }
+    }
+
+    &__dropdown {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &-menu {
+        position: static; // 改為靜態定位
+        transform: none;
+        margin-top: 15px;
+        width: 90%;
+        max-width: 280px;
+        overflow: hidden;
+        border-radius: 12px;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      &-item {
+        padding: 15px 25px;
+        font-size: 18px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// 超小螢幕特殊處理
+@media (max-width: 400px) {
+  .navbar {
+    &__content {
+      padding: 0 3px;
+    }
+
+    &__links {
+      padding: 70px 15px 30px;
+      min-height: 45vh;
+
+      &--active {
+        transform: translateY(0);
+      }
+    }
+
+    &__link {
+      font-size: 20px;
+      padding: 12px 25px;
+      min-width: 180px;
     }
   }
 }
