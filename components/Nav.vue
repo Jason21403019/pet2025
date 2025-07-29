@@ -49,19 +49,13 @@
             >活動辦法</NuxtLink
           >
 
-          <div
-            class="navbar__dropdown"
-            @mouseenter="showDropdown = true"
-            @mouseleave="showDropdown = false"
-            @click="toggleDropdownMobile"
-          >
+          <div class="navbar__dropdown" @click="toggleDropdown">
             <span class="navbar__link navbar__link--dropdown">
               毛孩百科全收錄
               <svg
                 class="navbar__dropdown-arrow"
                 :class="{
-                  'navbar__dropdown-arrow--open':
-                    showDropdown || mobileDropdownOpen,
+                  'navbar__dropdown-arrow--open': mobileDropdownOpen,
                 }"
                 width="12"
                 height="12"
@@ -81,7 +75,6 @@
             <div
               class="navbar__dropdown-menu"
               :class="{
-                'navbar__dropdown-menu--show': showDropdown,
                 'navbar__dropdown-menu--mobile-show': mobileDropdownOpen,
               }"
             >
@@ -176,8 +169,7 @@ const showWinnerListPopup = ref(false);
 const scrollThreshold = 40;
 const isLoggedIn = ref(false);
 
-// 下拉選單狀態
-const showDropdown = ref(false);
+// 下拉選單狀態 - 簡化為只用一個狀態
 const mobileDropdownOpen = ref(false);
 
 const winnerListConfig = {
@@ -214,19 +206,15 @@ function toggleMobileMenu() {
   }
 }
 
-// 手機版下拉選單切換
-function toggleDropdownMobile() {
-  // 只在手機版響應點擊
-  if (window.innerWidth <= 768) {
-    mobileDropdownOpen.value = !mobileDropdownOpen.value;
-  }
+// 統一的下拉選單切換函數
+function toggleDropdown() {
+  mobileDropdownOpen.value = !mobileDropdownOpen.value;
 }
 
 // 關閉所有選單
 function closeAllMenus() {
   isMobileMenuOpen.value = false;
   mobileDropdownOpen.value = false;
-  showDropdown.value = false;
 }
 
 function handleScroll() {
@@ -389,7 +377,7 @@ onBeforeUnmount(() => {
       padding: 0 10px;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 480px) {
       padding: 0 8px;
     }
   }
@@ -413,12 +401,11 @@ onBeforeUnmount(() => {
       gap: 6px;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 480px) {
       gap: 4px;
     }
   }
 
-  // 寵物 logo 樣式
   &__pet-logo {
     display: flex;
     align-items: center;
@@ -427,12 +414,14 @@ onBeforeUnmount(() => {
     transition: all 0.3s ease;
     border-radius: 8px;
     padding: 4px;
-    flex-shrink: 0; // 防止被壓縮
+    flex-shrink: 0;
 
     &:hover {
-      transform: scale(1.05);
       background: rgba(158, 174, 192, 0.1);
       box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
+    }
+    @media (max-width: 480px) {
+      display: none;
     }
 
     &-image {
@@ -449,31 +438,30 @@ onBeforeUnmount(() => {
         height: 30px;
       }
 
-      @media (max-width: 400px) {
+      @media (max-width: 480px) {
         height: 25px;
       }
     }
   }
 
-  // UDN logo 樣式
   &__udn-logo {
+    max-width: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     border-radius: 8px;
     padding: 4px;
-    flex-shrink: 0; // 防止被壓縮
+    flex-shrink: 0;
 
     &:hover {
-      transform: scale(1.05);
       background: rgba(158, 174, 192, 0.1);
       box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
     }
 
     &-image {
       height: 40px;
-      width: auto;
+      width: 100%;
       object-fit: contain;
       transition: all 0.3s ease;
 
@@ -485,7 +473,7 @@ onBeforeUnmount(() => {
         height: 30px;
       }
 
-      @media (max-width: 400px) {
+      @media (max-width: 480px) {
         height: 25px;
       }
     }
@@ -494,8 +482,8 @@ onBeforeUnmount(() => {
   &__right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    padding: 4px 0; // 改為上下padding
+    gap: 16px;
+    padding: 4px 0;
     transition: all 0.3s ease;
     background-color: transparent;
     backdrop-filter: none;
@@ -504,19 +492,19 @@ onBeforeUnmount(() => {
     min-width: 0;
 
     @media (max-width: 1200px) {
-      gap: 1.2rem;
+      gap: 12px;
     }
 
-    @media (max-width: 1000px) {
-      gap: 1rem;
+    @media (max-width: 992px) {
+      gap: 8px;
     }
 
     @media (max-width: 768px) {
-      gap: 0.8rem;
+      gap: 8px;
     }
 
-    @media (max-width: 400px) {
-      gap: 0.5rem;
+    @media (max-width: 480px) {
+      gap: 4px;
     }
   }
 
@@ -526,7 +514,7 @@ onBeforeUnmount(() => {
     border: none;
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 16px; // 保持16px
+    font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -536,26 +524,22 @@ onBeforeUnmount(() => {
     flex-shrink: 0;
 
     &:hover {
-      transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(158, 174, 192, 0.4);
       background: linear-gradient(135deg, #8a9ba8 0%, #9eaec0 100%);
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 992px) {
       padding: 6px 12px;
-      font-size: 15px; // 輕微調整
       min-width: 55px;
     }
 
     @media (max-width: 768px) {
       padding: 5px 10px;
-      font-size: 14px;
       min-width: 50px;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 480px) {
       padding: 4px 8px;
-      font-size: 13px;
       min-width: 45px;
     }
   }
@@ -573,7 +557,7 @@ onBeforeUnmount(() => {
   &__link {
     color: #000;
     text-decoration: none;
-    font-size: 16px; // 保持16px
+    font-size: 16px;
     font-weight: 300;
     transition: all 0.3s ease;
     position: relative;
@@ -581,7 +565,6 @@ onBeforeUnmount(() => {
     border-radius: 12px;
     white-space: nowrap;
 
-    // 只在極小螢幕稍微調整
     @media (max-width: 900px) {
       padding: 8px 12px;
     }
@@ -592,33 +575,33 @@ onBeforeUnmount(() => {
 
     &:first-child {
       margin-right: 4px;
-      @media (max-width: 1000px) {
-        margin-right: 2px;
+      @media (max-width: 992px) {
+        margin-right: 0px;
       }
     }
     &:last-child {
       margin-left: 4px;
-      @media (max-width: 1000px) {
-        margin-left: 2px;
+      @media (max-width: 992px) {
+        margin-left: 0px;
       }
     }
     &:nth-child(2) {
       margin: 0 4px;
-      @media (max-width: 1000px) {
-        margin: 0 2px;
+      @media (max-width: 992px) {
+        margin: 0px;
       }
     }
 
     &:not(&--dropdown):hover {
       color: #fff;
       background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
-      transform: translateY(-3px);
       box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
     }
 
     &--dropdown {
       display: flex;
       align-items: center;
+      justify-content: center; // 添加水平居中
       gap: 4px;
       cursor: pointer;
       padding: 10px 16px;
@@ -637,7 +620,6 @@ onBeforeUnmount(() => {
       &:hover {
         color: #fff;
         background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
-        transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
       }
     }
@@ -648,7 +630,6 @@ onBeforeUnmount(() => {
       &:hover {
         color: #fff;
         background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
-        transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(158, 174, 192, 0.5);
       }
 
@@ -665,7 +646,6 @@ onBeforeUnmount(() => {
     }
   }
 
-  // 下拉選單樣式
   &__dropdown {
     position: relative;
     display: inline-block;
@@ -702,12 +682,6 @@ onBeforeUnmount(() => {
       z-index: 1000;
       overflow: hidden;
 
-      &--show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-      }
-
       &--mobile-show {
         opacity: 1;
         visibility: visible;
@@ -740,15 +714,15 @@ onBeforeUnmount(() => {
 
   &__social {
     display: flex;
-    gap: 0.5rem;
+    gap: 16px;
     flex-shrink: 0;
 
-    @media (max-width: 1000px) {
-      gap: 0.3rem;
+    @media (max-width: 992px) {
+      gap: 12px;
     }
 
-    @media (max-width: 400px) {
-      gap: 0.2rem;
+    @media (max-width: 480px) {
+      gap: 8px;
     }
 
     &-link {
@@ -760,12 +734,12 @@ onBeforeUnmount(() => {
       border-radius: 50%;
       transition: all 0.3s ease;
 
-      @media (max-width: 1000px) {
+      @media (max-width: 992px) {
         width: 35px;
         height: 35px;
       }
 
-      @media (max-width: 400px) {
+      @media (max-width: 480px) {
         width: 30px;
         height: 30px;
       }
@@ -779,14 +753,9 @@ onBeforeUnmount(() => {
       width: 36px;
       height: 36px;
 
-      @media (max-width: 1000px) {
+      @media (max-width: 992px) {
         width: 30px;
         height: 30px;
-      }
-
-      @media (max-width: 400px) {
-        width: 25px;
-        height: 25px;
       }
     }
   }
@@ -801,41 +770,27 @@ onBeforeUnmount(() => {
     cursor: pointer;
     z-index: 110;
     position: relative;
-    flex-shrink: 0; // 防止被壓縮
+    flex-shrink: 0;
 
     @media (max-width: 768px) {
-      display: flex; // 在768px以下顯示
-    }
-
-    @media (max-width: 400px) {
-      width: 25px;
-      height: 25px;
+      display: flex;
     }
 
     &-line {
       display: block;
       height: 3px;
       width: 25px;
-      background-color: #000; // 改成黑色更明顯
+      background-color: #000;
       border-radius: 2px;
-      margin: 3px 0;
+      margin: 2.5px 0;
       transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
       transform-origin: center;
-
-      @media (max-width: 400px) {
-        width: 20px;
-        height: 2px;
-        margin: 2px 0;
-      }
     }
 
     &--active {
       .navbar__hamburger-line {
         &:nth-child(1) {
           transform: rotate(45deg) translate(6px, 6px);
-          @media (max-width: 400px) {
-            transform: rotate(45deg) translate(4px, 4px);
-          }
         }
 
         &:nth-child(2) {
@@ -845,9 +800,6 @@ onBeforeUnmount(() => {
 
         &:nth-child(3) {
           transform: rotate(-45deg) translate(6px, -6px);
-          @media (max-width: 400px) {
-            transform: rotate(-45deg) translate(4px, -4px);
-          }
         }
       }
     }
@@ -894,7 +846,7 @@ onBeforeUnmount(() => {
     }
 
     &__right {
-      gap: 0.8rem;
+      gap: 8px;
       position: relative;
       z-index: 102;
     }
@@ -909,8 +861,8 @@ onBeforeUnmount(() => {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0; // 加入right確保滿寬
-      width: 100vw; // 使用viewport width
+      right: 0;
+      width: 100vw;
       height: auto;
       min-height: 50vh;
       background: linear-gradient(
@@ -920,8 +872,8 @@ onBeforeUnmount(() => {
       );
       backdrop-filter: blur(15px) saturate(100%);
       -webkit-backdrop-filter: blur(15px) saturate(100%);
-      border-radius: 0 0 10px 10px; // 只有下方圓角
-      padding: 80px 20px 40px; // 增加頂部padding避開導覽列
+      border-radius: 0 0 10px 10px;
+      padding: 80px 20px 40px;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
@@ -934,7 +886,7 @@ onBeforeUnmount(() => {
       opacity: 0;
       visibility: hidden;
       transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      display: flex; // 確保顯示
+      display: flex;
 
       &--active {
         transform: translateY(0);
@@ -944,7 +896,7 @@ onBeforeUnmount(() => {
     }
 
     &__link {
-      color: #fff; // 手機版用白色文字
+      color: #fff;
       font-size: 22px;
       font-weight: 400;
       padding: 15px 30px;
@@ -953,12 +905,12 @@ onBeforeUnmount(() => {
       border: none;
       border-radius: 16px;
       margin: 8px 0;
-      min-width: 200px; // 確保最小寬度
+      min-width: 200px;
 
       &:hover {
         color: #fff;
         background: linear-gradient(135deg, #d4c5a9 0%, #9eaec0 100%);
-        transform: scale(1.05); // 縮小縮放避免跑版
+        transform: scale(1.05);
         box-shadow: 0 6px 20px rgba(212, 197, 169, 0.4);
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
@@ -975,7 +927,7 @@ onBeforeUnmount(() => {
       align-items: center;
 
       &-menu {
-        position: static; // 改為靜態定位
+        position: static;
         transform: none;
         margin-top: 15px;
         width: 90%;
@@ -997,8 +949,7 @@ onBeforeUnmount(() => {
   }
 }
 
-// 超小螢幕特殊處理
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .navbar {
     &__content {
       padding: 0 3px;

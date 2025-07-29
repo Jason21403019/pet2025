@@ -283,12 +283,12 @@ async function handleDivination(event) {
 
 @media (max-width: 768px) {
   .banner {
-    background-image: url("/imgs/m_banner.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center top;
-    position: relative;
-    aspect-ratio: 640 / 1076;
+    // background-image: url("/imgs/m_banner.png");
+    // background-size: cover;
+    // background-repeat: no-repeat;
+    // background-position: center top;
+    // position: relative;
+    // aspect-ratio: 640 / 1076;
     .firework-1 {
       width: 400px;
       height: 300px;

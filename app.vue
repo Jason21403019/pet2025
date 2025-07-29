@@ -32,11 +32,11 @@ html {
 }
 body {
   // background: url("/imgs/bg.jpg") top center;
-  background: linear-gradient(135deg, #ceb788 0%, #e6e0d4 100%);
+  background: #ffd89b;
   background-repeat: no-repeat;
   font-family: "Noto Sans TC", sans-serif;
   @media (max-width: 768px) {
-    background: url("/imgs/m_bg.jpg") top center;
+    // background: url("/imgs/m_bg.jpg") top center;
   }
 }
 </style>

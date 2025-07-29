@@ -18,7 +18,6 @@
             class="q"
             :class="{
               'q--error': hasError(q.id),
-              'q--disabled': q.isSkipped,
             }"
           >
             <!-- 分類標題 -->
@@ -26,16 +25,11 @@
               {{ q.category }}
             </div>
 
-            <!-- 跳過提示 -->
-            <div v-if="q.isSkipped" class="q__skip">
-              <span class="q__skip-text">此題目已跳過</span>
-            </div>
-
             <!-- 題目標題 -->
             <div class="q__head">
               <h3 class="q__title">
                 {{ index + 1 }}. {{ q.text }}
-                <span v-if="q.required && !q.isSkipped" class="q__req">*</span>
+                <span v-if="q.required" class="q__req">*</span>
               </h3>
             </div>
 
@@ -48,21 +42,30 @@
                   :key="opt.value"
                   class="opt"
                   :class="{
-                    'opt--selected': answers[q.id] === opt.text,
-                    'opt--disabled': q.isSkipped,
+                    'opt--selected': isOptionSelected(q.id, opt.text, 'single'),
                   }"
                 >
                   <input
                     type="radio"
                     :name="`q_${q.id}`"
                     :value="opt.text"
-                    v-model="answers[q.id]"
+                    :checked="isOptionSelected(q.id, opt.text, 'single')"
                     @change="handleSingle(q.id, opt.text, opt.value)"
-                    :disabled="q.isSkipped"
                     class="opt__input"
                   />
                   <span class="opt__text">{{ opt.text }}</span>
                 </label>
+
+                <!-- 單選題的其他說明輸入框 -->
+                <div v-if="showOtherInput(q.id, 'single')" class="other-input">
+                  <input
+                    type="text"
+                    :value="getOtherText(q.id, 'single')"
+                    placeholder="請說明..."
+                    class="other-input__field"
+                    @input="handleOtherInput(q.id, $event, 'single')"
+                  />
+                </div>
               </div>
 
               <!-- 多選題 -->
@@ -72,20 +75,36 @@
                   :key="opt.value"
                   class="opt opt--check"
                   :class="{
-                    'opt--selected': isOptSelected(q.id, opt.text),
-                    'opt--disabled': q.isSkipped,
+                    'opt--selected': isOptionSelected(
+                      q.id,
+                      opt.text,
+                      'multiple',
+                    ),
                   }"
                 >
                   <input
                     type="checkbox"
                     :value="opt.text"
-                    v-model="answers[q.id]"
-                    @change="handleMultiple(q.id, opt.value)"
-                    :disabled="q.isSkipped"
+                    :checked="isOptionSelected(q.id, opt.text, 'multiple')"
+                    @change="handleMultiple(q.id, opt.text, opt.value)"
                     class="opt__input opt__input--check"
                   />
                   <span class="opt__text">{{ opt.text }}</span>
                 </label>
+
+                <!-- 多選題的其他說明輸入框 -->
+                <div
+                  v-if="showOtherInput(q.id, 'multiple')"
+                  class="other-input"
+                >
+                  <input
+                    type="text"
+                    :value="getOtherText(q.id, 'multiple')"
+                    placeholder="請說明..."
+                    class="other-input__field"
+                    @input="handleOtherInput(q.id, $event, 'multiple')"
+                  />
+                </div>
               </div>
             </div>
 
@@ -214,16 +233,22 @@ const questions = ref([
   },
   {
     id: 6,
-    text: "您最常購買的貓咪用品類型是？（可複選）",
+    text: "您最常購買的寵物用品類型是？（可複選）",
     type: "multiple",
     required: true,
     options: [
       { value: 1, text: "寵物乾糧" },
       { value: 2, text: "寵物濕糧" },
-      { value: 3, text: "寵物零食" },
-      { value: 4, text: "寵物居家用品（如貓砂、砂盆、食器、提籠等）" },
-      { value: 5, text: "清潔美容用品（洗毛精、指甲剪、毛梳等）" },
-      { value: 6, text: "娛樂與玩具（如服飾配件、逗貓棒、跳台、抓板等）" },
+      { value: 3, text: "寵物零食 (如潔牙骨、凍乾)" },
+      {
+        value: 4,
+        text: "寵物居家用品（如狗窩、貓砂、砂盆、食器、牽繩、寵物推車、提籠等）",
+      },
+      { value: 5, text: "清潔美容用品（洗毛精、指甲剪、潔耳液、毛梳等）" },
+      {
+        value: 6,
+        text: "娛樂與玩具（如服飾配件、逗貓棒、跳台、抓板、藏食玩具等）",
+      },
       { value: 7, text: "醫療與健康檢查" },
       { value: 8, text: "營養保健食品與藥物" },
       {
@@ -235,32 +260,9 @@ const questions = ref([
       { value: 12, text: "寵物旅館" },
       { value: 13, text: "其他（請說明）" },
     ],
-    skipIf: { questionId: 1, answerValues: [1, 4] }, // 如果選狗狗或特寵則跳過
   },
   {
     id: 7,
-    text: "您最常購買的狗狗用品類型是？（可複選）",
-    type: "multiple",
-    required: true,
-    options: [
-      { value: 1, text: "寵物乾糧" },
-      { value: 2, text: "寵物濕糧" },
-      { value: 3, text: "寵物零食、潔牙骨" },
-      { value: 4, text: "寵物居家用品（如狗窩、食器、牽繩、寵物推車等）" },
-      { value: 5, text: "清潔美容用品（如洗毛精、潔耳液、毛梳等）" },
-      { value: 6, text: "娛樂與玩具（如服飾配件、藏食玩具等）" },
-      { value: 7, text: "醫療與健康檢查" },
-      { value: 8, text: "營養保健食品與藥物" },
-      { value: 9, text: "智能家電（如自動餵食機、自動飲水機、寵物攝影機等）" },
-      { value: 10, text: "寵物保險" },
-      { value: 11, text: "寵物美容" },
-      { value: 12, text: "寵物旅館" },
-      { value: 13, text: "其他（請說明）" },
-    ],
-    skipIf: { questionId: 1, answerValues: [2, 4] }, // 如果選貓咪或特寵則跳過
-  },
-  {
-    id: 8,
     text: "選購寵物產品時，您最重視的因素是？（可複選）",
     type: "multiple",
     required: true,
@@ -276,7 +278,7 @@ const questions = ref([
     ],
   },
   {
-    id: 9,
+    id: 8,
     text: "什麼因素會影響您嘗試購買新的產品給毛孩？（可複選）",
     type: "multiple",
     required: true,
@@ -291,7 +293,7 @@ const questions = ref([
   },
   // Part.3 寵物保健食品
   {
-    id: 10,
+    id: 9,
     category: "Part.3 寵物保健食品",
     text: "您是否有幫寵物補充營養保健食品？",
     type: "single",
@@ -303,8 +305,8 @@ const questions = ref([
     ],
   },
   {
-    id: 11,
-    text: "您提供營養保健食品給寵物的主要原因是什麼？（可複選）",
+    id: 10,
+    text: "您會想提供營養保健食品給寵物的主要原因是什麼？（可複選）",
     type: "multiple",
     required: true,
     options: [
@@ -319,11 +321,10 @@ const questions = ref([
       { value: 9, text: "情緒舒緩保健" },
       { value: 10, text: "其他（請說明）" },
     ],
-    skipIf: { questionId: 10, answerValues: [3] }, // 如果從未使用過則跳過
   },
   {
-    id: 12,
-    text: "您通常給寵物哪種形式的營養保健食品？（可複選）",
+    id: 11,
+    text: "您會希望提供給寵物哪種形式的營養保健食品？（可複選）",
     type: "multiple",
     required: true,
     options: [
@@ -335,10 +336,9 @@ const questions = ref([
       { value: 6, text: "結合零食型" },
       { value: 7, text: "沒特別偏好，以寵物接受度為主" },
     ],
-    skipIf: { questionId: 10, answerValues: [3] }, // 如果從未使用過則跳過
   },
   {
-    id: 13,
+    id: 12,
     text: "您選擇寵物營養保健食品最在意什麼？（可複選）",
     type: "multiple",
     required: true,
@@ -351,11 +351,10 @@ const questions = ref([
       { value: 6, text: "飼主社群或網友好評" },
       { value: 7, text: "其他（請說明）" },
     ],
-    skipIf: { questionId: 10, answerValues: [3] }, // 如果從未使用過則跳過
   },
   {
-    id: 14,
-    text: "您會透過哪些方式了解寵物營養保健食品資訊？（可複選）",
+    id: 13,
+    text: "您會想透過哪些方式了解寵物營養保健食品資訊？（可複選）",
     type: "multiple",
     required: true,
     options: [
@@ -368,10 +367,9 @@ const questions = ref([
       { value: 7, text: "廠商廣告" },
       { value: 8, text: "其他（請說明）" },
     ],
-    skipIf: { questionId: 10, answerValues: [3] }, // 如果從未使用過則跳過
   },
   {
-    id: 15,
+    id: 14,
     text: "您一個月願意花多少錢買寵物營養保健食品？",
     type: "single",
     required: true,
@@ -382,9 +380,25 @@ const questions = ref([
       { value: 4, text: "2000元以上" },
     ],
   },
+  {
+    id: 15,
+    text: "「就您認知，最具有健康形象的寵物食品品牌為何？」",
+    type: "single",
+    required: true,
+    options: [
+      { value: 1, text: "皇家" },
+      { value: 2, text: "希爾斯" },
+      { value: 3, text: "汪喵星球" },
+      { value: 4, text: "法米納" },
+      { value: 5, text: "瑞威" },
+      { value: 6, text: "怪獸部落" },
+      { value: 7, text: "無敵貓糧" },
+      { value: 8, text: "其他（點擊後自行填寫）" },
+    ],
+  },
 ]);
 
-// 輔助函數：根據選項的中文找到對應的 value
+// 輔助函數：根據選項的中文找到對應的 value（保留但可能不再需要）
 const getValueByText = (questionId, text) => {
   const question = questions.value.find((q) => q.id === questionId);
   if (!question) return null;
@@ -393,39 +407,21 @@ const getValueByText = (questionId, text) => {
   return option ? option.value : null;
 };
 
-// 計算屬性：所有題目帶有跳過狀態
+// 計算屬性：所有題目（移除跳過邏輯）
 const allQuestions = computed(() => {
   return questions.value.map((question) => {
-    let isSkipped = false;
-
-    if (question.skipIf) {
-      const skipCondition = question.skipIf;
-      const relatedAnswer = answers.value[skipCondition.questionId];
-
-      // 將中文答案轉換為 value 進行比較
-      const relatedValue = getValueByText(
-        skipCondition.questionId,
-        relatedAnswer,
-      );
-
-      // 如果滿足跳題條件，則標記為跳過
-      isSkipped = skipCondition.answerValues.includes(relatedValue);
-    }
-
     return {
       ...question,
-      isSkipped,
+      isSkipped: false, // 所有题目都不跳过
     };
   });
 });
 
-// 計算屬性：檢查是否可以提交（只檢查未跳過且必填的題目）
+// 計算屬性：檢查是否可以提交（所有必填題目都要回答）
 const canSubmit = computed(() => {
-  const requiredActive = allQuestions.value.filter(
-    (q) => q.required && !q.isSkipped,
-  );
+  const requiredQuestions = allQuestions.value.filter((q) => q.required);
 
-  return requiredActive.every((question) => {
+  return requiredQuestions.every((question) => {
     const answer = answers.value[question.id];
 
     if (question.type === "multiple") {
@@ -436,6 +432,120 @@ const canSubmit = computed(() => {
   });
 });
 
+// 檢查選項是否被選中
+const isOptionSelected = (questionId, optionText, type) => {
+  const answer = answers.value[questionId];
+
+  if (type === "single") {
+    if (!answer) return false;
+    // 檢查是否為"其他"選項或包含"其他："前綴的答案
+    if (optionText.includes("其他")) {
+      return answer === optionText || answer.startsWith("其他：");
+    }
+    return answer === optionText;
+  } else if (type === "multiple") {
+    if (!Array.isArray(answer)) return false;
+    // 檢查是否為"其他"選項或包含"其他："前綴的答案
+    if (optionText.includes("其他")) {
+      return answer.some(
+        (item) => item === optionText || item.startsWith("其他："),
+      );
+    }
+    return answer.includes(optionText);
+  }
+
+  return false;
+};
+
+// 檢查是否需要顯示"其他"輸入框
+const showOtherInput = (questionId, type) => {
+  const answer = answers.value[questionId];
+
+  if (type === "single") {
+    return answer && (answer.includes("其他") || answer.startsWith("其他："));
+  } else if (type === "multiple") {
+    return (
+      Array.isArray(answer) &&
+      answer.some(
+        (item) => item && (item.includes("其他") || item.startsWith("其他：")),
+      )
+    );
+  }
+
+  return false;
+};
+
+// 獲取"其他"選項的文本內容
+const getOtherText = (questionId, type) => {
+  const answer = answers.value[questionId];
+
+  if (type === "single") {
+    if (answer && answer.startsWith("其他：")) {
+      return answer.substring(3); // 移除"其他："前綴
+    }
+  } else if (type === "multiple") {
+    if (Array.isArray(answer)) {
+      const otherItem = answer.find(
+        (item) => item && item.startsWith("其他："),
+      );
+      if (otherItem) {
+        return otherItem.substring(3); // 移除"其他："前綴
+      }
+    }
+  }
+
+  return "";
+};
+
+// 處理"其他"輸入框的變更
+const handleOtherInput = (questionId, event, type) => {
+  const inputText = event.target.value;
+  const answer = answers.value[questionId];
+
+  if (type === "single") {
+    // 單選：直接更新答案
+    if (inputText.trim()) {
+      answers.value[questionId] = `其他：${inputText}`;
+    } else {
+      // 如果輸入為空，保持原來的"其他"選項
+      const question = allQuestions.value.find((q) => q.id === questionId);
+      const otherOption = question.options.find((opt) =>
+        opt.text.includes("其他"),
+      );
+      answers.value[questionId] = otherOption?.text || "";
+    }
+  } else if (type === "multiple") {
+    // 多選：更新數組中的"其他"項目
+    if (!Array.isArray(answers.value[questionId])) {
+      answers.value[questionId] = [];
+    }
+
+    // 移除舊的"其他"項目
+    answers.value[questionId] = answers.value[questionId].filter(
+      (item) => !item.includes("其他"),
+    );
+
+    // 添加新的"其他"項目
+    if (inputText.trim()) {
+      answers.value[questionId].push(`其他：${inputText}`);
+    } else {
+      // 如果輸入為空，添加原來的"其他"選項
+      const question = allQuestions.value.find((q) => q.id === questionId);
+      const otherOption = question.options.find((opt) =>
+        opt.text.includes("其他"),
+      );
+      if (otherOption) {
+        answers.value[questionId].push(otherOption.text);
+      }
+    }
+  }
+
+  // 清除該題目的錯誤
+  if (errors.value[questionId]) {
+    delete errors.value[questionId];
+  }
+};
+
 // 單選答案變更處理
 const handleSingle = (questionId, text, value) => {
   answers.value[questionId] = text;
@@ -444,41 +554,51 @@ const handleSingle = (questionId, text, value) => {
   if (errors.value[questionId]) {
     delete errors.value[questionId];
   }
-
-  // 檢查是否需要清除後續跳題的答案
-  clearDependentAnswers(questionId);
 };
 
 // 多選題答案變更處理
-const handleMultiple = (questionId, value) => {
+const handleMultiple = (questionId, text, value) => {
   // 確保答案是數組格式
   if (!Array.isArray(answers.value[questionId])) {
     answers.value[questionId] = [];
+  }
+
+  const currentAnswers = answers.value[questionId];
+
+  // 如果是"其他"選項，特殊處理
+  if (text.includes("其他")) {
+    const hasOtherVariant = currentAnswers.some((item) =>
+      item.includes("其他"),
+    );
+
+    if (hasOtherVariant) {
+      // 移除所有"其他"相關項目
+      answers.value[questionId] = currentAnswers.filter(
+        (item) => !item.includes("其他"),
+      );
+    } else {
+      // 添加"其他"選項
+      answers.value[questionId].push(text);
+    }
+  } else {
+    // 一般選項的切換
+    const index = currentAnswers.indexOf(text);
+    if (index > -1) {
+      answers.value[questionId].splice(index, 1);
+    } else {
+      answers.value[questionId].push(text);
+    }
   }
 
   // 清除錯誤
   if (errors.value[questionId]) {
     delete errors.value[questionId];
   }
-
-  clearDependentAnswers(questionId);
 };
 
-// 清除依賴題目的答案
-const clearDependentAnswers = (changedQuestionId) => {
-  questions.value.forEach((question) => {
-    if (question.skipIf && question.skipIf.questionId === changedQuestionId) {
-      // 清除依賴此題目的答案
-      delete answers.value[question.id];
-      delete errors.value[question.id];
-    }
-  });
-};
-
-// 檢查多選題選項是否被選中
+// 檢查多選題選項是否被選中（保留兼容性）
 const isOptSelected = (questionId, optText) => {
-  const answer = answers.value[questionId];
-  return Array.isArray(answer) && answer.includes(optText);
+  return isOptionSelected(questionId, optText, "multiple");
 };
 
 // 檢查題目是否有錯誤
@@ -491,24 +611,39 @@ const getError = (questionId) => {
   return errors.value[questionId] || "";
 };
 
-// 驗證答案（只驗證未跳過的題目）
+// 驗證答案（包括"其他"選項的文本驗證）
 const validate = () => {
   errors.value = {};
   let isValid = true;
 
   allQuestions.value.forEach((question) => {
-    // 只驗證未跳過且必填的題目
-    if (question.required && !question.isSkipped) {
+    // 驗證所有必填題目
+    if (question.required) {
       const answer = answers.value[question.id];
 
       if (question.type === "multiple") {
         if (!Array.isArray(answer) || answer.length === 0) {
           errors.value[question.id] = "請至少選擇一個選項";
           isValid = false;
+        } else {
+          // 檢查"其他"選項是否有說明文字
+          const hasIncompleteOther = answer.some(
+            (item) => item && item.includes("其他") && !item.includes("："),
+          );
+          if (hasIncompleteOther) {
+            errors.value[question.id] = "選擇其他選項時，請填寫說明內容";
+            isValid = false;
+          }
         }
       } else if (answer === undefined || answer === null || answer === "") {
         errors.value[question.id] = "此為必填項目，請選擇答案";
         isValid = false;
+      } else {
+        // 檢查單選"其他"選項是否有說明文字
+        if (answer.includes("其他") && !answer.includes("：")) {
+          errors.value[question.id] = "選擇其他選項時，請填寫說明內容";
+          isValid = false;
+        }
       }
     }
   });
@@ -519,7 +654,6 @@ const validate = () => {
 // 提交問卷
 const submit = async () => {
   if (!validate()) {
-    // 滾動到第一個錯誤
     const firstError = document.querySelector(".q--error");
     if (firstError) {
       firstError.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -530,20 +664,13 @@ const submit = async () => {
   submitting.value = true;
 
   try {
-    // 整理提交數據
-    const activeQs = allQuestions.value.filter((q) => !q.isSkipped);
-    const skippedQs = allQuestions.value.filter((q) => q.isSkipped);
-
     const submitData = {
-      answers: answers.value, // 現在包含的是中文答案
-      completedQuestions: activeQs.map((q) => q.id),
-      skippedQuestions: skippedQs.map((q) => q.id),
+      answers: answers.value, // 所有答案都在同一個對象中，包括"其他"的說明
+      completedQuestions: allQuestions.value.map((q) => q.id),
+      skippedQuestions: [],
     };
 
     console.log("提交問卷數據:", submitData);
-
-    // 這裡之後會調用 API 保存到資料庫
-    // await saveQuestionnaireData(submitData)
 
     // 模擬 API 調用
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -552,7 +679,6 @@ const submit = async () => {
     emit("questionnaire-completed", submitData);
   } catch (error) {
     console.error("提交問卷失敗:", error);
-    // 這裡可以顯示錯誤提示
   } finally {
     submitting.value = false;
   }
@@ -572,8 +698,7 @@ onMounted(() => {
 .ques {
   margin-top: 80px;
   width: 100%;
-  // min-height: 100vh;
-  background: linear-gradient(135deg, #ceb788 0%, #e6e0d4 100%);
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
   padding: 40px 20px;
   box-sizing: border-box;
 }
@@ -625,7 +750,7 @@ onMounted(() => {
   transition: all 0.3s ease;
   position: relative;
 
-  &:hover:not(&--disabled) {
+  &:hover {
     border-color: #e0e0e0;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   }
@@ -633,21 +758,6 @@ onMounted(() => {
   &--error {
     border-color: #ff4d4f;
     background: #fff2f2;
-  }
-
-  &--disabled {
-    opacity: 0.5;
-    background: #f8f8f8;
-    border-color: #e8e8e8;
-    pointer-events: none;
-
-    .q__title {
-      color: #999;
-    }
-
-    .opt__text {
-      color: #999;
-    }
   }
 }
 
@@ -658,22 +768,6 @@ onMounted(() => {
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
-}
-
-.q__skip {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  background: #f0f0f0;
-  padding: 6px 12px;
-  border-radius: 15px;
-  border: 1px solid #d9d9d9;
-}
-
-.q__skip-text {
-  font-size: 12px;
-  color: #999;
-  font-style: italic;
 }
 
 .q__head {
@@ -709,25 +803,15 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
 
-  &:hover:not(&--disabled) {
+  &:hover {
     border-color: #d4c5a9;
     background: #faf8f4;
   }
 
-  &--selected:not(&--disabled) {
+  &--selected {
     border-color: #d4c5a9;
     background: #f5f2ec;
     box-shadow: 0 2px 8px rgba(212, 197, 169, 0.3);
-  }
-
-  &--disabled {
-    background: #f5f5f5;
-    border-color: #d9d9d9;
-    cursor: not-allowed;
-
-    .opt__text {
-      color: #bbb;
-    }
   }
 }
 
@@ -738,11 +822,6 @@ onMounted(() => {
   height: 18px;
   accent-color: #d4c5a9;
   flex-shrink: 0;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 
   &--check {
     border-radius: 4px;
@@ -847,6 +926,35 @@ onMounted(() => {
   }
 }
 
+// "其他"選項輸入框樣式
+.other-input {
+  margin-top: 12px;
+  padding-left: 30px; // 與選項對齊
+
+  &__field {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #fff;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #d4c5a9;
+      box-shadow: 0 0 0 3px rgba(212, 197, 169, 0.1);
+    }
+
+    &::placeholder {
+      color: #999;
+      font-style: italic;
+    }
+  }
+}
+
 // 響應式設計
 @media (max-width: 768px) {
   .ques {
@@ -891,10 +999,14 @@ onMounted(() => {
     font-size: 16px;
   }
 
-  .q__skip {
-    position: static;
-    margin-bottom: 15px;
-    display: inline-block;
+  .other-input {
+    padding-left: 20px;
+    margin-top: 10px;
+
+    &__field {
+      padding: 10px 12px;
+      font-size: 13px;
+    }
   }
 }
 </style>
