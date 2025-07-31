@@ -27,8 +27,12 @@
       </div>
 
       <div class="navbar__right">
-        <!-- v-if="isLoggedIn" -->
-        <button @click="logout" class="navbar__logout" aria-label="登出">
+        <button
+          @click="logout"
+          class="navbar__logout"
+          aria-label="登出"
+          v-if="isLoggedIn"
+        >
           登出
         </button>
 
@@ -49,8 +53,8 @@
             >活動辦法</NuxtLink
           >
 
-          <div class="navbar__dropdown" @click="toggleDropdown">
-            <span class="navbar__link navbar__link--dropdown">
+          <!-- <div class="navbar__dropdown" @click="toggleDropdown"> -->
+          <!-- <span class="navbar__link navbar__link--dropdown">
               毛孩百科全收錄
               <svg
                 class="navbar__dropdown-arrow"
@@ -70,8 +74,8 @@
                   stroke-linejoin="round"
                 />
               </svg>
-            </span>
-
+            </span> -->
+          <!-- 
             <div
               class="navbar__dropdown-menu"
               :class="{
@@ -100,8 +104,8 @@
               >
                 毛孩大揭密
               </a>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
         </div>
 
         <div class="navbar__social">

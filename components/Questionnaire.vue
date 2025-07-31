@@ -155,10 +155,8 @@ const props = defineProps({
   },
 });
 
-// Emits
 const emit = defineEmits(["questionnaire-completed"]);
 
-// 響應式數據
 const answers = ref({});
 const errors = ref({});
 const submitting = ref(false);
@@ -664,21 +662,32 @@ const submit = async () => {
   submitting.value = true;
 
   try {
+    // 轉換答案格式：answer1, answer2, ... answer15
+    const formattedAnswers = {};
+
+    Object.keys(answers.value).forEach((qId) => {
+      const qNum = parseInt(qId);
+      const answer = answers.value[qId];
+
+      if (typeof answer === "string") {
+        formattedAnswers[`answer${qNum}`] = answer;
+      } else if (Array.isArray(answer)) {
+        formattedAnswers[`answer${qNum}`] = answer.join("、");
+      }
+    });
+
     const submitData = {
-      answers: answers.value, // 所有答案都在同一個對象中，包括"其他"的說明
+      answers: formattedAnswers,
       completedQuestions: allQuestions.value.map((q) => q.id),
-      skippedQuestions: [],
     };
 
     console.log("提交問卷數據:", submitData);
-
-    // 模擬 API 調用
-    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // 通知父組件
     emit("questionnaire-completed", submitData);
   } catch (error) {
     console.error("提交問卷失敗:", error);
+    alert("提交失敗，請稍後再試");
   } finally {
     submitting.value = false;
   }

@@ -99,6 +99,11 @@ export default defineNuxtConfig({
       __dangerouslyDisableSanitizers: ["script"],
     },
   },
+  nitro: {
+    output: {
+      dir: "./dist",
+    },
+  },
 
   runtimeConfig: {
     public: {
