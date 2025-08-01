@@ -1,13 +1,13 @@
 <template>
   <div class="banner">
     <div class="banner__content">
-      <button class="banner__trigger-area" @click="handleClick">
+      <button class="banner__trigger-area" @click="click">
         {{ isLoggedIn ? "前往填問卷" : "登入立即填問卷" }}
       </button>
     </div>
 
     <!-- 登入確認彈窗 -->
-    <div v-if="showConfirmModal" class="modal-overlay" @click="closeModal">
+    <div v-if="showModal" class="modal-overlay" @click="close">
       <div class="modal-content" @click.stop>
         <div class="modal-text">
           <p>請先登入會員再填問卷</p>
@@ -21,7 +21,7 @@
             :href="loginUrl"
             target="_blank"
             rel="noopener noreferrer"
-            @click="confirmLogin"
+            @click="confirm"
             class="confirm-btn"
           >
             確認
@@ -35,7 +35,7 @@
 <script setup>
 import { defineEmits, defineProps, ref } from "vue";
 
-const emit = defineEmits(["startDivination"]);
+const emit = defineEmits(["startDivination", "goQues"]);
 const props = defineProps({
   loginUrl: {
     type: String,
@@ -47,23 +47,23 @@ const props = defineProps({
   },
 });
 
-const showConfirmModal = ref(false);
+const showModal = ref(false);
 
-async function handleClick() {
+async function click() {
   if (!props.isLoggedIn) {
-    showConfirmModal.value = true;
+    showModal.value = true;
   } else {
-    await emit("startDivination");
+    await emit("goQues");
   }
 }
 
-function closeModal() {
-  showConfirmModal.value = false;
+function close() {
+  showModal.value = false;
 }
 
-async function confirmLogin() {
+async function confirm() {
   await emit("startDivination");
-  closeModal();
+  close();
 }
 </script>
 

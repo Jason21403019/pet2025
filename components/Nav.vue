@@ -274,11 +274,16 @@ function getCookieValue(name) {
   return null;
 }
 
-// 更新登入狀態
-function updateLoginStatus() {
+// 移除Nav.vue中的檢測邏輯，只保留簡單的狀態檢查
+function checkLoginStatus() {
+  if (typeof window === "undefined") return;
+
   const udnmember = getCookieValue("udnmember");
   const um2 = getCookieValue("um2");
-  isLoggedIn.value = !!(udnmember && um2);
+  const cookieBasedLogin = !!(udnmember && um2);
+
+  // 只更新登入狀態，不做安全檢查（交給index.vue處理）
+  isLoggedIn.value = cookieBasedLogin;
 }
 
 // 登出功能
@@ -335,7 +340,15 @@ onMounted(() => {
   }
 
   window.addEventListener("scroll", handleScroll);
-  updateLoginStatus();
+  checkLoginStatus();
+
+  // 加入定期檢查登入狀態，與主頁面同步
+  const loginCheckInterval = setInterval(checkLoginStatus, 5000);
+
+  // 清理計時器
+  onBeforeUnmount(() => {
+    clearInterval(loginCheckInterval);
+  });
 });
 
 onBeforeUnmount(() => {
