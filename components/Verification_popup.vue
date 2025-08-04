@@ -9,24 +9,7 @@
       :class="{ 'verification__popup--closing': isClosing }"
     >
       <div class="verification__popup-inner">
-        <!-- 關閉按鈕 -->
-        <button class="verification__close-btn" @click="closeModal">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 6L6 18M6 6L18 18"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
+        <!-- 移除關閉按鈕 -->
 
         <!-- 內容區 -->
         <div class="verification__content">
@@ -35,7 +18,7 @@
 
           <!-- 說明文字 -->
           <div class="verification__description">
-            請先完成下方安全驗證以繼續占卜
+            請先完成下方安全驗證以繼續填寫問卷
           </div>
 
           <!-- Turnstile 容器 -->
@@ -45,7 +28,7 @@
           ></div>
 
           <!-- 提示文字 -->
-          <div class="verification__hint">驗證完成後將自動進行占卜</div>
+          <div class="verification__hint">驗證完成後將自動進行問卷</div>
         </div>
       </div>
     </div>
@@ -66,13 +49,7 @@ const emit = defineEmits(["close", "opened"]);
 
 const isClosing = ref(false);
 
-const closeModal = () => {
-  isClosing.value = true;
-  setTimeout(() => {
-    isClosing.value = false;
-    emit("close");
-  }, 300);
-};
+// 移除 closeModal 函數，因為不再需要
 
 watch(
   () => props.isVisible,
@@ -207,39 +184,7 @@ onUnmounted(() => {
     }
   }
 
-  &__close-btn {
-    position: absolute;
-    top: -26px;
-    right: -32px;
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: linear-gradient(to bottom, #fe88f6, #fe32d9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: white;
-    z-index: 10;
-
-    @media (max-width: 480px) {
-      top: -20px;
-      right: -20px;
-    }
-    @media (max-width: 410px) {
-      width: 36px;
-      height: 36px;
-      top: -25px;
-      right: -23px;
-    }
-
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(254, 50, 217, 0.4);
-    }
-  }
+  // 移除關閉按鈕的樣式
 
   &__content {
     display: flex;

@@ -163,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, inject } from "vue";
 import Nav_container from "./Nav_container.vue";
 import Universal_popup from "./Universal_popup.vue";
 
@@ -171,7 +171,10 @@ const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
 const showWinnerListPopup = ref(false);
 const scrollThreshold = 40;
-const isLoggedIn = ref(false);
+
+// 使用注入的登入狀態
+const isLoggedIn = inject("isLoggedIn", ref(false));
+const updateLoginStatus = inject("updateLoginStatus", () => {});
 
 // 下拉選單狀態 - 簡化為只用一個狀態
 const mobileDropdownOpen = ref(false);
@@ -274,7 +277,7 @@ function getCookieValue(name) {
   return null;
 }
 
-// 移除Nav.vue中的檢測邏輯，只保留簡單的狀態檢查
+// 修改 checkLoginStatus 函數，使用與 index.vue 相同的安全檢查邏輯
 function checkLoginStatus() {
   if (typeof window === "undefined") return;
 
@@ -282,7 +285,23 @@ function checkLoginStatus() {
   const um2 = getCookieValue("um2");
   const cookieBasedLogin = !!(udnmember && um2);
 
-  // 只更新登入狀態，不做安全檢查（交給index.vue處理）
+  // 檢查是否有完整的正常流程標記（與 index.vue 相同的邏輯）
+  const justLoggedInFlag =
+    localStorage.getItem("pet2025_just_logged_in") === "true";
+  const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
+  const hasFlowToken = !!localStorage.getItem("pet2025_flow_token");
+
+  // 如果沒有完整的正常流程標記，即使有 cookie 也不顯示登出按鈕
+  if (
+    cookieBasedLogin &&
+    (!justLoggedInFlag || !isNormalFlow || !hasFlowToken)
+  ) {
+    console.log("Nav: 檢測到非正常流程，不顯示登出按鈕");
+    isLoggedIn.value = false;
+    return;
+  }
+
+  // 只有在有完整標記的情況下才顯示登出按鈕
   isLoggedIn.value = cookieBasedLogin;
 }
 
@@ -340,10 +359,12 @@ onMounted(() => {
   }
 
   window.addEventListener("scroll", handleScroll);
-  checkLoginStatus();
+
+  // 使用注入的 updateLoginStatus
+  updateLoginStatus();
 
   // 加入定期檢查登入狀態，與主頁面同步
-  const loginCheckInterval = setInterval(checkLoginStatus, 5000);
+  const loginCheckInterval = setInterval(updateLoginStatus, 5000);
 
   // 清理計時器
   onBeforeUnmount(() => {

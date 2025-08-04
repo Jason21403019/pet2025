@@ -7,11 +7,11 @@
   />
   <div class="questionnaire-container">
     <!-- 加載中彈窗 -->
-    <Loading_popup
+    <!-- <Loading_popup
       :is-visible="showLoadingPopup"
       :loading-data="loadingData"
       @close="closeLoadingPopup"
-    />
+    /> -->
     <!-- 驗證彈窗 -->
     <Verification_popup
       :is-visible="showVerificationPopup"
@@ -39,7 +39,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import axios from "axios";
 import Banner from "../components/Banner.vue";
-import Loading_popup from "../components/Loading_popup.vue";
+// import Loading_popup from "../components/Loading_popup.vue";
 import Verification_popup from "../components/Verification_popup.vue";
 import Universal_popup from "../components/Universal_popup.vue";
 import Questionnaire from "../components/Questionnaire.vue";
@@ -53,7 +53,7 @@ const isLoggedIn = ref(false);
 const showQuestionnaire = ref(false);
 
 // 彈窗相關
-const showLoadingPopup = ref(false);
+// const showLoadingPopup = ref(false);
 const loadingData = ref({});
 const showVerificationPopup = ref(false);
 const showUniversalPopup = ref(false);
@@ -79,28 +79,30 @@ function showDialog(options) {
   showUniversalPopup.value = true;
 
   return new Promise((resolve) => {
-    const handleClose = (result) => {
-      showUniversalPopup.value = false;
-      resolve(result);
-    };
-    window._universalPopupResolve = handleClose;
+    window._universalPopupResolve = resolve;
   });
 }
 
 // 關閉彈窗的函數
 const closeUniversalPopup = () => {
   showUniversalPopup.value = false;
+  // 清理 Promise resolve 函數
+  window._universalPopupResolve = null;
 };
 
 const handleUniversalConfirm = () => {
   if (window._universalPopupResolve) {
-    window._universalPopupResolve({ isConfirmed: true });
+    const resolve = window._universalPopupResolve;
+    window._universalPopupResolve = null; // 立即清理，防止重複調用
+    resolve({ isConfirmed: true });
   }
 };
 
 const handleUniversalCancel = () => {
   if (window._universalPopupResolve) {
-    window._universalPopupResolve({ isDismissed: true, dismiss: "cancel" });
+    const resolve = window._universalPopupResolve;
+    window._universalPopupResolve = null; // 立即清理，防止重複調用
+    resolve({ isDismissed: true, dismiss: "cancel" });
   }
 };
 
@@ -133,7 +135,7 @@ const loginUrl = computed(() => {
   if (hostname === "lab-event.udn.com") {
     redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
   } else if (hostname === "event.udn.com") {
-    redirectUrl = "https://event.udn.com/bd_fate2025/";
+    redirectUrl = "https://event.udn.com/bd_pet2025/";
   } else if (
     allowedHosts.includes(hostname) ||
     hostname.startsWith("localhost")
@@ -143,7 +145,7 @@ const loginUrl = computed(() => {
     redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
   }
 
-  return `https://member.udn.com/member/login.jsp?site=bd_fate2025&again=y&redirect=${redirectUrl}`;
+  return `https://member.udn.com/member/login.jsp?site=bd_pet2025&again=y&redirect=${redirectUrl}`;
 });
 
 // ==================== Cookie 與本地存儲管理 ====================
@@ -378,7 +380,7 @@ async function checkSubmitted() {
       console.log("資料庫確認：用戶已填寫過問卷");
 
       // 先關閉loading彈窗，再顯示已填寫過的彈窗
-      closeLoadingPopup();
+      // closeLoadingPopup();
       await showSubmittedDialog(response.data);
       return true;
     }
@@ -392,7 +394,7 @@ async function checkSubmitted() {
     if (error.response && error.response.data) {
       const errorData = error.response.data;
       if (errorData.message) {
-        closeLoadingPopup(); // 先關閉loading彈窗
+        // closeLoadingPopup(); // 先關閉loading彈窗
         await showDialog({
           icon: "warning",
           title: "活動提醒",
@@ -427,43 +429,32 @@ async function showSubmittedDialog(data) {
 }
 
 // ==================== 流程控制函數 ====================
-// 1. 問卷流程啟動函數
+// 1. 問卷流程啟動函數 - 只在初始點擊時生成令牌
 async function startQuestionnaire() {
   try {
     if (typeof window === "undefined") return;
 
     const hasSubmitted = await checkSubmitted();
 
-    closeLoadingPopup();
-
     if (hasSubmitted) {
       return;
     }
-
-    loadingData.value = {
-      message: "處理中...",
-      subMessage: "正在準備問卷",
-    };
-    showLoadingPopup.value = true;
 
     // 先清除舊的標記
     localStorage.removeItem("pet2025_just_logged_in");
     localStorage.removeItem("pet2025_normal_flow");
     securityManager.clearAll();
 
-    // 生成新的流程令牌
+    // 生成新的流程令牌 - 只在初始流程時生成
     await securityManager.flow.generate();
 
-    // 設置新的一次性標記
+    // 設置新的一次性標記 - 只在初始流程時設置
     localStorage.setItem("pet2025_just_logged_in", "true");
     localStorage.setItem("pet2025_normal_flow", "true");
-
-    closeLoadingPopup();
 
     return true;
   } catch (error) {
     console.error("問卷流程錯誤:", error);
-    closeLoadingPopup();
 
     // 錯誤時清除標記
     localStorage.removeItem("pet2025_just_logged_in");
@@ -477,9 +468,9 @@ async function startQuestionnaire() {
   }
 }
 
-const closeLoadingPopup = () => {
-  showLoadingPopup.value = false;
-};
+// const closeLoadingPopup = () => {
+//   showLoadingPopup.value = false;
+// };
 
 // 2. 驗證成功後執行問卷流程
 async function proceedToSubmit() {
@@ -621,61 +612,34 @@ const onVerifyOpened = () => {
   loadTurnstileScript();
 };
 
-// 修改goQues函數 - 直接顯示問卷，不需要機器人驗證
+// 修改goQues函數 - 不重新生成令牌，只檢查現有令牌
 async function goQues() {
   try {
     console.log("用戶點擊前往填問卷");
 
     // 首先檢查是否已經填寫過問卷
-    loadingData.value = {
-      message: "檢查中...",
-      subMessage: "正在確認問卷狀態",
-    };
-    showLoadingPopup.value = true;
-
     const hasSubmitted = await checkSubmitted();
-
-    closeLoadingPopup();
 
     if (hasSubmitted) {
       // 如果已經填寫過，直接返回（checkSubmitted內部會顯示已填寫的彈窗）
       return;
     }
 
-    // 如果未填寫過問卷，確保有流程令牌
-    let hasFlowToken = !!securityManager.flow.get();
+    // 檢查是否有有效的流程令牌 - 不重新生成
+    const hasFlowToken = !!securityManager.flow.get();
 
     if (!hasFlowToken) {
-      console.log("沒有流程令牌，重新生成");
+      console.log("沒有流程令牌，顯示非正常流程警告");
 
-      loadingData.value = {
-        message: "準備中...",
-        subMessage: "正在準備問卷流程",
-      };
-      showLoadingPopup.value = true;
-
-      try {
-        // 重新生成流程令牌
-        await securityManager.flow.generate();
-        localStorage.setItem("pet2025_normal_flow", "true");
-        hasFlowToken = true;
-        console.log("流程令牌生成成功");
-      } catch (error) {
-        closeLoadingPopup();
-        console.error("重新生成流程令牌失敗:", error);
-
-        showDialog({
-          icon: "error",
-          title: "系統錯誤",
-          text: "啟動問卷流程時發生錯誤，請稍後再試",
-          confirmButtonText: "確定",
-          showCancelButton: false,
-        });
-        return;
-      }
+      showDialog({
+        icon: "warning",
+        title: "請使用正確的流程",
+        text: "請從活動首頁點擊「登入立即填問卷」按鈕來參與活動。\n直接使用登入網址將無法參與。",
+        confirmButtonText: "我知道了",
+        showCancelButton: false,
+      });
+      return;
     }
-
-    closeLoadingPopup();
 
     // 直接顯示問卷，不需要機器人驗證
     showQuestionnaire.value = true;
@@ -685,7 +649,6 @@ async function goQues() {
     await nextTick();
     scrollToQues();
   } catch (error) {
-    closeLoadingPopup();
     console.error("前往填問卷錯誤:", error);
 
     showDialog({
@@ -749,11 +712,11 @@ async function handlePostLogin() {
       message: "檢查中...",
       subMessage: "正在確認您的狀態",
     };
-    showLoadingPopup.value = true;
+    // showLoadingPopup.value = true;
 
     const hasSubmitted = await checkSubmitted();
 
-    closeLoadingPopup();
+    // closeLoadingPopup();
 
     if (hasSubmitted) {
       localStorage.removeItem("pet2025_just_logged_in");
@@ -805,7 +768,7 @@ async function handlePostLogin() {
     // 顯示驗證對話框
     showVerifyDialog();
   } catch (error) {
-    closeLoadingPopup();
+    // closeLoadingPopup();
     console.error("登入後流程錯誤:", error);
 
     // 發生錯誤時清除標記並登出
@@ -855,11 +818,11 @@ async function checkExistingUser() {
       message: "檢查中...",
       subMessage: "正在確認您的問卷狀態",
     };
-    showLoadingPopup.value = true;
+    // showLoadingPopup.value = true;
 
     const hasSubmitted = await checkSubmitted();
 
-    closeLoadingPopup();
+    // closeLoadingPopup();
 
     if (hasSubmitted) {
       console.log("用戶已填寫過問卷");
@@ -876,7 +839,7 @@ async function checkExistingUser() {
     // 顯示驗證
     showVerifyDialog();
   } catch (error) {
-    closeLoadingPopup();
+    // closeLoadingPopup();
     console.error("檢查用戶狀態時發生錯誤:", error);
 
     // 錯誤時清除標記
@@ -891,11 +854,11 @@ async function onSubmit(data) {
     console.log("收到問卷數據:", data);
 
     loadingData.value = { message: "提交中..." };
-    showLoadingPopup.value = true;
+    // showLoadingPopup.value = true;
 
     const result = await submitData(data.answers);
 
-    closeLoadingPopup();
+    // closeLoadingPopup();
 
     if (result.status === "success") {
       showDialog({
@@ -917,7 +880,7 @@ async function onSubmit(data) {
     }
   } catch (error) {
     console.error("問卷提交錯誤:", error);
-    closeLoadingPopup();
+    // closeLoadingPopup();
 
     showDialog({
       icon: "error",
