@@ -33,27 +33,21 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref } from "vue";
-
-const emit = defineEmits(["startDivination", "goQues"]);
-const props = defineProps({
-  loginUrl: {
-    type: String,
-    required: true,
-  },
-  isLoggedIn: {
-    type: Boolean,
-    default: false,
-  },
-});
+import { ref, inject } from "vue";
 
 const showModal = ref(false);
 
+// 使用注入的狀態和方法
+const isLoggedIn = inject("isLoggedIn", ref(false));
+const loginUrl = inject("loginUrl", ref("#"));
+const startQuestionnaire = inject("startQuestionnaire", () => {});
+const goQues = inject("goQues", () => {});
+
 async function click() {
-  if (!props.isLoggedIn) {
+  if (!isLoggedIn.value) {
     showModal.value = true;
   } else {
-    await emit("goQues");
+    await goQues();
   }
 }
 
@@ -62,7 +56,7 @@ function close() {
 }
 
 async function confirm() {
-  await emit("startDivination");
+  await startQuestionnaire();
   close();
 }
 </script>
