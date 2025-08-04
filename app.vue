@@ -12,7 +12,6 @@
     <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
   </noscript>
 
-  <!-- 只在非 admin 頁面顯示導覽列 -->
   <Nav v-if="!isAdminPage" />
 
   <!-- 驗證彈窗 -->
@@ -85,7 +84,6 @@ function showDialog(options) {
 // 關閉彈窗的函數
 const closeUniversalPopup = () => {
   showUniversalPopup.value = false;
-  // 清理 Promise resolve 函數
   window._universalPopupResolve = null;
 };
 
@@ -162,7 +160,6 @@ function getCookieValue(name) {
 
 // 更新登入狀態 - 加入同步控制
 function updateLoginStatus() {
-  // 如果不允許同步，直接返回
   if (!allowLoginSync.value) {
     console.log("舊分頁，不同步登入狀態");
     return;
@@ -653,6 +650,15 @@ async function goQues() {
 
 // ==================== 生命週期 ====================
 onMounted(async () => {
+  // 檢查是否在 completed 頁面，如果是就跳過所有檢查
+  const isOnCompletedPage =
+    localStorage.getItem("pet2025_on_completed_page") === "true";
+  if (isOnCompletedPage) {
+    console.log("在完成頁面，跳過登入狀態檢查");
+    allowLoginSync.value = false;
+    return;
+  }
+
   // 檢查是否為從登入頁面返回
   const referrer = document.referrer;
   const isFromLoginPage = referrer.includes("member.udn.com/member/login.jsp");
@@ -746,24 +752,39 @@ async function handlePostLogin() {
       hasFlowToken: !!flowToken,
     });
 
-    // 核心安全檢查：必須同時具備三個條件
-    if (!justLoggedInFlag || !isNormalFlow || !flowToken) {
+    // 區分不同的錯誤情況
+    if (!justLoggedInFlag || !isNormalFlow) {
+      // 沒有正常流程標記 = 非正常進入
       console.log("檢測到非正常流程進入，立即登出");
 
-      // 清除所有可能的標記，防止重複使用
       localStorage.removeItem("pet2025_just_logged_in");
       localStorage.removeItem("pet2025_normal_flow");
       securityManager.clearAll();
-
-      // 立即強制完全登出
       performCompleteLogout();
 
-      // 同時顯示警告彈窗（不等待用戶確認）
       showDialog({
         icon: "warning",
         title: "請正常進入",
         text: "請從活動首頁點擊「開始填問卷」按鈕來參與活動。\n直接使用登入網址將無法參與。",
         confirmButtonText: "我知道了",
+        showCancelButton: false,
+      });
+
+      return;
+    } else if (!flowToken) {
+      // 有正常流程標記但令牌過期 = 停留時間過長
+      console.log("檢測到停留時間過長，令牌已過期");
+
+      localStorage.removeItem("pet2025_just_logged_in");
+      localStorage.removeItem("pet2025_normal_flow");
+      securityManager.clearAll();
+      performCompleteLogout();
+
+      showDialog({
+        icon: "warning",
+        title: "停留時間過長",
+        text: "由於安全考量，系統將重置狀態。請重新開始填寫流程。",
+        confirmButtonText: "確定",
         showCancelButton: false,
       });
 
@@ -929,12 +950,8 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  // background: url("/imgs/bg.jpg") top center;
   background: #ffd89b;
   background-repeat: no-repeat;
   font-family: "Noto Sans TC", sans-serif;
-  @media (max-width: 768px) {
-    // background: url("/imgs/m_bg.jpg") top center;
-  }
 }
 </style>

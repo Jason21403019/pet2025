@@ -44,14 +44,11 @@ async function onSubmit(data) {
     const result = await submitData(data.answers);
 
     if (result.status === "success") {
-      showDialog({
-        icon: "success",
-        title: "提交成功",
-        text: "感謝您的參與！",
-        confirmButtonText: "確定",
-        showCancelButton: false,
-      });
-      showQuestionnaire.value = false;
+      // 設置問卷完成標記
+      localStorage.setItem("pet2025_questionnaire_completed", "true");
+
+      // 跳轉到完成頁面
+      await navigateTo("/completed");
     } else {
       showDialog({
         icon: "error",
