@@ -59,8 +59,19 @@ const showVerificationPopup = ref(false);
 const showUniversalPopup = ref(false);
 const universalPopupData = ref({});
 
+// 簡化的防重複機制
+let isDialogOpen = false;
+
 // 創建統一的彈窗顯示函數
 function showDialog(options) {
+  // 如果已經有彈窗開啟，忽略新的彈窗請求
+  if (isDialogOpen) {
+    console.log("彈窗已開啟，忽略新請求");
+    return Promise.resolve({ isDismissed: true });
+  }
+
+  isDialogOpen = true;
+
   universalPopupData.value = {
     icon: options.icon || null,
     title: options.title || "",
@@ -84,23 +95,35 @@ function showDialog(options) {
 // 關閉彈窗的函數
 const closeUniversalPopup = () => {
   showUniversalPopup.value = false;
-  window._universalPopupResolve = null;
+  isDialogOpen = false;
+
+  if (window._universalPopupResolve) {
+    const resolve = window._universalPopupResolve;
+    window._universalPopupResolve = null;
+    resolve({ isDismissed: true, dismiss: "backdrop" });
+  }
 };
 
 const handleUniversalConfirm = () => {
   if (window._universalPopupResolve) {
     const resolve = window._universalPopupResolve;
-    window._universalPopupResolve = null; // 立即清理，防止重複調用
+    window._universalPopupResolve = null;
     resolve({ isConfirmed: true });
   }
+
+  showUniversalPopup.value = false;
+  isDialogOpen = false;
 };
 
 const handleUniversalCancel = () => {
   if (window._universalPopupResolve) {
     const resolve = window._universalPopupResolve;
-    window._universalPopupResolve = null; // 立即清理，防止重複調用
+    window._universalPopupResolve = null;
     resolve({ isDismissed: true, dismiss: "cancel" });
   }
+
+  showUniversalPopup.value = false;
+  isDialogOpen = false;
 };
 
 // Cloudflare Turnstile 配置
@@ -205,9 +228,6 @@ function checkNonNormalEntry() {
   if (!justLoggedInFlag && !isNormalFlow && !hasFlowToken) {
     console.log("檢測到非正常流程進入，立即強制登出並顯示警告");
 
-    // 立即強制登出
-    performCompleteLogout();
-
     // 顯示警告彈窗
     showDialog({
       icon: "warning",
@@ -216,11 +236,12 @@ function checkNonNormalEntry() {
       confirmButtonText: "我知道了",
       showCancelButton: false,
     });
-
-    return true; // 返回true表示應該攔截
+    // 立即強制登出
+    performCompleteLogout();
+    return true;
   }
 
-  return false; // 返回false表示正常流程
+  return false;
 }
 
 // ==================== Turnstile 機器人驗證 ====================
@@ -308,7 +329,6 @@ const securityManager = {
 
         const token = response.data.token;
         localStorage.setItem("pet2025_flow_token", token);
-        // 修改為3分鐘，加上2分鐘緩衝 = 總共5分鐘過期
         const expiryTime = Date.now() + 3 * 60 * 1000;
         localStorage.setItem("pet2025_flow_token_expiry", String(expiryTime));
 
@@ -326,7 +346,7 @@ const securityManager = {
         localStorage.getItem("pet2025_flow_token_expiry") || "0",
       );
 
-      const graceTime = 2 * 60 * 1000; // 保持2分鐘緩衝
+      const graceTime = 2 * 60 * 1000;
 
       if (expiryTime + graceTime < Date.now()) {
         console.warn("流程令牌已過期");
@@ -374,14 +394,12 @@ async function checkSubmitted() {
 
     console.log("問卷狀態檢查回應:", response.data);
 
-    // 修改檢查邏輯，對應後端的 completed 欄位
     if (
       response.data.status === "success" &&
       response.data.completed === true
     ) {
       console.log("資料庫確認：用戶已填寫過問卷");
 
-      // 先關閉loading彈窗，再顯示已填寫過的彈窗
       await showSubmittedDialog(response.data);
       return true;
     }
@@ -608,7 +626,7 @@ async function goQues() {
   try {
     console.log("用戶點擊前往填問卷");
 
-    // 首先檢查是否已經填寫過問卷
+    // 只需要檢查是否已經填寫過問卷
     const hasSubmitted = await checkSubmitted();
 
     if (hasSubmitted) {
@@ -616,32 +634,16 @@ async function goQues() {
       return;
     }
 
-    // 檢查是否有有效的流程令牌 - 不重新生成
-    const hasFlowToken = !!securityManager.flow.get();
-
-    if (!hasFlowToken) {
-      console.log("沒有流程令牌，顯示非正常流程警告");
-
-      showDialog({
-        icon: "warning",
-        title: "請使用正確的流程",
-        text: "請從活動首頁點擊「登入立即填問卷」按鈕來參與活動。\n直接使用登入網址將無法參與。",
-        confirmButtonText: "我知道了",
-        showCancelButton: false,
-      });
-      return;
-    }
-
-    // 發送事件給子組件
+    // 直接啟動問卷區塊
     window.dispatchEvent(new CustomEvent("questionnaire-start"));
-    console.log("=== 問卷流程完成 ===");
+    console.log("=== 移動到問卷區塊 ===");
   } catch (error) {
     console.error("前往填問卷錯誤:", error);
 
     showDialog({
       icon: "error",
       title: "系統錯誤",
-      text: "啟動問卷時發生錯誤，請稍後再試",
+      text: "移動到問卷時發生錯誤，請稍後再試",
       confirmButtonText: "確定",
       showCancelButton: false,
     });
@@ -650,7 +652,7 @@ async function goQues() {
 
 // ==================== 生命週期 ====================
 onMounted(async () => {
-  // 檢查是否在 completed 頁面，如果是就跳過所有檢查
+  // 檢查是否在 completed 頁面
   const isOnCompletedPage =
     localStorage.getItem("pet2025_on_completed_page") === "true";
   if (isOnCompletedPage) {
@@ -675,9 +677,24 @@ onMounted(async () => {
     referrer,
   });
 
-  // 判斷是否允許同步邏輯：
-  // 1. 有完整的正常流程標記（justLoggedIn + isNormalFlow + hasFlowToken）
-  // 2. 或者不是從登入頁面來但有正常流程標記（重新整理的情況）
+  // 🆕 優先處理非正常流程：從登入頁面回來但沒有正常流程標記
+  if (isFromLoginPage && !justLoggedIn && !isNormalFlow && !hasFlowToken) {
+    console.log("檢測到從登入頁面直接進入（非正常流程）");
+
+    // 檢查是否有登入 cookie
+    const udnmember = getCookieValue("udnmember");
+    const um2 = getCookieValue("um2");
+
+    if (udnmember && um2) {
+      console.log("有登入 cookie，執行非正常流程檢查");
+      checkNonNormalEntry(); // 直接調用，會顯示彈窗並強制登出
+    }
+
+    allowLoginSync.value = false;
+    return; // 結束處理
+  }
+
+  // 正常的 allowLoginSync 邏輯
   if (
     (justLoggedIn && isNormalFlow && hasFlowToken) ||
     (!isFromLoginPage && (isNormalFlow || hasFlowToken))

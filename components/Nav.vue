@@ -277,16 +277,11 @@ onMounted(() => {
 
   window.addEventListener("scroll", handleScroll);
 
-  // 使用注入的 updateLoginStatus
+  // 只執行一次初始檢查
   updateLoginStatus();
 
-  // 加入定期檢查登入狀態，與主頁面同步
-  const loginCheckInterval = setInterval(updateLoginStatus, 5000);
-
-  // 清理計時器
-  onBeforeUnmount(() => {
-    clearInterval(loginCheckInterval);
-  });
+  // 移除定時器，讓 app.vue 統一管理
+  // const loginCheckInterval = setInterval(updateLoginStatus, 5000); ❌
 });
 
 onBeforeUnmount(() => {
