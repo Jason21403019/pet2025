@@ -1,13 +1,27 @@
 <template>
-  <div class="prize-container">
-    <div class="prize-grid">
-      <div v-for="(prize, index) in prizes" :key="index" class="prize-card">
-        <div class="prize-image">
-          <img :src="prize.image" :alt="prize.title" />
+  <div class="prize">
+    <!-- 標題區塊 -->
+    <div class="prize__title">
+      <img
+        src="/imgs/prize_title.png"
+        alt="禮品區塊"
+        class="prize__title-img"
+      />
+    </div>
+
+    <!-- 禮品展示區域 -->
+    <div class="prize__items">
+      <div v-for="(item, index) in prizeItems" :key="index" class="prize__item">
+        <div class="prize__item-image">
+          <img
+            :src="`./imgs/prize${index + 1}.png`"
+            :alt="item.alt"
+            :class="`prize__image prize__image--${index + 1}`"
+          />
         </div>
-        <div class="prize-content">
-          <h3 class="prize-title">{{ prize.title }}</h3>
-          <p class="prize-subtitle">{{ prize.subtitle }}</p>
+        <div class="prize__item-text">
+          <div class="prize__item-text-top">{{ item.title }}</div>
+          <div class="prize__item-text-bottom">{{ item.subtitle }}</div>
         </div>
       </div>
     </div>
@@ -15,199 +29,238 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-// 獎品數據
-const prizes = ref([
+const prizeItems = [
   {
-    id: 1,
-    image: "./imgs/tv.png",
-    title: "星光劇院獎",
-    subtitle: "小米 65 吋LED 電視 | 1名",
+    title: "汪喵精選",
+    subtitle: "一年份貓砂",
+    alt: "汪喵精選一年份貓砂",
   },
   {
-    id: 2,
-    image: "./imgs/dyson.png",
-    title: "閃耀風光獎",
-    subtitle: "Dyson 二合一涼風空氣清淨機 | 2 名",
+    title: "汪喵精選",
+    subtitle: "一年份尿布墊",
+    alt: "汪喵精選一年份尿布墊",
   },
   {
-    id: 3,
-    image: "./imgs/barista.png",
-    title: "啡常幸運獎",
-    subtitle: "Barista C2+ 全自動義式咖啡機 | 1 名",
+    title: "榮獲IF設計獎",
+    subtitle: "多功能緩衝牽繩",
+    alt: "榮獲IF設計獎多功能緩衝牽繩",
   },
   {
-    id: 4,
-    image: "./imgs/wang1000.png",
-    title: "煙火食光獎",
-    subtitle: "王品集團 $1,000 即享券雙人 | 5 名",
+    title: "汪喵商城",
+    subtitle: "購物金$100",
+    alt: "汪喵商城購物金$100",
   },
-  {
-    id: 5,
-    image: "./imgs/linepoints5.png",
-    title: "轉運流星獎",
-    subtitle: "LINE POINTS 5點 | 1 萬組送完為止  ",
-  },
-  {
-    id: 6,
-    image: "./imgs/citycoffee.png",
-    title: "Line 好運加碼禮",
-    subtitle: "CITY CAFÉ 提貨券 | 50 名",
-  },
-]);
+];
 </script>
 
 <style lang="scss" scoped>
-.prize-container {
-  padding: 0px 0px 120px 0px;
-  max-width: 1200px;
+.prize {
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   @media (max-width: 1024px) {
-    padding-bottom: 80px;
+    padding-top: 100px;
   }
-  @media (max-width: 480px) {
-    padding-bottom: 40px;
-  }
-}
 
-.prize-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 25px;
-  @media (max-width: 1180px) {
-    gap: 20px;
-  }
   @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    padding: 100px 12px 0 12px;
   }
-  @media (max-width: 360px) {
-    gap: 12px;
+
+  @media (max-width: 480px) {
+    padding: 50px 12px 0 12px;
   }
-}
 
-.prize-card {
-  max-width: 100%;
-  border: 3px solid #d8ceff;
-  box-shadow: inset 0 0 50px 20px rgba(#8d46d6, 0.3);
-  background-color: rgba(#8d46d6, 0.2);
-  border-radius: 10px;
-  padding: 10px 10px 20px 10px;
-  text-align: center;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  &__title {
+    text-align: center;
+  }
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow:
-      inset 0 0 50px 20px rgba(#8d46d6, 0.4),
-      0 10px 25px rgba(#8d46d6, 0.2);
-    border-color: #c4b3ff;
+  &__title-img {
+    display: block;
+    width: 100%;
+    max-width: 290px;
+    height: auto;
 
-    .prize-image img {
+    @media (max-width: 1024px) {
+      max-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+      max-width: 300px;
+    }
+
+    @media (max-width: 480px) {
+      max-width: 200px;
+    }
+  }
+
+  &__items {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 25px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    transition: all 0.3s ease;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    // 第二張圖片（窄的）
+    &:nth-child(2) {
+      margin-left: -50px;
+    }
+
+    // 第三張圖片（寬的）
+    &:nth-child(3) {
+      margin-left: -30px;
+    }
+
+    // 第四張圖片（窄的）
+    &:nth-child(4) {
+      margin-left: -40px;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      margin-left: 0 !important;
+      margin-top: 20px;
+      align-items: center;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+
+      &:first-child {
+        margin-top: 0;
+        align-items: center;
+        justify-content: center;
+
+        .prize__image {
+          margin-left: 20px;
+        }
+      }
+
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(4) {
+        margin-left: 0 !important;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    &-image {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 10px;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    &-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      line-height: 1.2;
+      color: #2f75c9;
+
+      &-top {
+        font-size: 22px;
+        font-weight: 500;
+
+        @media (max-width: 1024px) {
+          font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 24px;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 20px;
+        }
+
+        @media (max-width: 360px) {
+          font-size: 18px;
+        }
+      }
+
+      &-bottom {
+        font-size: 22px;
+        font-weight: 700;
+
+        @media (max-width: 1024px) {
+          font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 24px;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 20px;
+        }
+
+        @media (max-width: 360px) {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  &__image {
+    object-fit: contain;
+    transition: all 0.3s ease;
+    display: block;
+
+    &:hover {
       transform: scale(1.05);
     }
-  }
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      45deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
-    transform: rotate(45deg);
-    transition: all 0.6s;
-    opacity: 0;
-  }
+    // 第一張圖片 - 貓砂 (284x240)
+    &--1 {
+      width: 289.5601px;
+      height: 207.6921px;
+    }
 
-  &:hover::before {
-    opacity: 1;
-    animation: shimmer 1.2s ease-in-out;
-  }
-}
+    // 第二張圖片 - 尿布墊 (202.69x246.13)
+    &--2 {
+      width: 202.6921px;
+      height: 246.1261px;
+    }
 
-.prize-image {
-  max-width: 100%;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 10px;
+    // 第三張圖片 - 牽繩 (289.56x202.69)
+    &--3 {
+      width: 289.5601px;
+      height: 207.6921px;
+    }
 
-  img {
-    width: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-  }
-}
-
-.prize-content {
-  .prize-title {
-    font-size: 40px;
-    font-weight: 400;
-    color: #fbcf47;
-    margin: 0 0 10px 0;
-    line-height: 1.2;
-    letter-spacing: 4px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    @media (max-width: 1180px) {
-      font-size: 32px;
-    }
-    @media (max-width: 992px) {
-      font-size: 28px;
-    }
-    @media (max-width: 870px) {
-      font-size: 24px;
-    }
-    @media (max-width: 640px) {
-      font-size: 20px;
-    }
-    @media (max-width: 480px) {
-      font-size: 18px;
-      letter-spacing: normal;
-    }
-    @media (max-width: 360px) {
-      font-size: 16px;
+    // 第四張圖片 - 購物金 (202.69x246.13)
+    &--4 {
+      width: 202.6921px;
+      height: 246.1261px;
     }
   }
-
-  .prize-subtitle {
-    font-size: 18px;
-    color: #fff;
-    margin: 0 auto;
-    line-height: 1.5;
-    display: inline-block;
-    @media (max-width: 480px) {
-      font-size: 14px;
-    }
-    @media (max-width: 360px) {
-      font-size: 12px;
-    }
-  }
-}
-
-// 閃爍動畫
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
-}
-.footer {
-  width: 100%;
-  background: url("./imgs/footer_bg.png") no-repeat center center;
-  height: 772px;
 }
 </style>

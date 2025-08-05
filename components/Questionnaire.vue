@@ -705,27 +705,49 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .ques {
-  margin-top: 80px;
   width: 100%;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-  padding: 40px 20px;
+  padding: 0px 20px;
   box-sizing: border-box;
+  // border: 1px solid red;
 }
 
 .ques__wrap {
-  max-width: 800px;
+  width: 900px; // 固定寬度900px
+  height: 785px; // 固定高度785px
   margin: 0 auto;
   background: white;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow-y: auto; // 允許垂直滾動
+  overflow-x: hidden; // 隱藏水平滾動
+  display: flex;
+  flex-direction: column;
+
+  // 響應式調整
+  @media (max-width: 950px) {
+    width: 95%;
+    max-width: 900px;
+  }
+
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: 600px;
+  }
 }
 
 .ques__head {
-  background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+  background-image: url("/imgs/quezheadbg.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   color: white;
-  padding: 40px 30px;
+  height: 165px;
+  padding: 0 30px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .ques__title {
@@ -736,7 +758,7 @@ onMounted(() => {
 }
 
 .ques__sub {
-  font-size: 16px;
+  font-size: 18px;
   margin: 0;
   opacity: 0.9;
   line-height: 1.5;
@@ -744,6 +766,12 @@ onMounted(() => {
 
 .ques__form {
   padding: 40px 30px;
+  flex: 1;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+  }
 }
 
 .ques__list {

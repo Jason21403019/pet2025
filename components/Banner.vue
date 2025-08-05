@@ -2,7 +2,11 @@
   <div class="banner">
     <div class="banner__content">
       <button class="banner__trigger-area" @click="click">
-        {{ isLoggedIn ? "前往填問卷" : "登入立即填問卷" }}
+        <img
+          :src="isLoggedIn ? './imgs/goquz_btn.png' : './imgs/login_btn.png'"
+          :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
+          class="banner__button-image"
+        />
       </button>
     </div>
 
@@ -36,8 +40,6 @@
 import { ref, inject } from "vue";
 
 const showModal = ref(false);
-
-// 使用注入的狀態和方法
 const isLoggedIn = inject("isLoggedIn", ref(false));
 const loginUrl = inject("loginUrl", ref("#"));
 const startQuestionnaire = inject("startQuestionnaire", () => {});
@@ -63,10 +65,30 @@ async function confirm() {
 
 <style lang="scss">
 .banner {
+  // border: 1px solid red;
+  background-image: url("/imgs/banner_bg.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center 0;
   width: 100%;
+  aspect-ratio: 16 / 8;
+  padding-top: 80px;
   position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
+
+  @media (max-width: 1513px) {
+    // background-position: center -40px;
+  }
+  @media (max-width: 992px) {
+    // background-position: center -20px;
+  }
+
+  @media (max-width: 768px) {
+    padding-top: 70px;
+  }
+
+  @media (max-width: 480px) {
+    padding-top: 65px;
+  }
 
   &__content {
     position: absolute;
@@ -79,18 +101,14 @@ async function confirm() {
 
   &__trigger-area {
     position: absolute;
-    right: 18.4%;
-    top: 37.8%;
+    right: 40%;
+    top: 52%;
     width: 30%;
-    max-width: 250px;
-    border-radius: 50%;
-    aspect-ratio: 1 / 1;
+    max-width: 330px;
     cursor: pointer;
-    border: 2px solid rgb(255, 255, 255);
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
+    border: none;
+    background: transparent;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,29 +116,106 @@ async function confirm() {
     transition: all 0.3s ease;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.5);
       transform: scale(1.05);
     }
 
-    @media (max-width: 1535px) {
-      right: 17.7%;
-      top: 36%;
-      width: 15%;
-      min-width: 80px;
-      font-size: 14px;
+    @media (max-width: 1800px) {
+      right: 40%;
+      top: 51.8%;
+      width: 28%;
+      max-width: 320px;
+    }
+
+    @media (max-width: 1700px) {
+      right: 40%;
+      top: 51.6%;
+      width: 26%;
+      max-width: 310px;
+    }
+
+    @media (max-width: 1600px) {
+      right: 40.6%;
+      top: 50.4%;
+      width: 17%;
+      max-width: 300px;
+    }
+
+    @media (max-width: 1500px) {
+      right: 40.8%;
+      top: 54.1%;
+      width: 17%;
+      max-width: 290px;
+    }
+
+    @media (max-width: 1400px) {
+      right: 40.5%;
+      top: 54%;
+      width: 17%;
+      max-width: 280px;
+    }
+
+    @media (max-width: 1300px) {
+      right: 41%;
+      top: 52.8%;
+      width: 17%;
+      max-width: 270px;
+    }
+
+    @media (max-width: 1200px) {
+      right: 40.5%;
+      top: 52.8%;
+      width: 17%;
+      max-width: 260px;
+    }
+
+    @media (max-width: 1100px) {
+      right: 40.5%;
+      top: 51.9%;
+      width: 17%;
+      max-width: 250px;
+    }
+
+    @media (max-width: 1000px) {
+      right: 40.5%;
+      top: 50.2%;
+      width: 17%;
+      max-width: 240px;
+    }
+
+    @media (max-width: 992px) {
+      right: 41%;
+      top: 55%;
+      width: 17%;
+      max-width: 230px;
+    }
+
+    @media (max-width: 800px) {
+      right: 40.6%;
+      top: 54.8%;
+      width: 17%;
+      max-width: 220px;
     }
 
     @media (max-width: 768px) {
-      top: 56.6%;
-      right: 35.4%;
-      width: 28%;
-      min-width: 60px;
-      font-size: 12px;
+      right: 42%;
+      top: 49.5%;
+      width: 17%;
+      max-width: 200px;
+    }
+  }
+
+  &__button-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+
+    .banner__trigger-area:hover & {
+      transform: scale(1.02);
     }
   }
 }
 
-// 彈窗樣式
 .modal-overlay {
   position: fixed;
   top: 0;

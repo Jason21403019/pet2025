@@ -12,8 +12,6 @@
     <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
   </noscript>
 
-  <Nav v-if="!isAdminPage" />
-
   <!-- 驗證彈窗 -->
   <Verification_popup
     :is-visible="showVerificationPopup"
@@ -40,8 +38,8 @@ import Verification_popup from "./components/Verification_popup.vue";
 import Universal_popup from "./components/Universal_popup.vue";
 
 // 檢查當前路由是否為 admin 頁面
-const route = useRoute();
-const isAdminPage = computed(() => route.name === "admin");
+// const route = useRoute();
+// const isAdminPage = computed(() => route.name === "admin");
 
 // ==================== 基本狀態管理 ====================
 const config = useRuntimeConfig();
@@ -966,9 +964,8 @@ provide("isDevelopment", isDevelopment);
 html {
   scroll-behavior: smooth;
 }
+
 body {
-  background: #ffd89b;
-  background-repeat: no-repeat;
   font-family: "Noto Sans TC", sans-serif;
 }
 </style>

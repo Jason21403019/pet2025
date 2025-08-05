@@ -1,11 +1,19 @@
 <template>
-  <Banner />
-  <div class="questionnaire-container">
-    <!-- 問卷組件 -->
-    <Questionnaire
-      v-if="showQuestionnaire"
-      @questionnaire-completed="onSubmit"
-    />
+  <div class="index-page">
+    <!-- 添加 Nav 組件 -->
+    <Nav />
+    <Banner />
+    <div
+      class="questionnaire-container"
+      :class="{ 'questionnaire-container--visible': showQuestionnaire }"
+    >
+      <Questionnaire
+        v-if="showQuestionnaire"
+        @questionnaire-completed="onSubmit"
+      />
+    </div>
+    <Prize />
+    <Act_area />
   </div>
 </template>
 
@@ -13,7 +21,9 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, inject } from "vue";
 import Banner from "../components/Banner.vue";
 import Questionnaire from "../components/Questionnaire.vue";
-
+import Nav from "../components/Nav.vue";
+import Prize from "../components/Prize.vue";
+import Act_area from "../components/Act_area.vue";
 // 使用注入的狀態和方法
 const showDialog = inject("showDialog", () => {});
 const submitData = inject("submitData", () => {});
@@ -97,8 +107,27 @@ function scrollToQues() {
 </script>
 
 <style lang="scss" scoped>
+.index-page {
+  min-height: 90vh;
+  background-image: url("/imgs/body_bg.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+}
+
 .questionnaire-container {
-  min-height: 100vh;
   padding: 20px;
+  background: transparent;
+  min-height: 0;
+  transition: all 0.3s ease;
+
+  &--visible {
+    min-height: 90vh;
+  }
+}
+
+#__nuxt {
+  position: relative;
+  z-index: 1;
 }
 </style>
