@@ -1,5 +1,5 @@
 <template>
-  <div class="ques" v-if="isVisible">
+  <section class="ques" v-if="isVisible">
     <div class="ques__wrap">
       <!-- 問卷標題 -->
       <div class="ques__head">
@@ -141,7 +141,7 @@
         </div>
       </form>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
@@ -706,7 +706,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .ques {
   width: 100%;
-  padding: 0px 20px;
+  padding: 20px 12px 0px 12px;
   box-sizing: border-box;
   // border: 1px solid red;
 }

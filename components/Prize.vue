@@ -1,5 +1,5 @@
 <template>
-  <div class="prize">
+  <section class="prize">
     <!-- 標題區塊 -->
     <div class="prize__title">
       <img
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
@@ -55,6 +55,7 @@ const prizeItems = [
 
 <style lang="scss" scoped>
 .prize {
+  padding: 0 12px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

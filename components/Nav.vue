@@ -1,89 +1,93 @@
 <template>
   <nav class="navbar">
-    <div
-      class="navbar__content"
-      :class="{ 'navbar__content--scrolled': isScrolled }"
-    >
-      <!-- 左邊: Logo區域 -->
-      <div class="navbar__left">
-        <NuxtLink
-          to="https://udn.com/news/index"
-          target="_blank"
-          class="navbar__udn-logo"
-        >
-          <img
-            src="/imgs/udn_logo.svg"
-            alt="udn_Logo"
-            class="navbar__udn-logo-image"
-          />
-        </NuxtLink>
-        <div class="navbar__pet-logo">
-          <img
-            src="/imgs/petBlog_logo.svg"
-            alt="petBlog_Logo"
-            class="navbar__pet-logo-image"
-          />
+    <Nav_container>
+      <div
+        class="navbar__content"
+        :class="{ 'navbar__content--scrolled': isScrolled }"
+      >
+        <!-- 左邊: Logo區域 -->
+        <div class="navbar__left">
+          <NuxtLink
+            to="https://udn.com/news/index"
+            target="_blank"
+            class="navbar__udn-logo"
+          >
+            <img
+              src="/imgs/udn_logo.svg"
+              alt="udn_Logo"
+              class="navbar__udn-logo-image"
+            />
+          </NuxtLink>
+          <div class="navbar__pet-logo">
+            <img
+              src="/imgs/petBlog_logo.svg"
+              alt="petBlog_Logo"
+              class="navbar__pet-logo-image"
+            />
+          </div>
+        </div>
+
+        <!-- 中間: 導航連結區域 (桌機版) -->
+        <div class="navbar__center">
+          <button
+            @click="logout"
+            class="navbar__logout"
+            aria-label="登出"
+            v-if="isLoggedIn"
+          >
+            登出
+          </button>
+          <NuxtLink to="/" class="navbar__link">首頁</NuxtLink>
+          <NuxtLink to="#activity" class="navbar__link">活動辦法</NuxtLink>
+        </div>
+
+        <!-- 右邊: Social Links -->
+        <div class="navbar__right">
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025"
+            target="_blank"
+            class="navbar__social-link navbar__social-link--facebook"
+            aria-label="分享到臉書"
+          >
+            <img
+              src="/imgs/fb_logo.svg"
+              alt="fb_Logo"
+              class="navbar__social-icon"
+            />
+          </a>
+          <a
+            href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025&text=%E5%BF%AB%E4%BE%86%E5%B9%B8%E7%A6%8F%E8%8A%B1%E7%81%AB%E8%BD%89%E4%B8%80%E5%A4%8F%EF%BC%81%E7%9C%8B%E7%9C%8B%E4%BD%A0%E6%9C%83%E6%8A%BD%E5%88%B0%E4%BB%80%E9%BA%BA%E7%85%99%E7%81%AB%EF%BC%81"
+            target="_blank"
+            class="navbar__social-link navbar__social-link--line"
+            aria-label="分享到LINE"
+          >
+            <img
+              src="/imgs/line_logo.svg"
+              alt="line_Logo"
+              class="navbar__social-icon"
+            />
+          </a>
         </div>
       </div>
 
-      <!-- 中間: 導航連結區域 (桌機版) -->
-      <div class="navbar__center">
+      <!-- 手機版: 導航連結區域 -->
+      <div class="navbar__mobile-nav">
         <button
           @click="logout"
-          class="navbar__logout"
+          class="navbar__logout navbar__logout--mobile"
           aria-label="登出"
           v-if="isLoggedIn"
         >
           登出
         </button>
-        <NuxtLink to="/" class="navbar__link">首頁</NuxtLink>
-        <NuxtLink to="#activity" class="navbar__link">活動辦法</NuxtLink>
-      </div>
-
-      <!-- 右邊: Social Links -->
-      <div class="navbar__right">
-        <a
-          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025"
-          target="_blank"
-          class="navbar__social-link navbar__social-link--facebook"
-          aria-label="分享到臉書"
+        <NuxtLink to="/" class="navbar__link navbar__link--mobile"
+          >首頁</NuxtLink
         >
-          <img
-            src="/imgs/fb_logo.svg"
-            alt="fb_Logo"
-            class="navbar__social-icon"
-          />
-        </a>
-        <a
-          href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025&text=%E5%BF%AB%E4%BE%86%E5%B9%B8%E7%A6%8F%E8%8A%B1%E7%81%AB%E8%BD%89%E4%B8%80%E5%A4%8F%EF%BC%81%E7%9C%8B%E7%9C%8B%E4%BD%A0%E6%9C%83%E6%8A%BD%E5%88%B0%E4%BB%80%E9%BA%BA%E7%85%99%E7%81%AB%EF%BC%81"
-          target="_blank"
-          class="navbar__social-link navbar__social-link--line"
-          aria-label="分享到LINE"
+        <NuxtLink to="#activity" class="navbar__link navbar__link--mobile"
+          >活動辦法</NuxtLink
         >
-          <img
-            src="/imgs/line_logo.svg"
-            alt="line_Logo"
-            class="navbar__social-icon"
-          />
-        </a>
       </div>
-    </div>
-
-    <!-- 手機版: 導航連結區域 (在logo和social下方) -->
-    <div class="navbar__mobile-nav">
-      <button
-        @click="logout"
-        class="navbar__logout navbar__logout--mobile"
-        aria-label="登出"
-        v-if="isLoggedIn"
-      >
-        登出
-      </button>
-      <NuxtLink to="/" class="navbar__link navbar__link--mobile">首頁</NuxtLink>
-      <NuxtLink to="#activity" class="navbar__link navbar__link--mobile"
-        >活動辦法</NuxtLink
-      >
-    </div>
+    </Nav_container>
   </nav>
 </template>
 
@@ -129,10 +133,12 @@ onBeforeUnmount(() => {
   background-color: transparent;
   box-shadow: none;
   width: 100%;
-  padding: 8px 0;
+  max-width: 1920px;
+  margin: 0 auto;
   position: fixed;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
 
   &__content {
@@ -189,7 +195,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  // 右邊Social區域
+  // 右邊Social區域 - 移除 padding-right，因為現在由外層處理
   &__right {
     display: flex;
     align-items: center;
@@ -199,16 +205,10 @@ onBeforeUnmount(() => {
 
     @media (max-width: 992px) {
       gap: 12px;
-      padding-right: 12px;
-    }
-
-    @media (max-width: 768px) {
-      padding-right: 12px;
     }
 
     @media (max-width: 480px) {
       gap: 8px;
-      padding-right: 12px;
     }
   }
 
@@ -307,7 +307,7 @@ onBeforeUnmount(() => {
     background: transparent;
     color: #2f75c9;
     border: 2px solid #2f75c9;
-    padding: 8px 16px;
+    padding: 8px 24px;
     border-radius: 30px;
     font-size: 16px;
     font-weight: 400;
@@ -342,7 +342,7 @@ onBeforeUnmount(() => {
     font-weight: 400;
     transition: all 0.3s ease;
     position: relative;
-    padding: 10px 16px;
+    padding: 8px 24px;
     border-radius: 30px;
     white-space: nowrap;
     border: 2px solid #2f75c9;

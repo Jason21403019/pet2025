@@ -14,6 +14,7 @@
     </div>
     <Prize />
     <Act_area />
+    <Footer />
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import Questionnaire from "../components/Questionnaire.vue";
 import Nav from "../components/Nav.vue";
 import Prize from "../components/Prize.vue";
 import Act_area from "../components/Act_area.vue";
+import Footer from "../components/Footer.vue";
 // 使用注入的狀態和方法
 const showDialog = inject("showDialog", () => {});
 const submitData = inject("submitData", () => {});

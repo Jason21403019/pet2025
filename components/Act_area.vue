@@ -178,9 +178,12 @@
       </div>
     </div>
   </section>
+  <Notice_popup />
 </template>
 
 <script setup>
+import Notice_popup from "./Notice_popup.vue";
+
 onMounted(() => {
   const handleAnchorClick = (e) => {
     const href = e.target.getAttribute("href");
@@ -211,7 +214,6 @@ onMounted(() => {
   .act-area__container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 12px;
     padding-top: 80px;
     @media (max-width: 1024px) {
       padding-top: 80px;
@@ -299,13 +301,6 @@ onMounted(() => {
 
   .act-area__rules {
     width: 100%;
-    margin-bottom: 140px;
-    @media (max-width: 1024px) {
-      margin-bottom: 80px;
-    }
-    @media (max-width: 480px) {
-      margin-bottom: 40px;
-    }
 
     h3 {
       color: #0c3d6d;

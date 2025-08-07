@@ -3,7 +3,7 @@
     <div class="banner__content">
       <button class="banner__trigger-area" @click="click">
         <img
-          :src="isLoggedIn ? './imgs/goquz_btn.png' : './imgs/login_btn.png'"
+          :src="isLoggedIn ? './imgs/goquez.png' : './imgs/login.png'"
           :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
           class="banner__button-image"
         />
@@ -65,22 +65,15 @@ async function confirm() {
 
 <style lang="scss">
 .banner {
-  // border: 1px solid red;
-  background-image: url("/imgs/banner_bg.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center 0;
+  // 先註解掉原本的背景圖
+  // background-image: url("/imgs/banner_bg.png");
+  // background-size: contain;
+  // background-repeat: no-repeat;
+  // background-position: center -30px;
+
   width: 100%;
   aspect-ratio: 16 / 8;
-  padding-top: 80px;
   position: relative;
-
-  @media (max-width: 1513px) {
-    // background-position: center -40px;
-  }
-  @media (max-width: 992px) {
-    // background-position: center -20px;
-  }
 
   @media (max-width: 768px) {
     padding-top: 70px;
@@ -100,11 +93,13 @@ async function confirm() {
   }
 
   &__trigger-area {
+    // 簡化按鈕定位，因為新圖片包含背景
     position: absolute;
-    right: 40%;
-    top: 52%;
-    width: 30%;
-    max-width: 330px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 69%;
+    height: 100%;
     cursor: pointer;
     border: none;
     background: transparent;
@@ -113,95 +108,23 @@ async function confirm() {
     align-items: center;
     justify-content: center;
     text-align: center;
-    transition: all 0.3s ease;
 
-    &:hover {
-      transform: scale(1.05);
-    }
+    // 註解掉原本複雜的響應式定位
+    // @media (max-width: 1800px) {
+    //   right: 40%;
+    //   top: 51.8%;
+    //   width: 28%;
+    //   max-width: 320px;
+    // }
 
-    @media (max-width: 1800px) {
-      right: 40%;
-      top: 51.8%;
-      width: 28%;
-      max-width: 320px;
-    }
+    // @media (max-width: 1700px) {
+    //   right: 40%;
+    //   top: 51.6%;
+    //   width: 26%;
+    //   max-width: 310px;
+    // }
 
-    @media (max-width: 1700px) {
-      right: 40%;
-      top: 51.6%;
-      width: 26%;
-      max-width: 310px;
-    }
-
-    @media (max-width: 1600px) {
-      right: 40.6%;
-      top: 50.4%;
-      width: 17%;
-      max-width: 300px;
-    }
-
-    @media (max-width: 1500px) {
-      right: 40.8%;
-      top: 54.1%;
-      width: 17%;
-      max-width: 290px;
-    }
-
-    @media (max-width: 1400px) {
-      right: 40.5%;
-      top: 54%;
-      width: 17%;
-      max-width: 280px;
-    }
-
-    @media (max-width: 1300px) {
-      right: 41%;
-      top: 52.8%;
-      width: 17%;
-      max-width: 270px;
-    }
-
-    @media (max-width: 1200px) {
-      right: 40.5%;
-      top: 52.8%;
-      width: 17%;
-      max-width: 260px;
-    }
-
-    @media (max-width: 1100px) {
-      right: 40.5%;
-      top: 51.9%;
-      width: 17%;
-      max-width: 250px;
-    }
-
-    @media (max-width: 1000px) {
-      right: 40.5%;
-      top: 50.2%;
-      width: 17%;
-      max-width: 240px;
-    }
-
-    @media (max-width: 992px) {
-      right: 41%;
-      top: 55%;
-      width: 17%;
-      max-width: 230px;
-    }
-
-    @media (max-width: 800px) {
-      right: 40.6%;
-      top: 54.8%;
-      width: 17%;
-      max-width: 220px;
-    }
-
-    @media (max-width: 768px) {
-      right: 42%;
-      top: 49.5%;
-      width: 17%;
-      max-width: 200px;
-    }
+    // ... 其他 media queries 也先註解掉
   }
 
   &__button-image {
@@ -209,13 +132,10 @@ async function confirm() {
     height: auto;
     object-fit: contain;
     transition: all 0.3s ease;
-
-    .banner__trigger-area:hover & {
-      transform: scale(1.02);
-    }
   }
 }
 
+// 保留彈窗樣式不變
 .modal-overlay {
   position: fixed;
   top: 0;
