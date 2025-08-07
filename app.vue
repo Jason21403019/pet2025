@@ -28,6 +28,15 @@
     @cancel="handleUniversalCancel"
   />
 
+  <!-- 已填寫問卷彈窗 -->
+  <Already_played_popup
+    :is-visible="showAlreadyPlayedPopup"
+    :already-played-data="alreadyPlayedData"
+    :total-play-count="totalPlayCount"
+    :is-development="isDevelopment"
+    @close="showAlreadyPlayedPopup = false"
+  />
+
   <NuxtPage />
 </template>
 
@@ -36,6 +45,7 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import axios from "axios";
 import Verification_popup from "./components/Verification_popup.vue";
 import Universal_popup from "./components/Universal_popup.vue";
+import Already_played_popup from "./components/Already_played_popup.vue";
 
 // 檢查當前路由是否為 admin 頁面
 // const route = useRoute();
@@ -56,6 +66,9 @@ const loadingData = ref({});
 const showVerificationPopup = ref(false);
 const showUniversalPopup = ref(false);
 const universalPopupData = ref({});
+const showAlreadyPlayedPopup = ref(false); // 新增：已填寫問卷彈窗狀態
+const alreadyPlayedData = ref({}); // 新增：已填寫問卷數據
+const totalPlayCount = ref(0); // 新增：總遊戲次數
 
 // 簡化的防重複機制
 let isDialogOpen = false;
@@ -425,23 +438,13 @@ async function checkSubmitted() {
   }
 }
 
-// 顯示已填寫過問卷的彈窗
+// 修改showSubmittedDialog函數，改用Already_played_popup組件
 async function showSubmittedDialog(data) {
-  let message = "您已經填寫過問卷了，感謝您的參與！";
+  // 設定已填寫問卷的數據
+  alreadyPlayedData.value = data;
 
-  // 如果有填寫時間，顯示更詳細的訊息
-  if (data.created_at) {
-    const submitDate = new Date(data.created_at).toLocaleString("zh-TW");
-    message = `您已經在 ${submitDate} 填寫過問卷了\n\n每位會員在活動期間只能填寫一次問卷\n感謝您的參與！`;
-  }
-
-  await showDialog({
-    icon: "info",
-    title: "問卷已填寫",
-    text: message,
-    confirmButtonText: "確定",
-    showCancelButton: false,
-  });
+  // 顯示已填寫問卷彈窗
+  showAlreadyPlayedPopup.value = true;
 }
 
 // ==================== 流程控制函數 ====================
@@ -945,6 +948,7 @@ provide("isTurnstileVerified", isTurnstileVerified);
 provide("securityManager", securityManager);
 provide("getCookieValue", getCookieValue);
 provide("sanitizeInput", sanitizeInput);
+provide("showAlreadyPlayedPopup", showAlreadyPlayedPopup);
 
 // 開發環境檢查
 const isDevelopment = computed(() => {

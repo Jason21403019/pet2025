@@ -131,7 +131,7 @@ const closeModal = () => {
   setTimeout(() => {
     isClosing.value = false;
     isPopupVisible.value = false;
-  }, 300);
+  });
 };
 </script>
 
@@ -198,8 +198,8 @@ const closeModal = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    background-color: rgba(168, 168, 168, 0.2);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -213,8 +213,12 @@ const closeModal = () => {
   }
 
   &__popup {
-    background: linear-gradient(to bottom, #05026a, #4a46fc);
-    border: 3px solid #d8ceff;
+    background: #2f75c9;
+    background-image: url("/imgs/noticePopup_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
     border-radius: 25px;
     max-width: 1060px;
     max-height: 700px;
@@ -231,29 +235,20 @@ const closeModal = () => {
     @media (max-width: 360px) {
       padding: 10px;
     }
-    &::before {
-      content: "";
-      position: absolute;
-      width: 80%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: rgba($color: #fff, $alpha: 0.05);
-    }
   }
 
   &__popup-inner {
     position: relative;
     padding: 60px 50px;
     border-radius: 20px;
-    border: 2px solid #577cff;
+    border: none;
     z-index: 0;
     @media (max-width: 768px) {
       padding: 40px 30px;
     }
     @media (max-width: 480px) {
       padding: 30px 20px;
-      border: 2px solid #06056a;
+      border: none;
     }
     @media (max-width: 360px) {
       padding: 20px 10px;
@@ -262,12 +257,12 @@ const closeModal = () => {
 
   &__close-btn {
     position: absolute;
-    top: -12px;
-    right: -12px;
+    top: -71px;
+    right: -18px;
     width: 40px;
     height: 40px;
     border: none;
-    background: linear-gradient(to bottom, #fe88f6, #fe32d9);
+    background: #89bcef;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -276,18 +271,10 @@ const closeModal = () => {
     transition: all 0.2s ease;
     color: white;
     z-index: 10;
-    @media (max-width: 480px) {
-      top: -32px;
-      right: -32px;
-    }
-    @media (max-width: 360px) {
-      top: -24px;
-      right: -24px;
-    }
 
     &:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(254, 50, 217, 0.4);
+      box-shadow: 0 4px 12px rgba(137, 188, 239, 0.4);
     }
   }
 
@@ -295,8 +282,8 @@ const closeModal = () => {
     margin-bottom: 20px;
     font-size: 30px;
     font-weight: bold;
-    color: #fbcf47;
-    text-align: left;
+    color: white;
+    text-align: center;
     @media (max-width: 480px) {
       font-size: 24px;
     }
@@ -325,26 +312,35 @@ const closeModal = () => {
     }
 
     &::-webkit-scrollbar {
-      width: 8px;
+      width: 12px;
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-track:vertical {
+      background: linear-gradient(
+        to right,
+        transparent 3px,
+        #89bcef 3px,
+        #89bcef 9px,
+        transparent 9px
+      );
     }
 
     &::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #577cff, #06056a);
-      border-radius: 4px;
+      background: #fbed1d;
+      border-radius: 6px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(to bottom, #7a9aff, #0a0a8a);
+      background: #f5e047;
     }
   }
 
   &__list {
-    list-style: disc;
+    list-style: none; // 移除原本的disc
     padding-left: 25px;
   }
 
@@ -355,13 +351,37 @@ const closeModal = () => {
     line-height: 1.6;
     position: relative;
     counter-increment: list-counter;
+    padding-left: 25px; // 為圖標留出空間
+
+    // 用 before 偽元素添加圖標
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: calc(10px + 0.4em); // 修改：調整到與文字基線對齊的位置
+      width: 16px;
+      height: 16px;
+      background-image: url("/imgs/popupList_icon.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
 
     &:first-child {
       padding-top: 0;
+
+      &::before {
+        top: 0.4em; // 修改：第一個項目也用相同的基線對齊
+      }
     }
 
     @media (max-width: 480px) {
       font-size: 16px;
+
+      &::before {
+        width: 14px;
+        height: 14px;
+      }
     }
 
     :deep(.activity-name) {

@@ -205,7 +205,7 @@ const closeModal = () => {
   setTimeout(() => {
     isClosing.value = false;
     emit("close");
-  }, 300);
+  });
 };
 
 const handleOverlayClick = () => {
@@ -233,20 +233,14 @@ const handleCancel = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(15px);
+    background-color: rgba(168, 168, 168, 0.2);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     padding: 12px;
     animation: overlayFadeIn 0.3s ease-out;
-    @media (max-width: 640px) {
-      padding: 32px;
-    }
-    @media (max-width: 380px) {
-      padding: 22px;
-    }
 
     &--closing {
       animation: overlayFadeOut 0.3s ease-out;
@@ -254,10 +248,19 @@ const handleCancel = () => {
   }
 
   &__popup {
-    background: linear-gradient(to bottom, #05026a, #4a46fc);
-    border-radius: 10px;
-    max-width: 600px;
-    max-height: 80vh;
+    background: #2f75c9;
+    background-image: url("/imgs/noticePopup_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 25px;
+    min-width: 300px;
+    max-width: 800px;
+    width: fit-content;
+    min-height: 200px;
+    max-height: 500px;
+    height: fit-content;
     position: relative;
     animation: modalBounceIn 0.3s ease-out;
     padding: 20px;
@@ -266,75 +269,43 @@ const handleCancel = () => {
       animation: modalBounceOut 0.25s ease-in;
     }
 
-    @media (max-width: 480px) {
-      border: none;
-      max-width: 95vw;
-    }
-    @media (max-width: 360px) {
-      padding: 10px;
+    @media (max-width: 768px) {
+      min-width: 280px;
+      max-width: 90vw;
+      min-height: 180px;
+      max-height: 80vh;
     }
 
-    &::before {
-      content: "";
-      position: absolute;
-      width: 80%;
-      height: 100%;
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      top: 0;
-      left: 0;
-      background: rgba(255, 255, 255, 0.05);
+    @media (max-width: 480px) {
+      min-width: 250px;
+      max-width: 95vw;
+      min-height: 160px;
+      max-height: 75vh;
+      border: none;
     }
-    &::after {
-      content: url("../imgs/right_ribbons.png");
-      position: absolute;
-      top: 170px;
-      right: -30px;
-      @media (max-width: 460px) {
-        top: 140px;
-        right: -20px;
-        z-index: 1004;
-      }
+
+    @media (max-width: 360px) {
+      padding: 10px;
+      min-width: 220px;
+      min-height: 140px;
     }
   }
 
   &__popup-inner {
     position: relative;
-    padding: 10px 40px;
-    border-radius: 10px;
-    z-index: 1;
-    border: 2px solid #577bff52;
-
-    &::before {
-      content: url("../imgs/left_circle.png");
-      position: absolute;
-      top: 220px;
-      left: -40px;
-      @media (max-width: 460px) {
-        top: 180px;
-        left: -30px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      padding: 30px 20px;
-    }
-    @media (max-width: 480px) {
-      padding: 25px 15px;
-    }
-    @media (max-width: 360px) {
-      padding: 20px 10px;
-    }
+    border-radius: 20px;
+    border: none;
+    z-index: 0;
   }
 
   &__close-btn {
     position: absolute;
-    top: -26px;
-    right: -32px;
+    top: -71px;
+    right: -18px;
     width: 40px;
     height: 40px;
     border: none;
-    background: linear-gradient(to bottom, #fe88f6, #fe32d9);
+    background: #89bcef;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -344,20 +315,9 @@ const handleCancel = () => {
     color: white;
     z-index: 10;
 
-    @media (max-width: 480px) {
-      top: -20px;
-      right: -20px;
-    }
-    @media (max-width: 410px) {
-      width: 36px;
-      height: 36px;
-      top: -25px;
-      right: -23px;
-    }
-
     &:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(254, 50, 217, 0.4);
+      box-shadow: 0 4px 12px rgba(137, 188, 239, 0.4);
     }
   }
 
@@ -368,24 +328,13 @@ const handleCancel = () => {
     align-items: center;
     text-align: center;
     color: #fff;
-    padding: 20px 0;
-
-    &::before {
-      content: url("../imgs/left_ribbons.png");
-      position: absolute;
-      top: 80px;
-      left: -35px;
-      @media (max-width: 460px) {
-        left: -30px;
-      }
-      @media (max-width: 360px) {
-        top: 60px;
-      }
-    }
+    padding: 10px 0; // 減少padding
+    width: 100%;
   }
 
   &__icon {
-    margin-bottom: 20px;
+    margin-bottom: 15px; // 減少間距
+    flex-shrink: 0; // 防止圖標被壓縮
 
     &--success svg {
       filter: drop-shadow(0 0 10px rgba(82, 196, 26, 0.3));
@@ -401,84 +350,94 @@ const handleCancel = () => {
   }
 
   &__title {
-    font-size: 28px;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    color: #f8dfb2;
+    font-size: 24px; // 稍微減少標題大小
     font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 15px; // 減少間距
+    line-height: 1.4;
+    word-wrap: break-word; // 長文字自動換行
 
     @media (max-width: 480px) {
-      font-size: 24px;
-    }
-    @media (max-width: 360px) {
-      font-size: 22px;
+      font-size: 20px;
+      margin-bottom: 12px;
     }
   }
 
   &__text {
-    font-size: 18px;
+    font-size: 16px; // 稍微減少文字大小
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 15px; // 減少間距
     color: #fff;
     white-space: pre-line;
+    word-wrap: break-word; // 長文字自動換行
+    max-width: 100%;
 
     @media (max-width: 480px) {
-      font-size: 16px;
+      font-size: 14px;
+      margin-bottom: 12px;
     }
   }
 
   &__html {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: #fff;
+    word-wrap: break-word;
+    max-width: 100%;
 
     @media (max-width: 480px) {
-      font-size: 16px;
+      font-size: 14px;
+      margin-bottom: 12px;
     }
   }
 
   &__buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px; // 減少按鈕間距
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 15px; // 減少上方間距
+    flex-wrap: wrap; // 小螢幕上允許換行
   }
 
   &__btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 600;
+    padding: 10px 20px; // 稍微減少按鈕大小
+    border: 2px solid #2f75c9;
+    border-radius: 30px;
+    font-size: 14px; // 稍微減少字體
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 100px;
+    min-width: 80px; // 減少最小寬度
+    background: transparent;
+    color: #2f75c9;
+    white-space: nowrap;
+    flex-shrink: 0; // 防止按鈕被壓縮
 
     &--confirm {
-      background: linear-gradient(to right, #1890ff, #40a9ff);
-      color: white;
-
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+        background: #2f75c9;
+        color: #fbed1d;
+        border-color: #2f75c9;
       }
     }
 
     &--cancel {
-      background: linear-gradient(to right, #8c8c8c, #bfbfbf);
-      color: white;
+      border-color: #8c8c8c;
+      color: #8c8c8c;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(140, 140, 140, 0.4);
+        background: #8c8c8c;
+        color: white;
+        border-color: #8c8c8c;
       }
     }
 
     @media (max-width: 480px) {
-      padding: 10px 20px;
-      font-size: 14px;
-      min-width: 80px;
+      padding: 8px 16px;
+      font-size: 13px;
+      min-width: 70px;
     }
   }
 
@@ -491,10 +450,10 @@ const handleCancel = () => {
 
 /* Loading 動畫 */
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #f69f2f;
+  width: 32px; // 稍微減少Loading大小
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #fbed1d;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="index-page">
-    <!-- 添加 Nav 組件 -->
     <Nav />
     <Banner />
     <div
@@ -15,6 +14,7 @@
     <Prize />
     <Act_area />
     <Footer />
+    <ToTop />
   </div>
 </template>
 
@@ -26,6 +26,7 @@ import Nav from "../components/Nav.vue";
 import Prize from "../components/Prize.vue";
 import Act_area from "../components/Act_area.vue";
 import Footer from "../components/Footer.vue";
+import ToTop from "../components/ToTop.vue";
 // 使用注入的狀態和方法
 const showDialog = inject("showDialog", () => {});
 const submitData = inject("submitData", () => {});
@@ -103,7 +104,7 @@ function scrollToQues() {
         });
         console.log("延遲滾動到問卷區塊");
       }
-    }, 300);
+    });
   }
 }
 </script>

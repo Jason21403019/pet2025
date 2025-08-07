@@ -9,8 +9,6 @@
       :class="{ 'verification__popup--closing': isClosing }"
     >
       <div class="verification__popup-inner">
-        <!-- 移除關閉按鈕 -->
-
         <!-- 內容區 -->
         <div class="verification__content">
           <!-- 標題 -->
@@ -49,15 +47,13 @@ const emit = defineEmits(["close", "opened"]);
 
 const isClosing = ref(false);
 
-// 移除 closeModal 函數，因為不再需要
-
 watch(
   () => props.isVisible,
   (newValue) => {
     if (newValue) {
       setTimeout(() => {
         emit("opened");
-      }, 100);
+      });
     }
   },
 );
@@ -85,20 +81,14 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(15px);
+    background-color: rgba(168, 168, 168, 0.2);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     padding: 12px;
     animation: overlayFadeIn 0.3s ease-out;
-    @media (max-width: 640px) {
-      padding: 32px;
-    }
-    @media (max-width: 380px) {
-      padding: 22px;
-    }
 
     &--closing {
       animation: overlayFadeOut 0.3s ease-out;
@@ -106,10 +96,20 @@ onUnmounted(() => {
   }
 
   &__popup {
-    background: linear-gradient(to bottom, #05026a, #4a46fc);
-    border-radius: 10px;
+    background: #2f75c9; // 修改：和Universal一樣的背景色
+    background-image: url("/imgs/noticePopup_bg.png"); // 修改：使用相同的背景圖片
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none; // 修改：移除邊框
+    border-radius: 25px;
+    // 修改：動態調整彈窗大小
+    min-width: 300px;
     max-width: 600px;
-    max-height: 80vh;
+    width: fit-content;
+    min-height: 200px;
+    max-height: 500px;
+    height: fit-content;
     position: relative;
     animation: modalBounceIn 0.3s ease-out;
     padding: 20px;
@@ -119,72 +119,48 @@ onUnmounted(() => {
       animation: modalBounceOut 0.25s ease-in;
     }
 
-    @media (max-width: 480px) {
-      border: none;
-      max-width: 95vw;
-    }
-    @media (max-width: 360px) {
-      padding: 10px;
+    @media (max-width: 768px) {
+      min-width: 280px;
+      max-width: 90vw;
+      min-height: 180px;
+      max-height: 80vh;
     }
 
-    &::before {
-      content: "";
-      position: absolute;
-      width: 80%;
-      height: 100%;
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      top: 0;
-      left: 0;
-      background: rgba(255, 255, 255, 0.05);
+    @media (max-width: 480px) {
+      min-width: 250px;
+      max-width: 95vw;
+      min-height: 160px;
+      max-height: 75vh;
+      border: none;
     }
-    &::after {
-      content: url("../imgs/right_ribbons.png");
-      position: absolute;
-      top: 100px;
-      right: -30px;
-      @media (max-width: 460px) {
-        top: 120px;
-        right: -10px;
-        z-index: 1004;
-      }
+
+    @media (max-width: 360px) {
+      padding: 10px;
+      min-width: 220px;
+      min-height: 140px;
     }
+    // 移除::before和::after裝飾
   }
 
   &__popup-inner {
     position: relative;
-    padding: 10px 10px;
-    border-radius: 10px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: none;
     z-index: 1;
-    border: 2px solid #577bff52;
     z-index: 1002;
 
-    &::before {
-      content: url("../imgs/left_circle.png");
-      position: absolute;
-      top: 200px;
-      left: -40px;
-      @media (max-width: 460px) {
-        top: 240px;
-        left: -30px;
-      }
-      @media (max-width: 360px) {
-        left: -20px;
-      }
-    }
-
     @media (max-width: 768px) {
-      padding: 30px 20px;
+      padding: 30px 25px;
     }
     @media (max-width: 480px) {
-      padding: 25px 15px;
+      padding: 25px 20px;
     }
     @media (max-width: 360px) {
-      padding: 20px 10px;
+      padding: 20px 15px;
     }
+    // 移除::before裝飾
   }
-
-  // 移除關閉按鈕的樣式
 
   &__content {
     display: flex;
@@ -193,47 +169,41 @@ onUnmounted(() => {
     align-items: center;
     text-align: center;
     color: #fff;
-    padding: 20px 0;
-
-    &::before {
-      content: url("../imgs/left_ribbons.png");
-      position: absolute;
-      top: 40px;
-      left: -35px;
-      @media (max-width: 460px) {
-        left: -30px;
-      }
-      @media (max-width: 360px) {
-        left: -20px;
-      }
-    }
+    padding: 10px 0;
+    width: 100%;
+    // 移除::before裝飾
   }
 
   &__title {
-    font-size: 28px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    color: #f8dfb2;
+    font-size: 24px;
     font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+    line-height: 1.4;
 
     @media (max-width: 480px) {
-      font-size: 24px;
+      font-size: 20px;
+      margin-bottom: 12px;
     }
   }
 
   &__description {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: #fff;
+    word-wrap: break-word;
+    max-width: 100%;
 
     @media (max-width: 480px) {
-      font-size: 16px;
+      font-size: 14px;
+      margin-bottom: 12px;
     }
   }
 
   &__turnstile-wrapper {
-    margin: 20px auto;
+    margin: 15px auto;
     min-height: 65px;
     display: flex;
     justify-content: center;
@@ -242,22 +212,25 @@ onUnmounted(() => {
     max-width: 250px;
     transform: scale(0.9);
     z-index: 1003;
+
     @media (max-width: 480px) {
       width: 100%;
       transform: scale(0.8);
       transform-origin: center;
+      margin: 12px auto;
     }
   }
 
   &__hint {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.5;
-    margin-top: 15px;
-    color: #c4c4c4;
+    margin-top: 12px;
+    color: #e0e0e0;
     font-style: italic;
 
     @media (max-width: 480px) {
-      font-size: 14px;
+      font-size: 13px;
+      margin-top: 10px;
     }
   }
 }
