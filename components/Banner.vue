@@ -3,9 +3,16 @@
     <div class="banner__content">
       <button class="banner__trigger-area" @click="click">
         <img
+          v-if="!isMobile"
           :src="isLoggedIn ? './imgs/goquez.png' : './imgs/login.png'"
           :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
-          class="banner__button-image"
+          class="banner__button-image banner__button-image--desktop"
+        />
+        <img
+          v-if="isMobile"
+          :src="isLoggedIn ? './imgs/goquez_m.png' : './imgs/login_m.png'"
+          :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
+          class="banner__button-image banner__button-image--mobile"
         />
       </button>
     </div>
@@ -63,14 +70,19 @@
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
+import { ref, inject, onMounted, onBeforeUnmount } from "vue";
 
 const showModal = ref(false);
 const isClosing = ref(false);
+const isMobile = ref(false);
 const isLoggedIn = inject("isLoggedIn", ref(false));
 const loginUrl = inject("loginUrl", ref("#"));
 const startQuestionnaire = inject("startQuestionnaire", () => {});
 const goQues = inject("goQues", () => {});
+
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 460;
+}
 
 async function click() {
   if (!isLoggedIn.value) {
@@ -93,59 +105,77 @@ async function confirm() {
   await startQuestionnaire();
   close();
 }
+
+onMounted(() => {
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", checkMobile);
+});
 </script>
 
 <style lang="scss">
 .banner {
-  // 先註解掉原本的背景圖
-  // background-image: url("/imgs/banner_bg.png");
-  // background-size: contain;
-  // background-repeat: no-repeat;
-  // background-position: center -30px;
-
   width: 100%;
-  aspect-ratio: 16 / 8;
   position: relative;
-
-  @media (max-width: 768px) {
-    padding-top: 70px;
-  }
-
-  @media (max-width: 480px) {
-    padding-top: 65px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &__content {
-    position: absolute;
-    top: 0;
-    left: 0;
+    max-width: 1365px;
     width: 100%;
-    height: 100%;
-    z-index: 2;
+    aspect-ratio: 1365 / 830;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // 在992px以下增加高度，避免上下被切掉
+    @media (max-width: 992px) {
+      aspect-ratio: 1365 / 1190; // 增加高度比例
+    }
+
+    @media (max-width: 768px) {
+      aspect-ratio: 1365 / 1190; // 再增加高度
+    }
+
+    @media (max-width: 460px) {
+      aspect-ratio: 710 / 1740; // 修改：手機版使用710:800比例
+    }
   }
 
   &__trigger-area {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 69%;
-    height: 100%;
     cursor: pointer;
     border: none;
     background: transparent;
     padding: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
   }
 
   &__button-image {
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 100%;
     transition: all 0.3s ease;
+
+    // 大螢幕使用contain
+    object-fit: contain;
+
+    // 992px以下使用cover並增加容器高度
+    @media (max-width: 992px) {
+      object-fit: cover;
+    }
+
+    // 手機版換圖後恢復contain
+    @media (max-width: 460px) {
+      object-fit: contain;
+    }
   }
 }
 

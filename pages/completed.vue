@@ -1,81 +1,81 @@
 <template>
   <div class="completed-page">
-    <div class="completed-page__container">
-      <!-- 成功圖示 -->
-      <div class="completed-page__icon">
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="#52c41a"
-            stroke-width="2"
-            fill="#52c41a"
-          />
-          <path
-            d="m9 12 2 2 4-4"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
+    <!-- 添加首頁的所有原本內容 -->
+    <Nav />
+    <Banner />
 
-      <!-- 標題 -->
-      <h2 class="completed-page__title">填寫成功</h2>
+    <!-- 問卷區塊位置改成完成頁面內容 -->
+    <div class="questionnaire-container questionnaire-container--visible">
+      <div class="completed-page__container">
+        <!-- 修改：成功圖示改成圖片 -->
+        <div class="completed-page__icon">
+          <img
+            src="/imgs/completed_title.png"
+            alt="填寫成功"
+            class="completed-page__icon-img"
+          />
+        </div>
 
-      <!-- 內容 - 暫時顯示序號內容，等API建立後再改為動態 -->
-      <div class="completed-page__content">
-        <div class="completed-page__discount-content">
-          <p class="completed-page__message-text">
-            恭喜獲得汪喵星球限定<br />
-            <span class="completed-page__discount-code">$100購物金電子序號</span
-            ><br />
-            <span class="completed-page__code">【udndcsfans】</span>
-          </p>
-          <p class="completed-page__reminder">
-            <提醒您，請務必截圖並妥善保存以利兌換>
-          </p>
+        <!-- 內容 -->
+        <div class="completed-page__content">
+          <div class="completed-page__discount-content">
+            <p class="completed-page__message-text">
+              恭喜獲得汪喵星球限定<br />$100購物金電子序號
+            </p>
+            <p class="completed-page__code-section">
+              <span class="completed-page__code">【udndcsfans】</span><br />
+              <span class="completed-page__reminder"
+                ><提醒您，請務必截圖並妥善保存以利兌換></span
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- 按鈕區域 -->
+        <div class="completed-page__actions">
+          <a href="#" @click="confirmSuccess" class="completed-page__btn">
+            分享
+          </a>
+          <a
+            href="https://udn.com/news/cate/2/7065"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="completed-page__btn"
+          >
+            揭開更多<br />寵物秘密
+          </a>
         </div>
       </div>
-
-      <!-- 按鈕區域 -->
-      <div class="completed-page__actions">
-        <button
-          @click="confirmSuccess"
-          class="completed-page__btn completed-page__btn--primary"
-        >
-          確認
-        </button>
-        <a
-          href="https://udn.com/news/index"
-          target="_blank"
-          class="completed-page__btn completed-page__btn--secondary"
-        >
-          揭開更多寵物秘密
-        </a>
-      </div>
     </div>
+
+    <!-- 添加首頁其他內容 -->
+    <Prize />
+    <Act_area />
+    <Footer />
+    <ToTop />
   </div>
 </template>
 
 <script setup>
 import { onMounted } from "vue";
+import Banner from "../components/Banner.vue";
+import Nav from "../components/Nav.vue";
+import Prize from "../components/Prize.vue";
+import Act_area from "../components/Act_area.vue";
+import Footer from "../components/Footer.vue";
+import ToTop from "../components/ToTop.vue";
 
 // 路由守衛 - 確保只有填完問卷的用戶才能訪問此頁面
 onMounted(() => {
   // 檢查是否有問卷完成的標記
-  const hasCompletedQuestionnaire = localStorage.getItem(
-    "pet2025_questionnaire_completed",
-  );
-
-  if (!hasCompletedQuestionnaire) {
-    // 如果沒有完成標記，重定向到首頁
-    navigateTo("/");
-    return;
-  }
-
+  //   const hasCompletedQuestionnaire = localStorage.getItem(
+  //     "pet2025_questionnaire_completed",
+  //   );
+  //   if (!hasCompletedQuestionnaire) {
+  //     // 如果沒有完成標記，重定向到首頁
+  //     navigateTo("/");
+  //     return;
+  //   }
   // 暫時註解掉 API 調用，等 PHP 建立後再啟用
   // await checkDiscountCodeAvailability();
 });
@@ -89,22 +89,34 @@ function confirmSuccess() {
 
 <style lang="scss" scoped>
 .completed-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #ffd89b 0%, #f4c4a5 100%);
+  background-image: url("/imgs/body_bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}
 
+.questionnaire-container {
+  padding: 40px 12px 40px 12px;
+  background: transparent;
+  min-height: 0;
+  transition: all 0.3s ease;
+}
+
+.completed-page {
   &__container {
     max-width: 500px;
     width: 100%;
-    background: white;
+    background-color: white;
+    background-image: url("/imgs/completed_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 20px;
-    padding: 40px;
+    padding: 80px 40px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 2px solid #52c41a;
+    border: none;
+    margin: 0 auto;
 
     @media (max-width: 768px) {
       padding: 30px 20px;
@@ -114,19 +126,11 @@ function confirmSuccess() {
   &__icon {
     margin-bottom: 20px;
 
-    svg {
-      filter: drop-shadow(0 4px 8px rgba(82, 196, 26, 0.3));
-    }
-  }
-
-  &__title {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: bold;
-
-    @media (max-width: 768px) {
-      font-size: 24px;
+    &-img {
+      max-width: 35%;
+      margin-right: 1rem;
+      height: auto;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     }
   }
 
@@ -135,97 +139,83 @@ function confirmSuccess() {
   }
 
   &__message-text {
-    font-size: 18px;
-    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0c3d6d;
     line-height: 1.6;
-    margin-bottom: 15px;
 
     @media (max-width: 768px) {
       font-size: 16px;
     }
   }
 
-  &__discount-code {
-    font-size: 20px;
-    font-weight: bold;
-    color: #52c41a;
-    display: block;
-    margin: 10px 0;
+  &__code-section {
+    margin: 0;
   }
 
   &__code {
     font-size: 16px;
     font-weight: bold;
-    color: #1890ff;
-    background: #f0f8ff;
-    padding: 5px 10px;
-    border-radius: 8px;
-    display: inline-block;
-    margin: 10px 0;
-    border: 1px solid #d6e4ff;
+    color: #f46c00;
   }
 
   &__reminder {
-    font-size: 14px;
-    color: #ff4d4f;
-    font-weight: 500;
-    margin-top: 15px;
-    padding: 10px;
-    background: #fff2f0;
-    border-radius: 8px;
-    border: 1px solid #ffccc7;
+    font-size: 12px;
+    color: #0c3d6d;
+    font-weight: normal;
   }
 
   &__actions {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
 
     @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: center;
+      gap: 10px;
     }
   }
 
   &__btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
+    // 修改：完全複製Already_played_popup的按鈕樣式
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 120px;
+    text-decoration: none;
+    padding: 4px 6px; // 修改：改成4px 6px
+    border: 2px solid #2f75c9;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    background: transparent;
+    color: #2f75c9;
+    white-space: nowrap;
+    line-height: 1.2;
 
-    @media (max-width: 768px) {
-      width: 100%;
-      max-width: 200px;
+    &:hover {
+      background: #2f75c9;
+      color: #fbed1d;
+      border-color: #2f75c9;
+      text-decoration: none;
     }
 
-    &--primary {
-      background: linear-gradient(135deg, #52c41a, #73d13d);
-      color: white;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);
-      }
+    &:active {
+      transform: translateY(-1px);
     }
 
-    &--secondary {
-      background: linear-gradient(135deg, #1890ff, #40a9ff);
-      color: white;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
-      }
+    @media (max-width: 480px) {
+      padding: 4px 6px; // 修改：手機版也改成4px 6px
+      font-size: 14px;
+      min-width: 80px;
     }
   }
+}
+
+#__nuxt {
+  position: relative;
+  z-index: 1;
 }
 </style>

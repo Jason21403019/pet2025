@@ -31,7 +31,7 @@ import ToTop from "../components/ToTop.vue";
 const showDialog = inject("showDialog", () => {});
 const submitData = inject("submitData", () => {});
 
-const showQuestionnaire = ref(false);
+const showQuestionnaire = ref(true);
 
 // 監聽問卷啟動事件
 onMounted(() => {
@@ -114,12 +114,12 @@ function scrollToQues() {
   min-height: 90vh;
   background-image: url("/imgs/body_bg.jpg");
   background-repeat: no-repeat;
-  background-size: 100% auto;
+  background-size: cover;
   background-position: center top;
 }
 
 .questionnaire-container {
-  padding: 20px;
+  padding: 20px 0;
   background: transparent;
   min-height: 0;
   transition: all 0.3s ease;

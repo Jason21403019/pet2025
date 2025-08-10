@@ -61,18 +61,6 @@ const prizeItems = [
   flex-direction: column;
   align-items: center;
 
-  @media (max-width: 1024px) {
-    padding-top: 100px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 100px 12px 0 12px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 50px 12px 0 12px;
-  }
-
   &__title {
     text-align: center;
   }
@@ -132,7 +120,7 @@ const prizeItems = [
 
     // 第四張圖片（窄的）
     &:nth-child(4) {
-      margin-left: -40px;
+      margin-left: -30px;
     }
 
     @media (max-width: 768px) {
@@ -183,49 +171,16 @@ const prizeItems = [
       flex-direction: column;
       align-items: center;
       text-align: center;
-      line-height: 1.2;
-      color: #2f75c9;
+      line-height: 1.4;
+      color: #0c3d6d;
 
       &-top {
-        font-size: 22px;
-        font-weight: 500;
-
-        @media (max-width: 1024px) {
-          font-size: 18px;
-        }
-
-        @media (max-width: 768px) {
-          font-size: 24px;
-        }
-
-        @media (max-width: 480px) {
-          font-size: 20px;
-        }
-
-        @media (max-width: 360px) {
-          font-size: 18px;
-        }
+        font-size: 18px;
       }
 
       &-bottom {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
-
-        @media (max-width: 1024px) {
-          font-size: 18px;
-        }
-
-        @media (max-width: 768px) {
-          font-size: 24px;
-        }
-
-        @media (max-width: 480px) {
-          font-size: 20px;
-        }
-
-        @media (max-width: 360px) {
-          font-size: 18px;
-        }
       }
     }
   }

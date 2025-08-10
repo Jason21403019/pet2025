@@ -712,26 +712,23 @@ onMounted(() => {
 }
 
 .ques__wrap {
-  width: 900px; // 固定寬度900px
-  height: 785px; // 固定高度785px
+  max-width: 900px;
+  height: 785px;
   margin: 0 auto;
   background: white;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; // 允許垂直滾動
-  overflow-x: hidden; // 隱藏水平滾動
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-
-  // 響應式調整
-  @media (max-width: 950px) {
-    width: 95%;
-    max-width: 900px;
+  @media screen and (max-width: 1600px) {
+    max-width: 700px;
+    height: 685px;
   }
-
-  @media (max-width: 768px) {
-    height: auto;
-    min-height: 600px;
+  @media screen and (max-width: 1440px) {
+    max-width: 650px;
+    height: 635px;
   }
 }
 
@@ -798,23 +795,21 @@ onMounted(() => {
   }
 }
 
+// 大標題 (分類標題) - 使用禮品文字的淺藍色
 .q__cat {
   font-size: 18px;
   font-weight: bold;
-  color: #9eaec0;
+  color: #2f75c9;
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
 }
 
-.q__head {
-  margin-bottom: 20px;
-}
-
+// 題目標題 - 使用注意事項的深藍色
 .q__title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #0c3d6d;
   margin: 0;
   line-height: 1.4;
 }
@@ -830,6 +825,7 @@ onMounted(() => {
   gap: 12px;
 }
 
+// 選項區域 - hover使用淺藍色
 .opt {
   display: flex;
   align-items: flex-start;
@@ -841,23 +837,24 @@ onMounted(() => {
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: #d4c5a9;
-    background: #faf8f4;
+    border-color: #9eaec0;
+    background: #f8f9fb;
   }
 
   &--selected {
-    border-color: #d4c5a9;
-    background: #f5f2ec;
-    box-shadow: 0 2px 8px rgba(212, 197, 169, 0.3);
+    border-color: #9eaec0;
+    background: #f0f2f5;
+    box-shadow: 0 2px 8px rgba(158, 174, 192, 0.3);
   }
 }
 
+// checkbox和radio - 使用橘色
 .opt__input {
   margin-right: 12px;
   margin-top: 2px;
   width: 18px;
   height: 18px;
-  accent-color: #d4c5a9;
+  accent-color: #f46c00;
   flex-shrink: 0;
 
   &--check {
@@ -910,7 +907,7 @@ onMounted(() => {
 }
 
 .ques__btn {
-  background: linear-gradient(135deg, #9eaec0 0%, #8a9ba8 100%);
+  background: #2f75c9; // 修改：使用藍色背景
   color: white;
   border: none;
   padding: 18px 50px;
@@ -919,12 +916,14 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(158, 174, 192, 0.4);
+  box-shadow: 0 5px 15px rgba(47, 117, 201, 0.4); // 修改：藍色陰影
   min-width: 200px;
 
   &:hover:not(:disabled) {
+    background: #2f75c9; // 修改：hover時保持藍色背景
+    color: #fbed1d; // 修改：hover時文字變黃色
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(158, 174, 192, 0.5);
+    box-shadow: 0 8px 25px rgba(47, 117, 201, 0.6); // 修改：加深藍色陰影
   }
 
   &:disabled {
@@ -966,7 +965,7 @@ onMounted(() => {
 // "其他"選項輸入框樣式
 .other-input {
   margin-top: 12px;
-  padding-left: 30px; // 與選項對齊
+  padding-left: 30px;
 
   &__field {
     width: 100%;
@@ -981,8 +980,8 @@ onMounted(() => {
 
     &:focus {
       outline: none;
-      border-color: #d4c5a9;
-      box-shadow: 0 0 0 3px rgba(212, 197, 169, 0.1);
+      border-color: #f46c00;
+      box-shadow: 0 0 0 3px rgba(244, 108, 0, 0.1);
     }
 
     &::placeholder {

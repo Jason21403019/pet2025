@@ -135,10 +135,8 @@ onBeforeUnmount(() => {
   width: 100%;
   max-width: 1920px;
   margin: 0 auto;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 100;
 
   &__content {
@@ -182,9 +180,10 @@ onBeforeUnmount(() => {
   &__center {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 36px;
     flex-grow: 1;
     justify-content: center;
+    // margin-right: 11rem;
 
     @media (max-width: 992px) {
       gap: 16px;
@@ -219,7 +218,6 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     gap: 16px;
-    padding: 20px;
 
     @media (max-width: 768px) {
       display: flex;
@@ -346,6 +344,8 @@ onBeforeUnmount(() => {
     border-radius: 30px;
     white-space: nowrap;
     border: 2px solid #2f75c9;
+    min-width: 60px;
+    text-align: center;
     background: transparent;
 
     @media (max-width: 900px) {

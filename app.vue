@@ -971,8 +971,8 @@ html {
 
 body {
   font-family: "Noto Sans TC", sans-serif;
-  max-width: 1920px; // 新增：限制body最大寬度為1920px
-  margin: 0 auto; // 新增：讓body置中
-  box-sizing: border-box; // 新增：確保box-sizing正確
+  max-width: 1920px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 </style>

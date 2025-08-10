@@ -51,7 +51,7 @@
             rel="noopener noreferrer"
             class="already-played__btn already-played__btn--explore"
           >
-            揭開更多寵物秘密
+            揭開更多<br />寵物秘密
           </a>
         </div>
       </div>
@@ -238,11 +238,11 @@ const closeModal = () => {
 
   &__btn {
     // 修改：a標籤的樣式，和button一樣
-    display: inline-flex; // 新增：讓a標籤表現像button
-    align-items: center; // 新增
-    justify-content: center; // 新增
-    text-decoration: none; // 新增：移除下劃線
-    padding: 12px 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 4px 6px; // 修改：改成4px 6px
     border: 2px solid #2f75c9;
     border-radius: 30px;
     font-size: 16px;
@@ -253,12 +253,13 @@ const closeModal = () => {
     background: transparent;
     color: #2f75c9;
     white-space: nowrap;
+    line-height: 1.2;
 
     &:hover {
       background: #2f75c9;
       color: #fbed1d;
       border-color: #2f75c9;
-      text-decoration: none; // 新增：hover時也不要下劃線
+      text-decoration: none;
     }
 
     &:active {
@@ -266,7 +267,7 @@ const closeModal = () => {
     }
 
     @media (max-width: 480px) {
-      padding: 10px 4px;
+      padding: 4px 6px; // 修改：手機版也改成4px 6px
       font-size: 14px;
       min-width: 80px;
     }
