@@ -31,7 +31,7 @@ import ToTop from "../components/ToTop.vue";
 const showDialog = inject("showDialog", () => {});
 const submitData = inject("submitData", () => {});
 
-const showQuestionnaire = ref(true);
+const showQuestionnaire = ref(false);
 
 // 監聽問卷啟動事件
 onMounted(() => {

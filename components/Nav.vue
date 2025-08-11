@@ -181,7 +181,13 @@ onBeforeUnmount(() => {
     gap: 36px;
     flex-grow: 1;
     justify-content: center;
-    // margin-right: 11rem;
+    margin-right: 16rem;
+    @media (max-width: 1200px) {
+      margin-right: 7rem;
+    }
+    @media (max-width: 1000px) {
+      margin-right: 0rem;
+    }
 
     @media (max-width: 992px) {
       gap: 16px;
@@ -296,8 +302,9 @@ onBeforeUnmount(() => {
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
-    min-width: 60px;
+    min-width: 110px;
     flex-shrink: 0;
+    line-height: inherit;
 
     &:hover {
       background: #2f75c9;

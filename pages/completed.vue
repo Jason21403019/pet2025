@@ -1,6 +1,5 @@
 <template>
   <div class="completed-page">
-    <!-- 添加首頁的所有原本內容 -->
     <Nav />
     <Banner />
 
@@ -19,15 +18,29 @@
         <!-- 內容 -->
         <div class="completed-page__content">
           <div class="completed-page__discount-content">
-            <p class="completed-page__message-text">
-              恭喜獲得汪喵星球限定<br />$100購物金電子序號
-            </p>
-            <p class="completed-page__code-section">
-              <span class="completed-page__code">【udndcsfans】</span><br />
-              <span class="completed-page__reminder"
-                ><提醒您，請務必截圖並妥善保存以利兌換></span
-              >
-            </p>
+            <!-- 根據優惠券狀態動態顯示內容 -->
+            <template v-if="hasDiscount">
+              <p class="completed-page__message-text">
+                恭喜獲得汪喵星球限定<br />$100購物金電子序號
+              </p>
+              <p class="completed-page__code-section">
+                <span class="completed-page__code">【udndcsfans】</span><br />
+                <span class="completed-page__reminder"
+                  ><提醒您，請務必截圖並妥善保存以利兌換></span
+                >
+              </p>
+            </template>
+            <template v-else>
+              <p class="completed-page__message-text">
+                由於活動踴躍，<br />電子序號折扣金以贈送完畢，<br />但您能享有抽大獎機會。
+              </p>
+              <p class="completed-page__code-section">
+                <span class="completed-page__code"
+                  >觀看開講資訊，請前往活動辦法</span
+                ><br />
+                <span class="completed-page__reminder">快分享給親朋好友</span>
+              </p>
+            </template>
           </div>
         </div>
 
@@ -48,7 +61,6 @@
       </div>
     </div>
 
-    <!-- 添加首頁其他內容 -->
     <Prize />
     <Act_area />
     <Footer />
@@ -57,7 +69,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import Banner from "../components/Banner.vue";
 import Nav from "../components/Nav.vue";
 import Prize from "../components/Prize.vue";
@@ -65,19 +77,44 @@ import Act_area from "../components/Act_area.vue";
 import Footer from "../components/Footer.vue";
 import ToTop from "../components/ToTop.vue";
 
+// 響應式資料
+const hasDiscount = ref(true); // 預設有優惠券，避免閃爍
+
+// 檢查優惠券狀態
+async function checkDiscountStatus() {
+  try {
+    const response = await $fetch("/pet2025php/checkDiscountStatus.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (response.status === "success") {
+      hasDiscount.value = response.has_discount;
+    }
+  } catch (error) {
+    console.error("檢查優惠券狀態失敗:", error);
+    // 如果 API 調用失敗，預設顯示有優惠券
+    hasDiscount.value = true;
+  }
+}
+
 // 路由守衛 - 確保只有填完問卷的用戶才能訪問此頁面
-onMounted(() => {
+onMounted(async () => {
   // 檢查是否有問卷完成的標記
-  //   const hasCompletedQuestionnaire = localStorage.getItem(
-  //     "pet2025_questionnaire_completed",
-  //   );
-  //   if (!hasCompletedQuestionnaire) {
-  //     // 如果沒有完成標記，重定向到首頁
-  //     navigateTo("/");
-  //     return;
-  //   }
-  // 暫時註解掉 API 調用，等 PHP 建立後再啟用
-  // await checkDiscountCodeAvailability();
+  const hasCompletedQuestionnaire = localStorage.getItem(
+    "pet2025_questionnaire_completed",
+  );
+  if (!hasCompletedQuestionnaire) {
+    // 如果沒有完成標記，重定向到首頁
+    navigateTo("/");
+    return;
+  }
+
+  // 檢查優惠券狀態
+  await checkDiscountStatus();
 });
 
 // 確認成功按鈕處理
@@ -101,11 +138,10 @@ function confirmSuccess() {
   min-height: 0;
   transition: all 0.3s ease;
 }
-
 .completed-page {
+  width: 100%;
   &__container {
     max-width: 500px;
-    width: 100%;
     background-color: white;
     background-image: url("/imgs/completed_bg.png");
     background-size: cover;
