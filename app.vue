@@ -66,9 +66,9 @@ const loadingData = ref({});
 const showVerificationPopup = ref(false);
 const showUniversalPopup = ref(false);
 const universalPopupData = ref({});
-const showAlreadyPlayedPopup = ref(false); // 新增：已填寫問卷彈窗狀態
-const alreadyPlayedData = ref({}); // 新增：已填寫問卷數據
-const totalPlayCount = ref(0); // 新增：總遊戲次數
+const showAlreadyPlayedPopup = ref(false); 
+const alreadyPlayedData = ref({}); 
+const totalPlayCount = ref(0);
 
 // 簡化的防重複機制
 let isDialogOpen = false;

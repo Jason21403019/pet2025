@@ -86,7 +86,7 @@ async function onSubmit(data) {
 
 // 滾動到問卷區塊的函數
 function scrollToQues() {
-  const quesElement = document.querySelector(".ques");
+  const quesElement = document.querySelector(".questionnaire-container");
   if (quesElement) {
     quesElement.scrollIntoView({
       behavior: "smooth",
@@ -96,7 +96,7 @@ function scrollToQues() {
   } else {
     // 如果問卷元素還沒載入，延遲一點再試
     setTimeout(() => {
-      const element = document.querySelector(".ques");
+      const element = document.querySelector(".questionnaire-container");
       if (element) {
         element.scrollIntoView({
           behavior: "smooth",
@@ -104,7 +104,7 @@ function scrollToQues() {
         });
         console.log("延遲滾動到問卷區塊");
       }
-    });
+    }, 100); // 加上延遲時間
   }
 }
 </script>
