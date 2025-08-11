@@ -96,14 +96,16 @@ onUnmounted(() => {
   }
 
   &__popup {
-    background: #2f75c9; // 修改：和Universal一樣的背景色
-    background-image: url("/imgs/noticePopup_bg.png"); // 修改：使用相同的背景圖片
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none; // 修改：移除邊框
+    background: #2f75c9;
+    background-image:
+      url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
+    background-size: 40%, 40%;
+    background-position:
+      top right,
+      bottom left;
+    background-repeat: no-repeat, no-repeat;
+    border: none;
     border-radius: 25px;
-    // 修改：動態調整彈窗大小
     min-width: 300px;
     max-width: 600px;
     width: fit-content;
@@ -139,7 +141,6 @@ onUnmounted(() => {
       min-width: 220px;
       min-height: 140px;
     }
-    // 移除::before和::after裝飾
   }
 
   &__popup-inner {
@@ -159,7 +160,6 @@ onUnmounted(() => {
     @media (max-width: 360px) {
       padding: 20px 15px;
     }
-    // 移除::before裝飾
   }
 
   &__content {
@@ -171,7 +171,6 @@ onUnmounted(() => {
     color: #fff;
     padding: 10px 0;
     width: 100%;
-    // 移除::before裝飾
   }
 
   &__title {

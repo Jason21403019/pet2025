@@ -218,10 +218,13 @@ const closeModal = () => {
 
   &__popup {
     background: #2f75c9;
-    background-image: url("/imgs/noticePopup_bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-image:
+      url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
+    background-size: 40%, 40%;
+    background-position:
+      top right,
+      bottom left;
+    background-repeat: no-repeat, no-repeat;
     border: none;
     border-radius: 25px;
     max-width: 1060px;

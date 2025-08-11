@@ -7,15 +7,46 @@ export default defineNuxtConfig({
     baseURL: process.env.NUXT_PUBLIC_BASE || "/",
     buildAssetsDir: "/_nuxt/",
     head: {
-      title: "你家毛孩怎麼寵!問卷活動大調查",
+      title: "飼主聲音大調查，你的毛孩怎麼寵 | 聯合新聞網  | 寵物部落",
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { charset: "utf-8" },
-        { name: "description", content: "你家毛孩怎麼寵!問卷活動大調查" },
+        {
+          name: "description",
+          content:
+            "如果毛孩會說話，牠會爆料你怎麼寵牠嗎？😼🐶 聯合新聞網寵物部落推出「飼主聲音大調查」，邀請所有奴才們聊聊日常寵愛秘訣與購物習慣。只要填問卷，就能獲得汪喵星球折扣碼，還有機會抽大獎，讓你的真心話被聽見！",
+        },
+        {
+          name: "keywords",
+          content: "寵物 問卷 活動 毛孩 抽獎",
+        },
+        // Open Graph 標籤
+        {
+          property: "og:title",
+          content: "飼主聲音大調查，你的毛孩怎麼寵 | 聯合新聞網 | 寵物部落",
+        },
+        {
+          property: "og:description",
+          content:
+            "如果毛孩會說話，牠會爆料你怎麼寵牠嗎？😼🐶 聯合新聞網寵物部落推出「飼主聲音大調查」，邀請所有奴才們聊聊日常寵愛秘訣與購物習慣。只要填問卷，就能獲得汪喵星球折扣碼，還有機會抽大獎！",
+        },
+        {
+          property: "og:url",
+          content: "https://event.udn.com/bd_petsqa_2025",
+        },
+        {
+          property: "og:type",
+          content: "website",
+        },
+        {
+          property: "og:site_name",
+          content: "聯合新聞網",
+        },
       ],
       link: [
         { rel: "icon", type: "image/x-icon" },
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        { rel: "canonical", href: "https://event.udn.com/bd_petsqa_2025" },
       ],
       script: [
         // Google Tag Manager

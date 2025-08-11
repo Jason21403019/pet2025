@@ -46,11 +46,17 @@
 
         <!-- 按鈕區域 -->
         <div class="completed-page__actions">
-          <a href="#" @click="confirmSuccess" class="completed-page__btn">
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click="confirmSuccess"
+            class="completed-page__btn"
+          >
             分享
           </a>
           <a
-            href="https://udn.com/news/cate/2/7065"
+            href="https://pets.udn.com/pets/index"
             target="_blank"
             rel="noopener noreferrer"
             class="completed-page__btn"

@@ -34,14 +34,14 @@
           >
             登出
           </button>
-          <NuxtLink to="/" class="navbar__link">首頁</NuxtLink>
+          <NuxtLink to="/" class="navbar__link" @click="goHome">首頁</NuxtLink>
           <NuxtLink to="#activity" class="navbar__link">活動辦法</NuxtLink>
         </div>
 
         <!-- Social Links -->
         <div class="navbar__right">
           <a
-            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025"
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025"
             target="_blank"
             class="navbar__social-link navbar__social-link--facebook"
             aria-label="分享到臉書"
@@ -53,7 +53,7 @@
             />
           </a>
           <a
-            href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025&text=%E5%BF%AB%E4%BE%86%E5%B9%B8%E7%A6%8F%E8%8A%B1%E7%81%AB%E8%BD%89%E4%B8%80%E5%A4%8F%EF%BC%81%E7%9C%8B%E7%9C%8B%E4%BD%A0%E6%9C%83%E6%8A%BD%E5%88%B0%E4%BB%80%E9%BA%BA%E7%85%99%E7%81%AB%EF%BC%81"
+            href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025&text=%E5%A6%82%E6%9E%9C%E6%AF%9B%E5%AD%A9%E6%9C%83%E8%AA%AA%E8%A9%B1%EF%BC%8C%E7%89%A0%E6%9C%83%E7%88%86%E6%96%99%E4%BD%A0%E6%80%8E%E9%BA%BC%E5%AF%B5%E7%89%A0%E5%97%8E%EF%BC%9F%F0%9F%98%BC%F0%9F%90%B6%20%E8%81%AF%E5%90%88%E6%96%B0%E8%81%9E%E7%B6%B2%E5%AF%B5%E7%89%A9%E9%83%A8%E8%90%BD%E9%A3%BC%E4%B8%BB%E8%81%B2%E9%9F%B3%E5%A4%A7%E8%AA%BF%E6%9F%A5%EF%BC%81"
             target="_blank"
             class="navbar__social-link navbar__social-link--line"
             aria-label="分享到LINE"
@@ -90,6 +90,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, inject } from "vue";
+import { useRoute } from "vue-router";
 
 const isScrolled = ref(false);
 const scrollThreshold = 40;
@@ -107,6 +108,16 @@ function handleScroll() {
 function logout() {
   performCompleteLogout();
   window.location.reload();
+}
+
+const route = useRoute();
+
+function goHome(e) {
+  // 如果已經在首頁，強制重新載入
+  if (route.path === "/") {
+    e.preventDefault();
+    window.location.reload();
+  }
 }
 
 onMounted(() => {
@@ -310,11 +321,6 @@ onBeforeUnmount(() => {
       background: #2f75c9;
       color: #fbed1d;
       border-color: #2f75c9;
-    }
-
-    @media (max-width: 992px) {
-      padding: 6px 12px;
-      min-width: 55px;
     }
 
     &--mobile {

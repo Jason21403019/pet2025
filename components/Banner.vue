@@ -10,7 +10,7 @@
         />
         <img
           v-if="isMobile"
-          :src="isLoggedIn ? './imgs/goquez_m.png' : './imgs/login_m.png'"
+          :src="isLoggedIn ? './imgs/goquze_m.png' : './imgs/login_m.png'"
           :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
           class="banner__button-image banner__button-image--mobile"
         />
@@ -133,17 +133,16 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
 
-    // 在992px以下增加高度，避免上下被切掉
     @media (max-width: 992px) {
-      aspect-ratio: 1365 / 1190; // 增加高度比例
+      aspect-ratio: 1365 / 1190;
     }
 
     @media (max-width: 768px) {
-      aspect-ratio: 1365 / 1190; // 再增加高度
+      aspect-ratio: 1365 / 1190;
     }
 
     @media (max-width: 460px) {
-      aspect-ratio: 710 / 1740; // 修改：手機版使用710:800比例
+      aspect-ratio: 710 / 1740;
     }
   }
 
@@ -164,22 +163,18 @@ onBeforeUnmount(() => {
     height: 100%;
     transition: all 0.3s ease;
 
-    // 大螢幕使用contain
     object-fit: contain;
 
-    // 992px以下使用cover並增加容器高度
     @media (max-width: 992px) {
       object-fit: cover;
     }
 
-    // 手機版換圖後恢復contain
     @media (max-width: 460px) {
       object-fit: contain;
     }
   }
 }
 
-// 修改彈窗樣式
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -379,44 +374,75 @@ onBeforeUnmount(() => {
 
 @media (max-width: 480px) {
   .modal-content {
-    max-width: 275px;
-    height: 388px;
-    max-height: 80vh;
+    max-width: 95vw;
+    width: 95vw;
+    height: 530px;
+    max-height: 90vh;
   }
 
   .modal-content-group {
-    gap: 12px;
+    left: 35%;
   }
 
   .modal-text {
     p {
-      font-size: 14px;
+      font-size: 16px;
+      margin: 3px 0;
 
       &:first-child,
       &:nth-child(2) {
-        font-size: 16px;
+        font-size: 20px;
       }
     }
   }
 
-  .confirm-btn {
-    padding: 10px 20px;
-    font-size: 14px;
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    align-items: center;
   }
 
   .modal-close-btn {
-    top: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
+    top: 15px;
+    right: 15px;
+    width: 42px;
+    height: 42px;
+  }
+}
+@media (max-width: 390px) {
+  .modal-content-group {
+    left: 33%;
   }
 }
 
 @media (max-width: 360px) {
   .modal-content {
-    max-width: 229px;
-    height: 323px;
-    max-height: 75vh;
+    max-width: 97vw;
+    width: 97vw;
+    height: 450px;
+    max-height: 80vh;
+  }
+  .modal-text {
+    p {
+      font-size: 14px;
+      margin: 3px 0;
+
+      &:first-child,
+      &:nth-child(2) {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .modal-content-group {
+    left: 33%;
+  }
+}
+@media (max-width: 320px) {
+  .modal-content-group {
+    left: 32%;
   }
 }
 </style>

@@ -38,7 +38,7 @@
         <div class="already-played__buttons">
           <!-- 修改：使用a標籤直接跳轉 -->
           <a
-            href="https://lab-event.udn.com/bd_pet2025"
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025"
             target="_blank"
             rel="noopener noreferrer"
             class="already-played__btn already-played__btn--share"
@@ -46,7 +46,7 @@
             分享
           </a>
           <a
-            href="https://udn.com/news/cate/2/7065"
+            href="https://pets.udn.com/pets/index"
             target="_blank"
             rel="noopener noreferrer"
             class="already-played__btn already-played__btn--explore"
@@ -92,8 +92,6 @@ const closeModal = () => {
     emit("close");
   });
 };
-
-// 移除handleShare和handleExplore函數，不需要了
 </script>
 
 <style lang="scss" scoped>
@@ -104,7 +102,7 @@ const closeModal = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(168, 168, 168, 0.2); // 修改：和Banner一樣的遮罩
+    background-color: rgba(168, 168, 168, 0.2);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
@@ -119,16 +117,16 @@ const closeModal = () => {
   }
 
   &__popup {
-    background-image: url("/imgs/loginPop.png"); // 修改：使用和Banner一樣的背景圖片
+    background-image: url("/imgs/loginPop.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
     border-radius: 0;
     padding: 0;
-    max-width: 458px; // 修改：使用圖片原始寬度
+    max-width: 458px;
     width: 90%;
-    height: 646px; // 修改：使用圖片原始高度
+    height: 646px;
     max-height: 90vh;
     text-align: center;
     box-shadow: none;
@@ -150,25 +148,32 @@ const closeModal = () => {
     }
 
     @media (max-width: 480px) {
-      max-width: 275px;
-      height: 388px;
-      max-height: 80vh;
+      max-width: 95vw;
+      width: 95vw;
+      height: 530px;
+      max-height: 90vh;
+    }
+
+    @media (max-width: 430px) {
+      max-width: 96vw;
+      width: 96vw;
     }
 
     @media (max-width: 360px) {
-      max-width: 229px;
-      height: 323px;
-      max-height: 75vh;
+      max-width: 97vw;
+      width: 97vw;
+      height: 450px;
+      max-height: 80vh;
     }
   }
 
   &__close-btn {
     position: absolute;
-    top: 15px; // 修改：和Banner一樣的位置
+    top: 15px;
     right: 15px;
     width: 40px;
     height: 40px;
-    border: 2px solid white; // 修改：和Banner一樣的樣式
+    border: 2px solid white;
     background: #f2ee72;
     border-radius: 50%;
     display: flex;
@@ -180,10 +185,10 @@ const closeModal = () => {
     z-index: 10;
 
     @media (max-width: 480px) {
-      top: 10px;
-      right: 10px;
-      width: 35px;
-      height: 35px;
+      top: 15px;
+      right: 15px;
+      width: 42px;
+      height: 42px;
     }
 
     &:hover {
@@ -192,10 +197,9 @@ const closeModal = () => {
     }
   }
 
-  // 新增：內容群組樣式（和Banner一樣）
   &__content-group {
     position: absolute;
-    top: 60%; // 和Banner一樣的位置
+    top: 56%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
@@ -212,7 +216,6 @@ const closeModal = () => {
     width: 100%;
 
     p {
-      margin: 2px 0;
       line-height: 1.4;
       color: #2f75c9;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
@@ -220,29 +223,28 @@ const closeModal = () => {
   }
 
   &__title {
-    font-size: 24px; // 修改：標題大小
+    font-size: 24px;
     font-weight: bold;
+    margin-bottom: 12px;
   }
 
   &__subtitle {
-    font-size: 20px; // 修改：副標題大小
+    font-size: 20px;
     font-weight: normal;
   }
 
   &__buttons {
     display: flex;
-    gap: 12px;
+    gap: 6px;
     justify-content: center;
-    flex-wrap: wrap; // 小螢幕上允許換行
   }
 
   &__btn {
-    // 修改：a標籤的樣式，和button一樣
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    padding: 4px 6px; // 修改：改成4px 6px
+    padding: 4px 6px;
     border: 2px solid #2f75c9;
     border-radius: 30px;
     font-size: 16px;
@@ -267,13 +269,12 @@ const closeModal = () => {
     }
 
     @media (max-width: 480px) {
-      padding: 4px 6px; // 修改：手機版也改成4px 6px
+      padding: 4px 6px;
       font-size: 14px;
       min-width: 80px;
     }
   }
 
-  // 響應式調整（和Banner一樣）
   @media (max-width: 768px) {
     &__content-group {
       gap: 15px;
@@ -282,7 +283,7 @@ const closeModal = () => {
     }
 
     &__title {
-      font-size: 18px;
+      font-size: 22px;
     }
 
     &__subtitle {
@@ -297,10 +298,6 @@ const closeModal = () => {
       max-width: 220px;
     }
 
-    &__title {
-      font-size: 16px;
-    }
-
     &__subtitle {
       font-size: 14px;
     }
@@ -308,21 +305,13 @@ const closeModal = () => {
 
   @media (max-width: 360px) {
     &__content-group {
+      top: 57%;
       width: 75%;
       max-width: 180px;
-    }
-
-    &__title {
-      font-size: 14px;
-    }
-
-    &__subtitle {
-      font-size: 13px;
     }
   }
 }
 
-// 動畫keyframes（和Banner一樣）
 @keyframes overlayFadeIn {
   from {
     opacity: 0;
