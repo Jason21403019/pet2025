@@ -1,11 +1,8 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'navbar--scrolled': isScrolled }">
     <Nav_container>
-      <div
-        class="navbar__content"
-        :class="{ 'navbar__content--scrolled': isScrolled }"
-      >
-        <!-- 左邊: Logo區域 -->
+      <div class="navbar__content">
+        <!-- Logo -->
         <div class="navbar__left">
           <NuxtLink
             to="https://udn.com/news/index"
@@ -27,7 +24,7 @@
           </div>
         </div>
 
-        <!-- 中間: 導航連結區域 (桌機版) -->
+        <!-- 桌機版navbar -->
         <div class="navbar__center">
           <button
             @click="logout"
@@ -41,7 +38,7 @@
           <NuxtLink to="#activity" class="navbar__link">活動辦法</NuxtLink>
         </div>
 
-        <!-- 右邊: Social Links -->
+        <!-- Social Links -->
         <div class="navbar__right">
           <a
             href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flab-event.udn.com%2Fbd_pet2025"
@@ -70,7 +67,7 @@
         </div>
       </div>
 
-      <!-- 手機版: 導航連結區域 -->
+      <!-- 手機版navbar -->
       <div class="navbar__mobile-nav">
         <button
           @click="logout"
@@ -138,20 +135,21 @@ onBeforeUnmount(() => {
   position: sticky;
   top: 0;
   z-index: 100;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &--scrolled {
+    background-color: rgba(168, 168, 168, 0.2);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    box-shadow: 1px 1px 5px rgba(158, 174, 192, 0.2);
+  }
 
   &__content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    border-radius: 8px;
-
-    &--scrolled {
-      background-color: rgba(158, 174, 192, 0.25);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 1px 1px 5px rgba(158, 174, 192, 0.8);
-    }
   }
 
   // 左邊Logo區域
@@ -235,21 +233,14 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
     border-radius: 8px;
     padding: 4px;
     flex-shrink: 0;
-
-    &:hover {
-      background: rgba(158, 174, 192, 0.1);
-      box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
-    }
 
     &-image {
       height: 40px;
       width: auto;
       object-fit: contain;
-      transition: all 0.3s ease;
 
       @media (max-width: 1100px) {
         height: 35px;
@@ -270,21 +261,14 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
     border-radius: 8px;
     padding: 4px;
     flex-shrink: 0;
-
-    &:hover {
-      background: rgba(158, 174, 192, 0.1);
-      box-shadow: 0 2px 8px rgba(158, 174, 192, 0.2);
-    }
 
     &-image {
       height: 40px;
       width: 100%;
       object-fit: contain;
-      transition: all 0.3s ease;
 
       @media (max-width: 1100px) {
         height: 35px;
@@ -380,19 +364,13 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     transition: all 0.3s ease;
-
-    @media (max-width: 992px) {
-      width: 35px;
-      height: 35px;
-    }
-
-    @media (max-width: 480px) {
-      width: 30px;
-      height: 30px;
+    @media (max-width: 460px) {
+      width: 32px;
+      height: 32px;
     }
 
     &:hover {
@@ -404,20 +382,9 @@ onBeforeUnmount(() => {
   &__social-icon {
     width: 36px;
     height: 36px;
-
-    @media (max-width: 992px) {
-      width: 30px;
-      height: 30px;
-    }
-
-    @media (max-width: 768px) {
-      width: 30px;
-      height: 30px;
-    }
-
-    @media (max-width: 480px) {
-      width: 30px;
-      height: 30px;
+    @media (max-width: 460px) {
+      width: 32px;
+      height: 32px;
     }
   }
 }

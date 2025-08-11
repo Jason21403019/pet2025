@@ -116,13 +116,23 @@ function scrollToQues() {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center top;
+  @media screen and (max-width: 768px) {
+    min-height: 100vh;
+    background-image: url("/imgs/body_bg_m.jpg");
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
+  }
 }
 
 .questionnaire-container {
-  padding: 20px 0;
+  padding: 20px 0 60px 0;
   background: transparent;
   min-height: 0;
   transition: all 0.3s ease;
+  @media screen and (max-width: 460px) {
+    padding: 20px 0 30px 0;
+  }
 
   &--visible {
     min-height: 90vh;

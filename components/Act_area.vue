@@ -122,7 +122,7 @@
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
-                參加獎汪喵星球100元購物金為前2000名完成問卷者立即打獎，請中獎者務必截圖妥善保存序號，使用期限至2025/12/31
+                參加獎汪喵星球100元購物金為前2000名完成問卷者【立即贈獎(電子序號)】，請中獎者務必截圖妥善保存序號，使用期限至2025/12/31
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
@@ -217,11 +217,9 @@ onMounted(() => {
     padding-top: 80px;
     @media (max-width: 1024px) {
       padding-top: 80px;
-      margin-bottom: 80px;
     }
     @media (max-width: 480px) {
       padding-top: 40px;
-      margin-bottom: 40px;
     }
   }
 
@@ -250,20 +248,8 @@ onMounted(() => {
     height: auto;
     margin: 0 auto;
 
-    @media (max-width: 1024px) {
-      max-width: 200px;
-    }
-
-    @media (max-width: 768px) {
-      max-width: 300px;
-    }
-
-    @media (max-width: 480px) {
-      max-width: 200px;
-    }
-
-    @media (max-width: 360px) {
-      max-width: 140px;
+    @media (max-width: 460px) {
+      content: url("/imgs/actinfo_title_m.png");
     }
   }
 
@@ -309,8 +295,11 @@ onMounted(() => {
       margin-bottom: 12px;
       display: flex;
       align-items: center;
-      @media (max-width: 480px) {
-        font-size: 20px;
+      @media (max-width: 460px) {
+        font-size: 18px;
+      }
+      @media (max-width: 360px) {
+        font-size: 16px;
       }
     }
 

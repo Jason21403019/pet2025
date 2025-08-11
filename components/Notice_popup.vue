@@ -137,10 +137,13 @@ const closeModal = () => {
 
 <style lang="scss" scoped>
 .notice {
-  padding: 0px 20px 80px 20px;
+  padding: 0px 20px 80px;
   max-width: 100%;
   margin: 0 auto;
   position: relative;
+  @media (max-width: 460px) {
+    padding: 0px 20px 160px;
+  }
 
   &__buttons {
     display: flex;
@@ -170,7 +173,8 @@ const closeModal = () => {
       padding: 6px 18px;
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 460px) {
+      font-size: 16px;
       padding: 6px 16px;
     }
 

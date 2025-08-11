@@ -5,7 +5,8 @@
       <div class="ques__head">
         <h2 class="ques__title">寵物飼主調查問卷</h2>
         <p class="ques__sub">
-          感謝您參與我們的問卷調查，您的意見對我們非常重要
+          感謝您參與我們的問卷調查，<br class="ques__sub-br" />
+          您的意見對我們非常重要
         </p>
       </div>
 
@@ -117,15 +118,6 @@
 
         <!-- 提交按鈕區域 -->
         <div class="ques__foot">
-          <div class="ques__info">
-            <p class="ques__note">
-              <span class="ques__req">*</span> 為必填項目
-            </p>
-            <p class="ques__privacy">
-              我們將嚴格保護您的隱私，問卷資料僅用於研究分析
-            </p>
-          </div>
-
           <button
             type="submit"
             class="ques__btn"
@@ -759,6 +751,12 @@ onMounted(() => {
   margin: 0;
   opacity: 0.9;
   line-height: 1.5;
+  .ques__sub-br {
+    display: none;
+    @media screen and (max-width: 460px) {
+      display: block;
+    }
+  }
 }
 
 .ques__form {
@@ -825,7 +823,6 @@ onMounted(() => {
   gap: 12px;
 }
 
-// 選項區域 - hover使用淺藍色
 .opt {
   display: flex;
   align-items: flex-start;
@@ -848,7 +845,6 @@ onMounted(() => {
   }
 }
 
-// checkbox和radio - 使用橘色
 .opt__input {
   margin-right: 12px;
   margin-top: 2px;
@@ -880,34 +876,11 @@ onMounted(() => {
 }
 
 .ques__foot {
-  border-top: 1px solid #f0f0f0;
-  padding-top: 30px;
   text-align: center;
 }
 
-.ques__info {
-  margin-bottom: 30px;
-}
-
-.ques__note {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 8px 0;
-}
-
-.ques__req {
-  color: #ff4d4f;
-}
-
-.ques__privacy {
-  font-size: 12px;
-  color: #999;
-  margin: 0;
-  line-height: 1.4;
-}
-
 .ques__btn {
-  background: #2f75c9; // 修改：使用藍色背景
+  background: #2f75c9;
   color: white;
   border: none;
   padding: 18px 50px;
@@ -916,14 +889,14 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(47, 117, 201, 0.4); // 修改：藍色陰影
+  box-shadow: 0 5px 15px rgba(47, 117, 201, 0.4);
   min-width: 200px;
 
   &:hover:not(:disabled) {
-    background: #2f75c9; // 修改：hover時保持藍色背景
-    color: #fbed1d; // 修改：hover時文字變黃色
+    background: #2f75c9;
+    color: #fbed1d;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(47, 117, 201, 0.6); // 修改：加深藍色陰影
+    box-shadow: 0 8px 25px rgba(47, 117, 201, 0.6);
   }
 
   &:disabled {
@@ -1006,7 +979,7 @@ onMounted(() => {
   }
 
   .ques__sub {
-    font-size: 14px;
+    font-size: 18px;
   }
 
   .ques__form {
@@ -1043,6 +1016,11 @@ onMounted(() => {
       padding: 10px 12px;
       font-size: 13px;
     }
+  }
+}
+@media screen and (max-width: 460px) {
+  .ques__head {
+    padding: 10px 20px;
   }
 }
 </style>

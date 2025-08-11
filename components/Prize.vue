@@ -71,16 +71,8 @@ const prizeItems = [
     max-width: 290px;
     height: auto;
 
-    @media (max-width: 1024px) {
-      max-width: 200px;
-    }
-
-    @media (max-width: 768px) {
-      max-width: 300px;
-    }
-
-    @media (max-width: 480px) {
-      max-width: 200px;
+    @media (max-width: 460px) {
+      content: url("/imgs/prize_title_m.png");
     }
   }
 
@@ -139,6 +131,9 @@ const prizeItems = [
 
         .prize__image {
           margin-left: 20px;
+          @media (max-width: 460px) {
+            margin-left: 35px;
+          }
         }
       }
 
@@ -194,28 +189,44 @@ const prizeItems = [
       transform: scale(1.05);
     }
 
-    // 第一張圖片 - 貓砂 (284x240)
     &--1 {
       width: 289.5601px;
       height: 207.6921px;
+
+      @media (max-width: 460px) {
+        width: 269.5601px;
+        height: 227.6921px;
+      }
     }
 
-    // 第二張圖片 - 尿布墊 (202.69x246.13)
     &--2 {
       width: 202.6921px;
       height: 246.1261px;
+
+      @media (max-width: 460px) {
+        width: 222.6921px;
+        height: 266.1261px;
+      }
     }
 
-    // 第三張圖片 - 牽繩 (289.56x202.69)
     &--3 {
       width: 289.5601px;
       height: 207.6921px;
+
+      @media (max-width: 460px) {
+        width: 299.5601px;
+        height: 217.6921px;
+      }
     }
 
-    // 第四張圖片 - 購物金 (202.69x246.13)
     &--4 {
       width: 202.6921px;
       height: 246.1261px;
+
+      @media (max-width: 460px) {
+        width: 222.6921px;
+        height: 266.1261px;
+      }
     }
   }
 }
