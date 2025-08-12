@@ -3,10 +3,8 @@
     <Nav />
     <Banner />
 
-    <!-- 問卷區塊位置改成完成頁面內容 -->
     <div class="questionnaire-container questionnaire-container--visible">
       <div class="completed-page__container">
-        <!-- 修改：成功圖示改成圖片 -->
         <div class="completed-page__icon">
           <img
             src="/imgs/completed_title.png"
@@ -15,10 +13,8 @@
           />
         </div>
 
-        <!-- 內容 -->
         <div class="completed-page__content">
           <div class="completed-page__discount-content">
-            <!-- 根據優惠券狀態動態顯示內容 -->
             <template v-if="hasDiscount">
               <p class="completed-page__message-text">
                 恭喜獲得汪喵星球限定<br />$100購物金電子序號
@@ -44,7 +40,6 @@
           </div>
         </div>
 
-        <!-- 按鈕區域 -->
         <div class="completed-page__actions">
           <a
             href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025"
@@ -75,7 +70,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, nextTick } from "vue";
 import Banner from "../components/Banner.vue";
 import Nav from "../components/Nav.vue";
 import Prize from "../components/Prize.vue";
@@ -83,10 +78,8 @@ import Act_area from "../components/Act_area.vue";
 import Footer from "../components/Footer.vue";
 import ToTop from "../components/ToTop.vue";
 
-// 響應式資料
-const hasDiscount = ref(true); // 預設有優惠券，避免閃爍
+const hasDiscount = ref(true);
 
-// 檢查優惠券狀態
 async function checkDiscountStatus() {
   try {
     const response = await $fetch("/pet2025php/checkDiscountStatus.php", {
@@ -102,31 +95,37 @@ async function checkDiscountStatus() {
     }
   } catch (error) {
     console.error("檢查優惠券狀態失敗:", error);
-    // 如果 API 調用失敗，預設顯示有優惠券
     hasDiscount.value = true;
   }
 }
 
-// 路由守衛 - 確保只有填完問卷的用戶才能訪問此頁面
 onMounted(async () => {
-  // 檢查是否有問卷完成的標記
   const hasCompletedQuestionnaire = localStorage.getItem(
     "pet2025_questionnaire_completed",
   );
   if (!hasCompletedQuestionnaire) {
-    // 如果沒有完成標記，重定向到首頁
     navigateTo("/");
     return;
   }
 
-  // 檢查優惠券狀態
   await checkDiscountStatus();
+
+  await nextTick();
+  scrollToContent();
 });
 
-// 確認成功按鈕處理
 function confirmSuccess() {
-  // 可以選擇重新載入頁面或執行其他操作
   window.location.reload();
+}
+
+function scrollToContent() {
+  const contentElement = document.querySelector(".completed-page__container");
+  if (contentElement) {
+    contentElement.scrollIntoView({
+      behavior: "instant",
+      block: "center",
+    });
+  }
 }
 </script>
 
@@ -219,12 +218,11 @@ function confirmSuccess() {
   }
 
   &__btn {
-    // 修改：完全複製Already_played_popup的按鈕樣式
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    padding: 4px 6px; // 修改：改成4px 6px
+    padding: 4px 6px;
     border: 2px solid #2f75c9;
     border-radius: 30px;
     font-size: 16px;
@@ -249,7 +247,7 @@ function confirmSuccess() {
     }
 
     @media (max-width: 480px) {
-      padding: 4px 6px; // 修改：手機版也改成4px 6px
+      padding: 4px 6px;
       font-size: 14px;
       min-width: 80px;
     }

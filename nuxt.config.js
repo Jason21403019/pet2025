@@ -96,8 +96,8 @@ export default defineNuxtConfig({
             dataLayer = [{
                 'user_id': user_id,
                 'google_id': google_id,
-                'cat': ['event', '', '', '', ''],
-                'content_tag': '',
+                'cat': ['event_pets', '', '', '', ''],
+                'content_tag': '問答',
                 'auth_type': auth_type,
                 'publication_date': '',
                 'ffid': JSON.parse(localStorage.getItem('UDN_FID'))?.FFID,
@@ -108,10 +108,18 @@ export default defineNuxtConfig({
         },
         // UDN Fingerprint
         {
-          src: "https://p.udn.com.tw/upf/static/common/udn-fingerprint.umd.js?12",
-          async: true,
+          innerHTML: `
+            // 確保在 DataLayer 設定完成後載入 UDN Fingerprint
+            (function() {
+              var script = document.createElement('script');
+              script.src = 'https://p.udn.com.tw/upf/static/common/udn-fingerprint.umd.js?12';
+              script.async = true;
+              document.head.appendChild(script);
+            })();
+          `,
+          type: "text/javascript",
         },
-        // comScore 追蹤代碼
+        // comScore
         {
           innerHTML: `
             var _comscore = _comscore || [];

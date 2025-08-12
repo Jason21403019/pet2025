@@ -66,8 +66,8 @@ const loadingData = ref({});
 const showVerificationPopup = ref(false);
 const showUniversalPopup = ref(false);
 const universalPopupData = ref({});
-const showAlreadyPlayedPopup = ref(false); 
-const alreadyPlayedData = ref({}); 
+const showAlreadyPlayedPopup = ref(false);
+const alreadyPlayedData = ref({});
 const totalPlayCount = ref(0);
 
 // 簡化的防重複機制
@@ -230,6 +230,14 @@ function updateLoginStatus() {
 
 // 檢查非正常流程進入 - 修改為同步函數並返回是否應該攔截
 function checkNonNormalEntry() {
+  // 新增：如果用戶已完成問卷，跳過非正常流程檢查
+  const hasCompletedQuestionnaire =
+    localStorage.getItem("pet2025_questionnaire_completed") === "true";
+  if (hasCompletedQuestionnaire) {
+    console.log("用戶已完成問卷，跳過非正常流程檢查");
+    return false;
+  }
+
   const justLoggedInFlag =
     localStorage.getItem("pet2025_just_logged_in") === "true";
   const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
@@ -659,15 +667,6 @@ async function goQues() {
 
 // ==================== 生命週期 ====================
 onMounted(async () => {
-  // 檢查是否在 completed 頁面
-  const isOnCompletedPage =
-    localStorage.getItem("pet2025_on_completed_page") === "true";
-  if (isOnCompletedPage) {
-    console.log("在完成頁面，跳過登入狀態檢查");
-    allowLoginSync.value = false;
-    return;
-  }
-
   // 檢查是否為從登入頁面返回
   const referrer = document.referrer;
   const isFromLoginPage = referrer.includes("member.udn.com/member/login.jsp");
@@ -837,6 +836,14 @@ async function checkExistingUser() {
   localStorage.setItem("login_checked", "true");
 
   console.log("檢測到已登入用戶，檢查是否為非正常進入...");
+
+  // 新增：如果用戶已完成問卷，跳過流程檢查
+  const hasCompletedQuestionnaire =
+    localStorage.getItem("pet2025_questionnaire_completed") === "true";
+  if (hasCompletedQuestionnaire) {
+    console.log("用戶已完成問卷，跳過流程檢查");
+    return;
+  }
 
   // 檢查是否有正常流程的完整標記
   const justLoggedInFlag =

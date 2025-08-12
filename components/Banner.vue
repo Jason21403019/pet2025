@@ -59,6 +59,7 @@
               rel="noopener noreferrer"
               @click="confirm"
               class="confirm-btn"
+              data-action="submit"
             >
               確認
             </a>

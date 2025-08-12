@@ -100,17 +100,14 @@ const prizeItems = [
       margin-left: 0;
     }
 
-    // 第二張圖片（窄的）
     &:nth-child(2) {
       margin-left: -50px;
     }
 
-    // 第三張圖片（寬的）
     &:nth-child(3) {
       margin-left: -30px;
     }
 
-    // 第四張圖片（窄的）
     &:nth-child(4) {
       margin-left: -30px;
     }

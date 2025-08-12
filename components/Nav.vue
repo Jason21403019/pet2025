@@ -2,11 +2,11 @@
   <nav class="navbar" :class="{ 'navbar--scrolled': isScrolled }">
     <Nav_container>
       <div class="navbar__content">
-        <!-- Logo -->
         <div class="navbar__left">
-          <NuxtLink
-            to="https://udn.com/news/index"
+          <a
+            href="https://udn.com/news/index"
             target="_blank"
+            rel="noopener noreferrer"
             class="navbar__udn-logo"
           >
             <img
@@ -14,17 +14,23 @@
               alt="udn_Logo"
               class="navbar__udn-logo-image"
             />
-          </NuxtLink>
+          </a>
+
           <div class="navbar__pet-logo">
-            <img
-              src="/imgs/petBlog_logo.svg"
-              alt="petBlog_Logo"
-              class="navbar__pet-logo-image"
-            />
+            <a
+              href="https://pets.udn.com/pets/index"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/imgs/petBlog_logo.svg"
+                alt="petBlog_Logo"
+                class="navbar__pet-logo-image"
+              />
+            </a>
           </div>
         </div>
 
-        <!-- 桌機版navbar -->
         <div class="navbar__center">
           <button
             @click="logout"
@@ -38,7 +44,6 @@
           <NuxtLink to="#activity" class="navbar__link">活動辦法</NuxtLink>
         </div>
 
-        <!-- Social Links -->
         <div class="navbar__right">
           <a
             href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevent.udn.com%2Fbd_petsqa_2025"
@@ -67,7 +72,6 @@
         </div>
       </div>
 
-      <!-- 手機版navbar -->
       <div class="navbar__mobile-nav">
         <button
           @click="logout"
@@ -77,7 +81,10 @@
         >
           登出
         </button>
-        <NuxtLink to="/" class="navbar__link navbar__link--mobile"
+        <NuxtLink
+          to="/"
+          class="navbar__link navbar__link--mobile"
+          @click="goHome"
           >首頁</NuxtLink
         >
         <NuxtLink to="#activity" class="navbar__link navbar__link--mobile"
@@ -269,6 +276,15 @@ onBeforeUnmount(() => {
 
       @media (max-width: 480px) {
         height: 24px;
+      }
+    }
+
+    a {
+      display: inline-block;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
       }
     }
   }

@@ -10,7 +10,7 @@
         <button
           @click="toggleDevTools"
           class="btn btn-warning"
-          v-if="isDevelopment"
+          v-if="isDevelopment && showBtn"
         >
           {{ showDevTools ? "隱藏" : "顯示" }} 開發工具
         </button>
@@ -337,7 +337,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from "vue";
+import { ref, computed, onMounted, watch, nextTick, onUnmounted } from "vue";
 import Swal from "sweetalert2";
 
 useSeoMeta({
@@ -377,6 +377,7 @@ const selectedRecord = ref(null);
 // 修正：開發工具相關變數 - 避免 SSR 錯誤
 const isDevelopment = ref(false);
 const showDevTools = ref(false);
+const showBtn = ref(false); // 新增：控制按鈕顯示
 const showResetConfirm = ref(false);
 const targetEmail = ref("");
 const securityKey = ref("pet2025reset");
@@ -390,10 +391,28 @@ onMounted(() => {
       process.env.NODE_ENV === "development" ||
       window.location.hostname.includes("localhost") ||
       window.location.hostname.includes("lab-event");
+
+    // 新增：監聽鍵盤事件
+    window.addEventListener("keydown", handleKeyDown);
   }
 
   // 載入資料
   fetchRecords();
+});
+
+// 新增：鍵盤事件處理
+function handleKeyDown(e) {
+  if (e.shiftKey && e.key.toLowerCase() === "d") {
+    e.preventDefault();
+    showBtn.value = !showBtn.value;
+  }
+}
+
+// 清理事件監聽器
+onUnmounted(() => {
+  if (process.client) {
+    window.removeEventListener("keydown", handleKeyDown);
+  }
 });
 
 // 計算屬性
