@@ -144,11 +144,11 @@ const TURNSTILE_SITE_KEY = config.public.turnstileSiteKey;
 function getApiUrl(endpoint) {
   const baseUrl = (() => {
     if (config.public.domain?.includes("lab-event")) {
-      return "https://lab-event.udn.com/bd_pet2025/pet2025php";
+      return "https://lab-event.udn.com/bd_petsqa_2025/pet2025php";
     } else if (config.public.domain?.includes("event.udn")) {
       return "https://event.udn.com/bd_petsqa_2025/pet2025php"; // 修改正式環境的路徑
     } else {
-      return "https://lab-event.udn.com/bd_pet2025/pet2025php";
+      return "https://lab-event.udn.com/bd_petsqa_2025/pet2025php";
     }
   })();
 
@@ -166,7 +166,7 @@ const loginUrl = computed(() => {
   let siteParam;
 
   if (hostname === "lab-event.udn.com") {
-    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
+    redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
     siteParam = "bd_pet2025"; // 測試環境仍使用舊的 site 參數
   } else if (hostname === "event.udn.com") {
     redirectUrl = "https://event.udn.com/bd_petsqa_2025/";
@@ -175,10 +175,10 @@ const loginUrl = computed(() => {
     allowedHosts.includes(hostname) ||
     hostname.startsWith("localhost")
   ) {
-    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
+    redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
     siteParam = "bd_pet2025"; // 本地開發使用測試環境設定
   } else {
-    redirectUrl = "https://lab-event.udn.com/bd_pet2025/";
+    redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
     siteParam = "bd_pet2025"; // 預設使用測試環境設定
   }
 

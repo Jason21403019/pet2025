@@ -4,13 +4,13 @@
       <button class="banner__trigger-area" @click="click">
         <img
           v-if="!isMobile"
-          :src="isLoggedIn ? './imgs/goquez.png' : './imgs/login.png'"
+          :src="getImgPath(isLoggedIn ? 'goquez.png' : 'login.png')"
           :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
           class="banner__button-image banner__button-image--desktop"
         />
         <img
           v-if="isMobile"
-          :src="isLoggedIn ? './imgs/goquze_m.png' : './imgs/login_m.png'"
+          :src="getImgPath(isLoggedIn ? 'goquze_m.png' : 'login_m.png')"
           :alt="isLoggedIn ? '前往填問卷' : '登入立即填問卷'"
           class="banner__button-image banner__button-image--mobile"
         />
@@ -80,6 +80,13 @@ const isLoggedIn = inject("isLoggedIn", ref(false));
 const loginUrl = inject("loginUrl", ref("#"));
 const startQuestionnaire = inject("startQuestionnaire", () => {});
 const goQues = inject("goQues", () => {});
+
+// 動態生成圖片路徑
+function getImgPath(filename) {
+  const config = useRuntimeConfig();
+  const baseURL = config.app.baseURL || "/";
+  return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
+}
 
 function checkMobile() {
   isMobile.value = window.innerWidth <= 460;

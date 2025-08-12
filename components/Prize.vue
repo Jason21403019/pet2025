@@ -3,7 +3,7 @@
     <!-- 標題區塊 -->
     <div class="prize__title">
       <img
-        src="/imgs/prize_title.png"
+        :src="getImgPath('prize_title.png')"
         alt="禮品區塊"
         class="prize__title-img"
       />
@@ -14,7 +14,7 @@
       <div v-for="(item, index) in prizeItems" :key="index" class="prize__item">
         <div class="prize__item-image">
           <img
-            :src="`./imgs/prize${index + 1}.png`"
+            :src="getImgPath(`prize${index + 1}.png`)"
             :alt="item.alt"
             :class="`prize__image prize__image--${index + 1}`"
           />
@@ -29,6 +29,15 @@
 </template>
 
 <script setup>
+import { ref, inject, onMounted, onBeforeUnmount } from "vue";
+
+// 動態生成圖片路徑
+function getImgPath(filename) {
+  const config = useRuntimeConfig();
+  const baseURL = config.app.baseURL || "/";
+  return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
+}
+
 const prizeItems = [
   {
     title: "汪喵精選",

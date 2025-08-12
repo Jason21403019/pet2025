@@ -120,10 +120,24 @@ function logout() {
 const route = useRoute();
 
 function goHome(e) {
-  // 如果已經在首頁，強制重新載入
   if (route.path === "/") {
     e.preventDefault();
-    window.location.reload();
+    scrollToBanner();
+  }
+}
+
+function scrollToBanner() {
+  const bannerElement = document.querySelector(".banner");
+  if (bannerElement) {
+    bannerElement.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  } else {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 }
 

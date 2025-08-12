@@ -45,7 +45,7 @@
                 alt=""
                 class="act-area__list-icon"
               />中獎公布：<span class="act-area__highlight"
-                >2025/9/30（二）</span
+                >2025/9/30(二)</span
               >
             </h3>
           </div>
@@ -81,7 +81,7 @@
               <p>好禮1-汪喵優選一年份貓砂</p>
               <p>好禮2-汪喵優選一年份尿布墊</p>
               <p>好禮3-IF設計獎多功能牽繩</p>
-              <p class="act-area__prize-detail">共抽 1名 ，中獎者可好禮3選1</p>
+              <p class="act-area__prize-detail">共抽1名 ，中獎者可好禮3選1</p>
 
               <h4>
                 <img
@@ -89,13 +89,13 @@
                   alt=""
                   class="act-area__li-icon"
                 />參加獎-<span class="act-area__highlight"
-                  >汪喵星球 100 元 購物金</span
+                  >汪喵星球購物金$100</span
                 >
               </h4>
               <p class="act-area__note">
                 （填寫問卷即贈，每帳號限領取1次，<span
                   class="act-area__highlight"
-                  >限量 2000組，前2000名參加者可得，送完為止）</span
+                  >限量2000組，前2000名參加者可得，送完為止）</span
                 >
               </p>
               <p>
@@ -122,7 +122,7 @@
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
-                參加獎汪喵星球100元購物金為前2000名完成問卷者【立即贈獎(電子序號)】，請中獎者務必截圖妥善保存序號，使用期限至2025/12/31
+                參加獎汪喵星球購物金$100為前2000名完成問卷者【立即贈獎(電子序號)】，請中獎者務必截圖妥善保存序號，使用期限至2025/12/31
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
@@ -158,8 +158,7 @@
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
-                若經查核發現，得獎者於活動開獎日前一年內，參與聯合線上活動累計中獎獎項價值超過新台幣
-                1,000 元（含）以上，將取消本活動之獲獎資格。
+                若經查核發現，得獎者於活動開獎日前一年內，參與聯合線上活動累計中獎獎項價值超過新台幣1,000元（含）以上，將取消本活動之獲獎資格。
               </li>
               <li class="act-area__info-list-items">
                 <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
