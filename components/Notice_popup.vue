@@ -245,7 +245,7 @@ onMounted(() => {
     border: none;
     border-radius: 25px;
     max-width: 1060px;
-    max-height: 700px;
+    max-height: 600px;
     position: relative;
     animation: modalBounceIn 0.3s ease-out;
     padding: 20px;
@@ -263,15 +263,15 @@ onMounted(() => {
 
   &__popup-inner {
     position: relative;
-    padding: 60px 50px;
+    padding: 20px 50px;
     border-radius: 20px;
     border: none;
     z-index: 0;
     @media (max-width: 768px) {
-      padding: 40px 30px;
+      padding: 20px 30px;
     }
     @media (max-width: 480px) {
-      padding: 0px 0px;
+      padding: 10px 10px;
       border: none;
     }
   }
@@ -292,6 +292,10 @@ onMounted(() => {
     transition: all 0.2s ease;
     color: white;
     z-index: 10;
+    @media (max-width: 360px) {
+      right: -11px;
+      top: -61px;
+    }
 
     &:hover {
       transform: scale(1.1);

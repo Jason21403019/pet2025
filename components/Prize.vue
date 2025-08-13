@@ -1,6 +1,5 @@
 <template>
   <section class="prize">
-    <!-- 標題區塊 -->
     <div class="prize__title">
       <img
         :src="getImgPath('prize_title.png')"
@@ -9,7 +8,6 @@
       />
     </div>
 
-    <!-- 禮品展示區域 -->
     <div class="prize__items">
       <div v-for="(item, index) in prizeItems" :key="index" class="prize__item">
         <div class="prize__item-image">
@@ -32,25 +30,22 @@
 import { ref, inject, onMounted, onBeforeUnmount } from "vue";
 import { useImagePath } from "~/composables/useImagePath.js";
 
-// 修改這個函數
 function getImgPath(filename) {
   const config = useRuntimeConfig();
   const baseURL = config.app.baseURL || "/";
 
-  // 如果是 PNG 圖片，使用 PGW
   if (filename.endsWith(".png")) {
     return useImagePath(filename);
   }
 
-  // SVG 或其他格式，使用原本的邏輯
   return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
 }
 
 const prizeItems = [
   {
     title: "汪喵精選",
-    subtitle: "一年份貓砂",
-    alt: "汪喵精選一年份貓砂",
+    subtitle: "一年份貓砂-無痕砂",
+    alt: "汪喵精選一年份貓砂-無痕砂",
   },
   {
     title: "汪喵精選",
@@ -70,7 +65,6 @@ const prizeItems = [
 ];
 
 onMounted(() => {
-  // 設定 CSS 變數給手機版標題圖片
   const root = document.documentElement;
   root.style.setProperty(
     "--prize-title-m",
@@ -98,7 +92,7 @@ onMounted(() => {
     height: auto;
 
     @media (max-width: 460px) {
-      content: var(--prize-title-m); // 使用 CSS 變數
+      content: var(--prize-title-m);
     }
   }
 
