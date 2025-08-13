@@ -94,6 +94,8 @@ function showDialog(options) {
     cancelButtonText: options.cancelButtonText || "取消",
     allowOutsideClick: options.allowOutsideClick !== false,
     showCloseButton: options.showCloseButton !== false,
+    // 新增：標記是否需要在關閉時登出
+    shouldLogoutOnClose: options.shouldLogoutOnClose || false,
   };
 
   showUniversalPopup.value = true;
@@ -105,6 +107,8 @@ function showDialog(options) {
 
 // 關閉彈窗的函數
 const closeUniversalPopup = () => {
+  const shouldLogout = universalPopupData.value.shouldLogoutOnClose;
+
   showUniversalPopup.value = false;
   isDialogOpen = false;
 
@@ -113,9 +117,18 @@ const closeUniversalPopup = () => {
     window._universalPopupResolve = null;
     resolve({ isDismissed: true, dismiss: "backdrop" });
   }
+
+  // 如果需要登出，執行登出
+  if (shouldLogout) {
+    console.log("檢測到需要登出的錯誤，執行登出");
+    performCompleteLogout();
+    window.location.reload();
+  }
 };
 
 const handleUniversalConfirm = () => {
+  const shouldLogout = universalPopupData.value.shouldLogoutOnClose;
+
   if (window._universalPopupResolve) {
     const resolve = window._universalPopupResolve;
     window._universalPopupResolve = null;
@@ -124,9 +137,18 @@ const handleUniversalConfirm = () => {
 
   showUniversalPopup.value = false;
   isDialogOpen = false;
+
+  // 如果需要登出，執行登出
+  if (shouldLogout) {
+    console.log("檢測到需要登出的錯誤，執行登出");
+    performCompleteLogout();
+    window.location.reload();
+  }
 };
 
 const handleUniversalCancel = () => {
+  const shouldLogout = universalPopupData.value.shouldLogoutOnClose;
+
   if (window._universalPopupResolve) {
     const resolve = window._universalPopupResolve;
     window._universalPopupResolve = null;
@@ -135,6 +157,13 @@ const handleUniversalCancel = () => {
 
   showUniversalPopup.value = false;
   isDialogOpen = false;
+
+  // 如果需要登出，執行登出
+  if (shouldLogout) {
+    console.log("檢測到需要登出的錯誤，執行登出");
+    performCompleteLogout();
+    window.location.reload();
+  }
 };
 
 // Cloudflare Turnstile 配置
@@ -213,6 +242,10 @@ function updateLoginStatus() {
   // 只有在從未登入變為登入狀態時，才檢查是否為非正常流程
   if (!wasLoggedIn && currentlyLoggedIn) {
     console.log("檢測到登入狀態變化，檢查是否為非正常流程進入");
+
+    // 新增：清除舊的問卷完成標記，避免不同用戶間的狀態混淆
+    localStorage.removeItem("pet2025_questionnaire_completed");
+    console.log("已清除舊的問卷完成標記");
 
     // 立即檢查非正常進入，不延遲
     const shouldBlock = checkNonNormalEntry();
@@ -665,8 +698,35 @@ async function goQues() {
   }
 }
 
+// ==================== 瀏覽器檢測和跳轉 ====================
+const checkAndRedirect = () => {
+  const u = navigator.userAgent;
+  const ua = navigator.userAgent.toLowerCase();
+  const isLineApp = /Line/i.test(ua);
+  const isFbApp = /FBAV/i.test(ua) || /FBAN/i.test(ua);
+  const isExAppUrl = /[?&]openExternalBrowser=1\b/.test(window.location.href);
+
+  if (isLineApp && !isExAppUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("openExternalBrowser", "1");
+    window.location.replace(url.toString());
+  }
+  if (isFbApp) {
+    showDialog({
+      icon: "warning",
+      title: "您正在使用 Facebook 內建瀏覽器",
+      text: "建議使用外部瀏覽器開啟，以獲得最佳體驗",
+      confirmButtonText: "確定",
+      showCancelButton: false,
+    });
+  }
+};
+
 // ==================== 生命週期 ====================
 onMounted(async () => {
+  // 首先執行瀏覽器檢查和跳轉
+  checkAndRedirect();
+
   // 檢查是否為從登入頁面返回
   const referrer = document.referrer;
   const isFromLoginPage = referrer.includes("member.udn.com/member/login.jsp");
@@ -693,11 +753,11 @@ onMounted(async () => {
 
     if (udnmember && um2) {
       console.log("有登入 cookie，執行非正常流程檢查");
-      checkNonNormalEntry(); // 直接調用，會顯示彈窗並強制登出
+      checkNonNormalEntry();
     }
 
     allowLoginSync.value = false;
-    return; // 結束處理
+    return;
   }
 
   // 正常的 allowLoginSync 邏輯

@@ -63,12 +63,14 @@ async function onSubmit(data) {
       // 跳轉到完成頁面
       await navigateTo("/completed");
     } else {
+      // 所有提交失敗的錯誤都在關閉彈窗時登出
       showDialog({
         icon: "error",
         title: "提交失敗",
         text: result.message || "請稍後再試",
         confirmButtonText: "確定",
         showCancelButton: false,
+        shouldLogoutOnClose: true, // 設置登出標記
       });
     }
   } catch (error) {
@@ -80,6 +82,7 @@ async function onSubmit(data) {
       text: "請稍後再試",
       confirmButtonText: "確定",
       showCancelButton: false,
+      shouldLogoutOnClose: true, // 設置登出標記
     });
   }
 }

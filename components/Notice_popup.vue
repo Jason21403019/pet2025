@@ -254,11 +254,8 @@ const closeModal = () => {
       padding: 40px 30px;
     }
     @media (max-width: 480px) {
-      padding: 30px 20px;
+      padding: 0px 0px;
       border: none;
-    }
-    @media (max-width: 360px) {
-      padding: 20px 10px;
     }
   }
 
@@ -347,7 +344,7 @@ const closeModal = () => {
   }
 
   &__list {
-    list-style: none; // 移除原本的disc
+    list-style: none;
     padding-left: 25px;
   }
 
@@ -358,14 +355,13 @@ const closeModal = () => {
     line-height: 1.6;
     position: relative;
     counter-increment: list-counter;
-    padding-left: 25px; // 為圖標留出空間
+    padding-left: 25px;
 
-    // 用 before 偽元素添加圖標
     &::before {
       content: "";
       position: absolute;
       left: 0;
-      top: calc(10px + 0.4em); // 修改：調整到與文字基線對齊的位置
+      top: calc(10px + 0.4em);
       width: 16px;
       height: 16px;
       background-image: url("/imgs/popupList_icon.png");
@@ -378,7 +374,7 @@ const closeModal = () => {
       padding-top: 0;
 
       &::before {
-        top: 0.4em; // 修改：第一個項目也用相同的基線對齊
+        top: 0.4em;
       }
     }
 

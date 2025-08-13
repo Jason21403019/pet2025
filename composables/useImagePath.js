@@ -1,12 +1,5 @@
-export const useImagePath = () => {
-  const config = useRuntimeConfig();
+import { pgwWrap } from "./usePgw.js";
 
-  const getImgPath = (filename) => {
-    const baseURL = config.app.baseURL || "/";
-    return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
-  };
-
-  return {
-    getImgPath,
-  };
+export const useImagePath = (imageName) => {
+  return pgwWrap(`/imgs/${imageName}`);
 };

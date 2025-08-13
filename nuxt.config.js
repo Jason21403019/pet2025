@@ -42,6 +42,10 @@ export default defineNuxtConfig({
           property: "og:site_name",
           content: "聯合新聞網",
         },
+        {
+          property: "og:image",
+          content: "https://event.udn.com/bd_petsqa_2025/imgs/login.png",
+        },
       ],
       link: [
         { rel: "icon", type: "image/x-icon" },

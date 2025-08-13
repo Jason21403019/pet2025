@@ -162,6 +162,10 @@ function scrollToContent() {
     @media (max-width: 768px) {
       padding: 30px 20px;
     }
+
+    @media (max-width: 460px) {
+      background-image: url("/imgs/completed_bg_m.png");
+    }
   }
 
   &__icon {
