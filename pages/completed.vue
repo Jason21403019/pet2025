@@ -4,10 +4,10 @@
     <Banner />
 
     <div class="questionnaire-container questionnaire-container--visible">
-      <div class="completed-page__container">
+      <div class="completed-page__container" :style="containerBgStyle">
         <div class="completed-page__icon">
           <img
-            src="/imgs/completed_title.png"
+            :src="getImgPath('completed_title.png')"
             alt="填寫成功"
             class="completed-page__icon-img"
           />
@@ -70,7 +70,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref, nextTick, computed } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 import Banner from "../components/Banner.vue";
 import Nav from "../components/Nav.vue";
 import Prize from "../components/Prize.vue";
@@ -79,6 +80,27 @@ import Footer from "../components/Footer.vue";
 import ToTop from "../components/ToTop.vue";
 
 const hasDiscount = ref(true);
+
+// 動態生成圖片路徑
+function getImgPath(filename) {
+  const config = useRuntimeConfig();
+  const baseURL = config.app.baseURL || "/";
+
+  if (filename.endsWith(".png")) {
+    return useImagePath(filename);
+  }
+
+  return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
+}
+
+// 計算背景樣式
+const containerBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("completed_bg.png")}")`,
+}));
+
+const containerMobileBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("completed_bg_m.png")}")`,
+}));
 
 async function checkDiscountStatus() {
   try {
@@ -100,18 +122,33 @@ async function checkDiscountStatus() {
 }
 
 onMounted(async () => {
-  const hasCompletedQuestionnaire = localStorage.getItem(
-    "pet2025_questionnaire_completed",
-  );
-  if (!hasCompletedQuestionnaire) {
-    navigateTo("/");
-    return;
-  }
+  // const hasCompletedQuestionnaire = localStorage.getItem(
+  //   "pet2025_questionnaire_completed",
+  // );
+  // if (!hasCompletedQuestionnaire) {
+  //   navigateTo("/");
+  //   return;
+  // }
 
   await checkDiscountStatus();
 
   await nextTick();
   scrollToContent();
+
+  // 處理手機版背景圖片
+  const handleResize = () => {
+    const container = document.querySelector(".completed-page__container");
+    if (container) {
+      if (window.innerWidth <= 460) {
+        container.style.backgroundImage = `url("${useImagePath("completed_bg_m.png")}")`;
+      } else {
+        container.style.backgroundImage = `url("${useImagePath("completed_bg.png")}")`;
+      }
+    }
+  };
+
+  handleResize();
+  window.addEventListener("resize", handleResize);
 });
 
 function confirmSuccess() {
@@ -148,7 +185,6 @@ function scrollToContent() {
   &__container {
     max-width: 500px;
     background-color: white;
-    background-image: url("/imgs/completed_bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -164,7 +200,7 @@ function scrollToContent() {
     }
 
     @media (max-width: 460px) {
-      background-image: url("/imgs/completed_bg_m.png");
+      // background-image: url("/imgs/completed_bg_m.png");
     }
   }
 

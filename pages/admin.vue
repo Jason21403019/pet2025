@@ -521,7 +521,7 @@ function applyFilters() {
   });
 
   const endTime = performance.now();
-  console.log(`篩選耗時: ${endTime - startTime}ms`);
+  // console.log(`篩選耗時: ${endTime - startTime}ms`);
 
   currentPage.value = 1;
   pageInput.value = 1;
@@ -553,7 +553,7 @@ function applySorting() {
   });
 
   const endTime = performance.now();
-  console.log(`排序耗時: ${endTime - startTime}ms`);
+  // console.log(`排序耗時: ${endTime - startTime}ms`);
 }
 
 // 優化的分頁函數

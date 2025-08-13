@@ -30,11 +30,19 @@
 
 <script setup>
 import { ref, inject, onMounted, onBeforeUnmount } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
-// 動態生成圖片路徑
+// 修改這個函數
 function getImgPath(filename) {
   const config = useRuntimeConfig();
   const baseURL = config.app.baseURL || "/";
+
+  // 如果是 PNG 圖片，使用 PGW
+  if (filename.endsWith(".png")) {
+    return useImagePath(filename);
+  }
+
+  // SVG 或其他格式，使用原本的邏輯
   return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
 }
 
@@ -60,6 +68,15 @@ const prizeItems = [
     alt: "汪喵商城購物金$100",
   },
 ];
+
+onMounted(() => {
+  // 設定 CSS 變數給手機版標題圖片
+  const root = document.documentElement;
+  root.style.setProperty(
+    "--prize-title-m",
+    `url("${useImagePath("prize_title_m.png")}")`,
+  );
+});
 </script>
 
 <style lang="scss" scoped>
@@ -81,7 +98,7 @@ const prizeItems = [
     height: auto;
 
     @media (max-width: 460px) {
-      content: url("/imgs/prize_title_m.png");
+      content: var(--prize-title-m); // 使用 CSS 變數
     }
   }
 

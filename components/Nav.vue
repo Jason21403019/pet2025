@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
     }
 
     @media (max-width: 768px) {
-      gap: 6px;
+      gap: 4px;
     }
 
     @media (max-width: 480px) {
@@ -230,7 +230,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  // 右邊Social區域 - 移除 padding-right，因為現在由外層處理
+  // 右邊Social區域
   &__right {
     display: flex;
     align-items: center;
@@ -271,7 +271,6 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 8px;
     padding: 4px;
     flex-shrink: 0;
 
@@ -289,7 +288,7 @@ onBeforeUnmount(() => {
       }
 
       @media (max-width: 480px) {
-        height: 24px;
+        height: 28px;
       }
     }
 
@@ -326,7 +325,7 @@ onBeforeUnmount(() => {
       }
 
       @media (max-width: 480px) {
-        height: 30px;
+        height: 32px;
       }
     }
   }

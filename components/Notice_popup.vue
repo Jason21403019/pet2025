@@ -64,7 +64,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 const isPopupVisible = ref(false);
 const activeTab = ref("notice");
@@ -133,6 +134,23 @@ const closeModal = () => {
     isPopupVisible.value = false;
   });
 };
+
+onMounted(() => {
+  // 設定 CSS 變數給背景圖片
+  const root = document.documentElement;
+  root.style.setProperty(
+    "--popup-bg-right",
+    `url("${useImagePath("popup_bg_right.png")}")`,
+  );
+  root.style.setProperty(
+    "--popup-bg-left",
+    `url("${useImagePath("popup_bg_left.png")}")`,
+  );
+  root.style.setProperty(
+    "--popup-list-icon",
+    `url("${useImagePath("popupList_icon.png")}")`,
+  );
+});
 </script>
 
 <style lang="scss" scoped>
@@ -218,8 +236,7 @@ const closeModal = () => {
 
   &__popup {
     background: #2f75c9;
-    background-image:
-      url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
+    background-image: var(--popup-bg-right), var(--popup-bg-left);
     background-size: 40%, 40%;
     background-position:
       top right,
@@ -364,7 +381,7 @@ const closeModal = () => {
       top: calc(10px + 0.4em);
       width: 16px;
       height: 16px;
-      background-image: url("/imgs/popupList_icon.png");
+      background-image: var(--popup-list-icon);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;

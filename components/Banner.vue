@@ -24,7 +24,12 @@
       :class="{ closing: isClosing }"
       @click="close"
     >
-      <div class="modal-content" :class="{ closing: isClosing }" @click.stop>
+      <div
+        class="modal-content"
+        :style="modalBgStyle"
+        :class="{ closing: isClosing }"
+        @click.stop
+      >
         <!-- 關閉按鈕 -->
         <button class="modal-close-btn" @click="close">
           <svg
@@ -71,7 +76,8 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount } from "vue";
+import { ref, inject, onMounted, onBeforeUnmount, computed } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 const showModal = ref(false);
 const isClosing = ref(false);
@@ -85,8 +91,20 @@ const goQues = inject("goQues", () => {});
 function getImgPath(filename) {
   const config = useRuntimeConfig();
   const baseURL = config.app.baseURL || "/";
+
+  // 如果是 PNG 圖片，使用 PGW
+  if (filename.endsWith(".png")) {
+    return useImagePath(filename);
+  }
+
+  // SVG 或其他格式，使用你原本的邏輯
   return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
 }
+
+// 新增：計算背景樣式
+const modalBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("loginPop.png")}")`,
+}));
 
 function checkMobile() {
   isMobile.value = window.innerWidth <= 460;
@@ -203,7 +221,6 @@ onBeforeUnmount(() => {
 }
 
 .modal-content {
-  background-image: url("/imgs/loginPop.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

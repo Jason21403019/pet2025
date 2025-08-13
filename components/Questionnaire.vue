@@ -16,6 +16,7 @@
           <div
             v-for="(q, index) in allQuestions"
             :key="q.id"
+            :data-question-id="q.id"
             class="q"
             :class="{
               'q--error': hasError(q.id),
@@ -118,13 +119,20 @@
 
         <!-- 提交按鈕區域 -->
         <div class="ques__foot">
+          <!-- 新增：未完成提示 -->
+          <div v-if="!canSubmit && !submitting" class="ques__incomplete-hint">
+            尚未填寫完問卷，還有 {{ uncompletedQuestions.length }} 題未完成
+          </div>
+
           <button
             type="submit"
             class="ques__btn"
-            :disabled="submitting || !canSubmit"
-            :class="{ 'ques__btn--loading': submitting }"
+            :class="{
+              'ques__btn--loading': submitting,
+              'ques__btn--incomplete': !canSubmit && !submitting,
+            }"
           >
-            <span v-if="!submitting">提交問卷</span>
+            <span v-if="!submitting">{{ submitButtonText }}</span>
             <span v-else class="ques__loading">
               <span class="ques__spinner"></span>
               提交中...
@@ -138,6 +146,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 // Props
 const props = defineProps({
@@ -422,6 +431,46 @@ const canSubmit = computed(() => {
   });
 });
 
+// 新增：計算未填寫的題目
+const uncompletedQuestions = computed(() => {
+  const requiredQuestions = allQuestions.value.filter((q) => q.required);
+
+  return requiredQuestions.filter((question) => {
+    const answer = answers.value[question.id];
+
+    if (question.type === "multiple") {
+      return !Array.isArray(answer) || answer.length === 0;
+    }
+
+    return answer === undefined || answer === null || answer === "";
+  });
+});
+
+// 新增：計算按鈕文字
+const submitButtonText = computed(() => {
+  if (submitting.value) return "提交中...";
+  if (canSubmit.value) return "提交問卷";
+  return "尚未填寫";
+});
+
+// 新增：滾動到第一個未填寫的題目
+const scrollToFirstUncompleted = () => {
+  if (uncompletedQuestions.value.length > 0) {
+    const firstUncompletedId = uncompletedQuestions.value[0].id;
+    const element = document.querySelector(
+      `[data-question-id="${firstUncompletedId}"]`,
+    );
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      // 可以加上視覺提示
+      element.classList.add("q--highlight");
+      setTimeout(() => {
+        element.classList.remove("q--highlight");
+      }, 2000);
+    }
+  }
+};
+
 // 檢查選項是否被選中
 const isOptionSelected = (questionId, optionText, type) => {
   const answer = answers.value[questionId];
@@ -643,6 +692,12 @@ const validate = () => {
 
 // 提交問卷
 const submit = async () => {
+  // 如果未完成，滾動到第一個未填寫的題目
+  if (!canSubmit.value) {
+    scrollToFirstUncompleted();
+    return;
+  }
+
   if (!validate()) {
     const firstError = document.querySelector(".q--error");
     if (firstError) {
@@ -673,7 +728,7 @@ const submit = async () => {
       completedQuestions: allQuestions.value.map((q) => q.id),
     };
 
-    console.log("提交問卷數據:", submitData);
+    // console.log("提交問卷數據:", submitData);
 
     // 通知父組件
     emit("questionnaire-completed", submitData);
@@ -692,6 +747,13 @@ onMounted(() => {
       answers.value[question.id] = [];
     }
   });
+
+  // 設定 CSS 變數給背景圖片
+  const root = document.documentElement;
+  root.style.setProperty(
+    "--ques-head-bg",
+    `url("${useImagePath("quezheadbg.png")}")`,
+  );
 });
 </script>
 
@@ -725,7 +787,7 @@ onMounted(() => {
 }
 
 .ques__head {
-  background-image: url("/imgs/quezheadbg.png");
+  background-image: var(--ques-head-bg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -790,6 +852,11 @@ onMounted(() => {
   &--error {
     border-color: #ff4d4f;
     background: #fff2f2;
+  }
+
+  &--highlight {
+    border-color: #f46c00;
+    box-shadow: 0 0 0 3px rgba(244, 108, 0, 0.2);
   }
 }
 
@@ -908,30 +975,35 @@ onMounted(() => {
   &--loading {
     cursor: wait;
   }
-}
 
-.ques__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
+  // 新增：未完成狀態的按鈕樣式
+  &--incomplete {
+    background: #faad14;
+    box-shadow: 0 5px 15px rgba(250, 173, 20, 0.4);
 
-.ques__spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+    &:hover {
+      background: #faad14;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(250, 173, 20, 0.6);
+    }
   }
+}
+
+// 新增：高亮未填寫題目的動畫
+.q--highlight {
+  border-color: #faad14 !important;
+  background: #fffbe6 !important;
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0%,
   100% {
-    transform: rotate(360deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    box-shadow: 0 5px 25px rgba(250, 173, 20, 0.3);
   }
 }
 
@@ -1022,5 +1094,16 @@ onMounted(() => {
   .ques__head {
     padding: 10px 20px;
   }
+}
+
+.ques__incomplete-hint {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+  border-radius: 8px;
+  color: #d46b08;
+  font-size: 14px;
+  text-align: center;
 }
 </style>

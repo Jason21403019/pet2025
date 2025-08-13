@@ -52,7 +52,7 @@ onMounted(() => {
 // 問卷提交處理
 async function onSubmit(data) {
   try {
-    console.log("收到問卷數據:", data);
+    // console.log("收到問卷數據:", data);
 
     const result = await submitData(data.answers);
 
@@ -95,7 +95,7 @@ function scrollToQues() {
       behavior: "smooth",
       block: "start",
     });
-    console.log("已滾動到問卷區塊");
+    // console.log("已滾動到問卷區塊");
   } else {
     // 如果問卷元素還沒載入，延遲一點再試
     setTimeout(() => {
@@ -105,7 +105,7 @@ function scrollToQues() {
           behavior: "smooth",
           block: "start",
         });
-        console.log("延遲滾動到問卷區塊");
+        // console.log("延遲滾動到問卷區塊");
       }
     }, 100); // 加上延遲時間
   }

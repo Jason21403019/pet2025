@@ -1,23 +1,36 @@
 <template>
   <transition name="fade">
     <button v-if="isVisible" @click="scrollToTop" class="totop">
-      <img src="/imgs/toTop_btn.png" alt="回到頂部" class="totop__image" />
+      <img
+        :src="getImgPath('toTop_btn.png')"
+        alt="回到頂部"
+        class="totop__image"
+      />
     </button>
   </transition>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
-// 狀態管理
 const isVisible = ref(false);
 
-// 監聽滾動事件
+function getImgPath(filename) {
+  const config = useRuntimeConfig();
+  const baseURL = config.app.baseURL || "/";
+
+  if (filename.endsWith(".png")) {
+    return useImagePath(filename);
+  }
+
+  return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
+}
+
 const handleScroll = () => {
   isVisible.value = window.scrollY > 300;
 };
 
-// 滾動到頂部
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
@@ -25,7 +38,6 @@ const scrollToTop = () => {
   });
 };
 
-// 生命週期
 onMounted(() => {
   window.addEventListener("scroll", handleScroll, { passive: true });
 });

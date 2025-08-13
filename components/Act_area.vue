@@ -4,7 +4,7 @@
       <div class="act-area__content">
         <div class="act-area__title" id="activity">
           <img
-            src="/imgs/actinfo_title.png"
+            :src="getImgPath('actinfo_title.png')"
             alt="活動辦法"
             class="act-area__title-img"
           />
@@ -13,7 +13,7 @@
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />主辦單位：聯合線上股份有限公司
@@ -22,7 +22,7 @@
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />協辦單位：汪喵星球、Justar
@@ -31,28 +31,26 @@
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />活動時間：即日起至
-              <span class="act-area__highlight">2025/9/15(一)</span>
+              <span class="act-area__highlight">2025/9/15(一)10:00</span>
             </h3>
           </div>
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
-              />中獎公布：<span class="act-area__highlight"
-                >2025/9/30(二)</span
-              >
+              />中獎公布：<span class="act-area__highlight">2025/9/30(二)</span>
             </h3>
           </div>
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />活動流程：
@@ -65,7 +63,7 @@
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />活動獎品：
@@ -73,7 +71,7 @@
             <div class="act-area__prize-section">
               <h4>
                 <img
-                  src="/imgs/li_icon.png"
+                  :src="getImgPath('li_icon.png')"
                   alt=""
                   class="act-area__li-icon"
                 />頭獎-三大好禮任選1
@@ -85,7 +83,7 @@
 
               <h4>
                 <img
-                  src="/imgs/li_icon.png"
+                  :src="getImgPath('li_icon.png')"
                   alt=""
                   class="act-area__li-icon"
                 />參加獎-<span class="act-area__highlight"
@@ -106,26 +104,42 @@
           <div class="act-area__section">
             <h3>
               <img
-                src="/imgs/list_icon.png"
+                :src="getImgPath('list_icon.png')"
                 alt=""
                 class="act-area__list-icon"
               />貼心提醒：
             </h3>
             <ul class="act-area__info-list">
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 活動期間，每一會員帳號都有一次填寫問卷機會。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 頭獎獎項中獎名單將於2025/9/30公布在中獎專區(聯合新聞網>右上角搜索>活動專區>行銷活動>中獎專區)
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 參加獎汪喵星球購物金$100為前2000名完成問卷者【立即贈獎(電子序號)】，請中獎者務必截圖妥善保存序號，使用期限至2025/12/31
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 購物金使用說明如下：
               </li>
               <li class="act-area__info-list-items act-area__sub-item">
@@ -145,30 +159,54 @@
                 5.汪喵星球保留隨時修改、變更及取消優惠碼之權利。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 主辦單位保有針對重複、異常等填寫行為進行異動之權利，恕不另行通知。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 若發現人為操作、使用網頁機器人程式或一次性信箱等參與活動，聯合線上得取消其參加或得獎資格。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 本活動獲獎資格不得重複，每人僅限一次領獎機會（依個人資料為準），均不得重複領獎。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 若經查核發現，得獎者於活動開獎日前一年內，參與聯合線上活動累計中獎獎項價值超過新台幣1,000元（含）以上，將取消本活動之獲獎資格。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 若使用 Gmail
                 帳號參加活動，於帳號任意字元間加入小數點，均視為同一個信箱，僅有一次獲（抽）獎資格。例如，已有
                 123@gmail.com 參加活動，將主動排除
                 1.23@gmail.com、12.3@gmail.com 等變體信箱。
               </li>
               <li class="act-area__info-list-items">
-                <img src="/imgs/li_icon.png" alt="" class="act-area__li-icon" />
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                />
                 參與本次活動即代表您已充分了解並同意接受個資聲明與注意事項。
               </li>
             </ul>
@@ -181,9 +219,32 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 import Notice_popup from "./Notice_popup.vue";
 
+// 動態生成圖片路徑
+function getImgPath(filename) {
+  const config = useRuntimeConfig();
+  const baseURL = config.app.baseURL || "/";
+
+  // 如果是 PNG 圖片，使用 PGW
+  if (filename.endsWith(".png")) {
+    return useImagePath(filename);
+  }
+
+  // SVG 或其他格式，使用原本的邏輯
+  return `${baseURL}imgs/${filename}`.replace(/\/+/g, "/");
+}
+
 onMounted(() => {
+  // 設定 CSS 變數給手機版標題圖片
+  const root = document.documentElement;
+  root.style.setProperty(
+    "--actinfo-title-m",
+    `url("${useImagePath("actinfo_title_m.png")}")`,
+  );
+
   const handleAnchorClick = (e) => {
     const href = e.target.getAttribute("href");
     if (href && href.startsWith("#")) {
@@ -248,7 +309,7 @@ onMounted(() => {
     margin: 0 auto;
 
     @media (max-width: 460px) {
-      content: url("/imgs/actinfo_title_m.png");
+      content: var(--actinfo-title-m); // 使用 CSS 變數
     }
   }
 

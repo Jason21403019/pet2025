@@ -8,6 +8,7 @@
     <div
       class="already-played__popup"
       :class="{ 'already-played__popup--closing': isClosing }"
+      :style="popupBgStyle"
     >
       <!-- 關閉按鈕 -->
       <button class="already-played__close-btn" @click="closeModal">
@@ -60,7 +61,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 const props = defineProps({
   isVisible: {
@@ -84,6 +86,11 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 const isClosing = ref(false);
+
+// 計算背景圖片樣式
+const popupBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("loginPop.png")}")`,
+}));
 
 const closeModal = () => {
   isClosing.value = true;
@@ -117,7 +124,6 @@ const closeModal = () => {
   }
 
   &__popup {
-    background-image: url("/imgs/loginPop.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

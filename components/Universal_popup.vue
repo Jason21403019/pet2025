@@ -8,6 +8,7 @@
     <div
       class="universal__popup"
       :class="{ 'universal__popup--closing': isClosing }"
+      :style="popupBgStyle"
     >
       <div class="universal__popup-inner">
         <!-- 關閉按鈕 (僅在允許關閉時顯示) -->
@@ -162,6 +163,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 const props = defineProps({
   isVisible: {
@@ -171,7 +173,7 @@ const props = defineProps({
   popupData: {
     type: Object,
     default: () => ({
-      icon: null, // 'success', 'error', 'warning', 'loading'
+      icon: null,
       title: "",
       text: "",
       html: "",
@@ -198,6 +200,11 @@ const showButtons = computed(
     props.popupData.showConfirmButton !== false ||
     props.popupData.showCancelButton,
 );
+
+// 計算背景圖片樣式
+const popupBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("popup_bg_right.png")}"), url("${useImagePath("popup_bg_left.png")}")`,
+}));
 
 // 方法
 const closeModal = () => {
@@ -249,13 +256,6 @@ const handleCancel = () => {
 
   &__popup {
     background: #2f75c9;
-    background-image:
-      url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
-    background-size: 40%, 40%;
-    background-position:
-      top right,
-      bottom left;
-    background-repeat: no-repeat, no-repeat;
     border: none;
     border-radius: 25px;
     min-width: 300px;
@@ -267,6 +267,11 @@ const handleCancel = () => {
     position: relative;
     animation: modalBounceIn 0.3s ease-out;
     padding: 20px;
+    background-size: 40%, 40%;
+    background-position:
+      top right,
+      bottom left;
+    background-repeat: no-repeat, no-repeat;
 
     &--closing {
       animation: modalBounceOut 0.25s ease-in;
@@ -331,13 +336,13 @@ const handleCancel = () => {
     align-items: center;
     text-align: center;
     color: #fff;
-    padding: 10px 0; // 減少padding
+    padding: 10px 0;
     width: 100%;
   }
 
   &__icon {
-    margin-bottom: 15px; // 減少間距
-    flex-shrink: 0; // 防止圖標被壓縮
+    margin-bottom: 15px;
+    flex-shrink: 0;
 
     &--success svg {
       filter: drop-shadow(0 0 10px rgba(82, 196, 26, 0.3));
@@ -353,13 +358,13 @@ const handleCancel = () => {
   }
 
   &__title {
-    font-size: 24px; // 稍微減少標題大小
+    font-size: 24px;
     font-weight: bold;
     color: white;
     text-align: center;
-    margin-bottom: 15px; // 減少間距
+    margin-bottom: 15px;
     line-height: 1.4;
-    word-wrap: break-word; // 長文字自動換行
+    word-wrap: break-word;
 
     @media (max-width: 480px) {
       font-size: 20px;
@@ -368,12 +373,12 @@ const handleCancel = () => {
   }
 
   &__text {
-    font-size: 16px; // 稍微減少文字大小
+    font-size: 16px;
     line-height: 1.5;
-    margin-bottom: 15px; // 減少間距
+    margin-bottom: 15px;
     color: #fff;
     white-space: pre-line;
-    word-wrap: break-word; // 長文字自動換行
+    word-wrap: break-word;
     max-width: 100%;
 
     @media (max-width: 480px) {
@@ -398,25 +403,25 @@ const handleCancel = () => {
 
   &__buttons {
     display: flex;
-    gap: 12px; // 減少按鈕間距
+    gap: 12px;
     justify-content: center;
-    margin-top: 15px; // 減少上方間距
-    flex-wrap: wrap; // 小螢幕上允許換行
+    margin-top: 15px;
+    flex-wrap: wrap;
   }
 
   &__btn {
-    padding: 10px 20px; // 稍微減少按鈕大小
+    padding: 10px 20px;
     border: 2px solid #2f75c9;
     border-radius: 30px;
-    font-size: 14px; // 稍微減少字體
+    font-size: 14px;
     font-weight: 400;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 80px; // 減少最小寬度
+    min-width: 80px;
     background: transparent;
     color: #2f75c9;
     white-space: nowrap;
-    flex-shrink: 0; // 防止按鈕被壓縮
+    flex-shrink: 0;
 
     &--confirm {
       &:hover {
@@ -451,9 +456,8 @@ const handleCancel = () => {
   }
 }
 
-/* Loading 動畫 */
 .spinner {
-  width: 32px; // 稍微減少Loading大小
+  width: 32px;
   height: 32px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top: 3px solid #fbed1d;

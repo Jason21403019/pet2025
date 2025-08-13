@@ -8,14 +8,14 @@
 
 <style lang="scss" scoped>
 .container {
-  max-width: 1920px; // 修改：導覽列容器最大寬度為1920px
+  max-width: 1920px;
   width: 100%;
   margin: 0 auto;
-  padding: 16px;
+  padding: 12px;
   box-sizing: border-box;
 
   @media (max-width: 480px) {
-    padding: 12px;
+    padding: 8px;
   }
 
   @media (max-width: 375px) {

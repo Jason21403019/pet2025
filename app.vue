@@ -77,7 +77,7 @@ let isDialogOpen = false;
 function showDialog(options) {
   // 如果已經有彈窗開啟，忽略新的彈窗請求
   if (isDialogOpen) {
-    console.log("彈窗已開啟，忽略新請求");
+    // console.log("彈窗已開啟，忽略新請求");
     return Promise.resolve({ isDismissed: true });
   }
 
@@ -120,7 +120,7 @@ const closeUniversalPopup = () => {
 
   // 如果需要登出，執行登出
   if (shouldLogout) {
-    console.log("檢測到需要登出的錯誤，執行登出");
+    // console.log("檢測到需要登出的錯誤，執行登出");
     performCompleteLogout();
     window.location.reload();
   }
@@ -140,7 +140,7 @@ const handleUniversalConfirm = () => {
 
   // 如果需要登出，執行登出
   if (shouldLogout) {
-    console.log("檢測到需要登出的錯誤，執行登出");
+    // console.log("檢測到需要登出的錯誤，執行登出");
     performCompleteLogout();
     window.location.reload();
   }
@@ -160,7 +160,7 @@ const handleUniversalCancel = () => {
 
   // 如果需要登出，執行登出
   if (shouldLogout) {
-    console.log("檢測到需要登出的錯誤，執行登出");
+    // console.log("檢測到需要登出的錯誤，執行登出");
     performCompleteLogout();
     window.location.reload();
   }
@@ -230,7 +230,7 @@ function getCookieValue(name) {
 // 更新登入狀態 - 加入同步控制
 function updateLoginStatus() {
   if (!allowLoginSync.value) {
-    console.log("舊分頁，不同步登入狀態");
+    // console.log("舊分頁，不同步登入狀態");
     return;
   }
 
@@ -241,18 +241,18 @@ function updateLoginStatus() {
 
   // 只有在從未登入變為登入狀態時，才檢查是否為非正常流程
   if (!wasLoggedIn && currentlyLoggedIn) {
-    console.log("檢測到登入狀態變化，檢查是否為非正常流程進入");
+    // console.log("檢測到登入狀態變化，檢查是否為非正常流程進入");
 
     // 新增：清除舊的問卷完成標記，避免不同用戶間的狀態混淆
     localStorage.removeItem("pet2025_questionnaire_completed");
-    console.log("已清除舊的問卷完成標記");
+    // console.log("已清除舊的問卷完成標記");
 
     // 立即檢查非正常進入，不延遲
     const shouldBlock = checkNonNormalEntry();
 
     if (shouldBlock) {
       // 如果檢測到非正常進入，不要設置登入狀態
-      console.log("非正常進入已處理，保持登出狀態");
+      // console.log("非正常進入已處理，保持登出狀態");
       return;
     }
   }
@@ -267,7 +267,7 @@ function checkNonNormalEntry() {
   const hasCompletedQuestionnaire =
     localStorage.getItem("pet2025_questionnaire_completed") === "true";
   if (hasCompletedQuestionnaire) {
-    console.log("用戶已完成問卷，跳過非正常流程檢查");
+    // console.log("用戶已完成問卷，跳過非正常流程檢查");
     return false;
   }
 
@@ -276,15 +276,15 @@ function checkNonNormalEntry() {
   const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
   const hasFlowToken = !!securityManager.flow.get();
 
-  console.log("非正常流程檢查:", {
-    justLoggedInFlag,
-    isNormalFlow,
-    hasFlowToken,
-  });
+  // console.log("非正常流程檢查:", {
+  // justLoggedInFlag,
+  // isNormalFlow,
+  // hasFlowToken,
+  // });
 
   // 如果沒有任何正常流程標記，說明是非正常進入
   if (!justLoggedInFlag && !isNormalFlow && !hasFlowToken) {
-    console.log("檢測到非正常流程進入，立即強制登出並顯示警告");
+    // console.log("檢測到非正常流程進入，立即強制登出並顯示警告");
 
     // 顯示警告彈窗
     showDialog({
@@ -341,7 +341,7 @@ function renderTurnstile() {
       sitekey: TURNSTILE_SITE_KEY,
       theme: "dark",
       callback: function (token) {
-        console.log("Turnstile 驗證成功");
+        // console.log("Turnstile 驗證成功");
 
         turnstileToken.value = token;
         isTurnstileVerified.value = true;
@@ -352,7 +352,7 @@ function renderTurnstile() {
         proceedToSubmit();
       },
       "expired-callback": function () {
-        console.warn("Turnstile token 已過期");
+        // console.warn("Turnstile token 已過期");
         turnstileToken.value = null;
         isTurnstileVerified.value = false;
         localStorage.removeItem("temp_turnstile_token");
@@ -374,7 +374,7 @@ const securityManager = {
     async generate() {
       try {
         const apiUrl = getApiUrl("auth_token.php");
-        console.log("正在獲取流程安全令牌...");
+        // console.log("正在獲取流程安全令牌...");
 
         const response = await axios.get(apiUrl, {
           withCredentials: true,
@@ -390,7 +390,7 @@ const securityManager = {
         const expiryTime = Date.now() + 3 * 60 * 1000;
         localStorage.setItem("pet2025_flow_token_expiry", String(expiryTime));
 
-        console.log("流程令牌獲取成功");
+        // console.log("流程令牌獲取成功");
         return token;
       } catch (error) {
         console.error("生成流程令牌錯誤:", error);
@@ -407,7 +407,7 @@ const securityManager = {
       const graceTime = 2 * 60 * 1000;
 
       if (expiryTime + graceTime < Date.now()) {
-        console.warn("流程令牌已過期");
+        // console.warn("流程令牌已過期");
         this.clear();
         return null;
       }
@@ -435,13 +435,13 @@ async function checkSubmitted() {
   const um2 = getCookieValue("um2") || "";
 
   if (!udnmember || !um2) {
-    console.log("用戶未登入，無法檢查問卷狀態");
+    // console.log("用戶未登入，無法檢查問卷狀態");
     return false;
   }
 
   try {
     const apiUrl = getApiUrl("checkPlayStatus.php");
-    console.log("從資料庫檢查問卷狀態...");
+    // console.log("從資料庫檢查問卷狀態...");
 
     const requestData = { udnmember, um2 };
 
@@ -450,19 +450,19 @@ async function checkSubmitted() {
       withCredentials: true,
     });
 
-    console.log("問卷狀態檢查回應:", response.data);
+    // console.log("問卷狀態檢查回應:", response.data);
 
     if (
       response.data.status === "success" &&
       response.data.completed === true
     ) {
-      console.log("資料庫確認：用戶已填寫過問卷");
+      // console.log("資料庫確認：用戶已填寫過問卷");
 
       await showSubmittedDialog(response.data);
       return true;
     }
 
-    console.log("資料庫確認：用戶尚未填寫問卷");
+    // console.log("資料庫確認：用戶尚未填寫問卷");
     return false;
   } catch (error) {
     console.error("檢查問卷狀態時發生錯誤:", error);
@@ -537,7 +537,7 @@ async function startQuestionnaire() {
 // 2. 驗證成功後執行問卷流程
 async function proceedToSubmit() {
   try {
-    console.log("=== 開始執行問卷流程 ===");
+    // console.log("=== 開始執行問卷流程 ===");
 
     localStorage.removeItem("pet2025_just_logged_in");
 
@@ -568,7 +568,7 @@ async function proceedToSubmit() {
 
     // 發送事件給子組件
     window.dispatchEvent(new CustomEvent("questionnaire-start"));
-    console.log("=== 問卷流程完成 ===");
+    // console.log("=== 問卷流程完成 ===");
   } catch (error) {
     console.error("問卷流程執行錯誤:", error);
 
@@ -582,7 +582,7 @@ function performCompleteLogout() {
   if (typeof window === "undefined") return;
 
   try {
-    console.log("執行完全登出，清除所有狀態...");
+    // console.log("執行完全登出，清除所有狀態...");
 
     // 清除所有domain的cookies
     const domains = [
@@ -618,7 +618,7 @@ function performCompleteLogout() {
     // 清除安全令牌
     securityManager.clearAll();
 
-    console.log("完全登出完成");
+    // console.log("完全登出完成");
   } catch (e) {
     console.error("清除狀態過程中發生錯誤:", e);
   }
@@ -672,7 +672,7 @@ const onVerifyOpened = () => {
 // 修改goQues函數 - 不重新生成令牌，只檢查現有令牌
 async function goQues() {
   try {
-    console.log("用戶點擊前往填問卷");
+    // console.log("用戶點擊前往填問卷");
 
     // 只需要檢查是否已經填寫過問卷
     const hasSubmitted = await checkSubmitted();
@@ -684,7 +684,7 @@ async function goQues() {
 
     // 直接啟動問卷區塊
     window.dispatchEvent(new CustomEvent("questionnaire-start"));
-    console.log("=== 移動到問卷區塊 ===");
+    // console.log("=== 移動到問卷區塊 ===");
   } catch (error) {
     console.error("前往填問卷錯誤:", error);
 
@@ -735,24 +735,24 @@ onMounted(async () => {
   const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
   const hasFlowToken = !!securityManager.flow.get();
 
-  console.log("頁面載入檢查:", {
-    isFromLoginPage,
-    justLoggedIn,
-    isNormalFlow,
-    hasFlowToken,
-    referrer,
-  });
+  // console.log("頁面載入檢查:", {
+  // isFromLoginPage,
+  // justLoggedIn,
+  // isNormalFlow,
+  // hasFlowToken,
+  // referrer,
+  // });
 
   // 🆕 優先處理非正常流程：從登入頁面回來但沒有正常流程標記
   if (isFromLoginPage && !justLoggedIn && !isNormalFlow && !hasFlowToken) {
-    console.log("檢測到從登入頁面直接進入（非正常流程）");
+    // console.log("檢測到從登入頁面直接進入（非正常流程）");
 
     // 檢查是否有登入 cookie
     const udnmember = getCookieValue("udnmember");
     const um2 = getCookieValue("um2");
 
     if (udnmember && um2) {
-      console.log("有登入 cookie，執行非正常流程檢查");
+      // console.log("有登入 cookie，執行非正常流程檢查");
       checkNonNormalEntry();
     }
 
@@ -765,7 +765,7 @@ onMounted(async () => {
     (justLoggedIn && isNormalFlow && hasFlowToken) ||
     (!isFromLoginPage && (isNormalFlow || hasFlowToken))
   ) {
-    console.log("允許同步登入狀態的分頁");
+    // console.log("允許同步登入狀態的分頁");
     allowLoginSync.value = true;
 
     // 設置定期檢查登入狀態的計時器
@@ -776,7 +776,7 @@ onMounted(async () => {
       clearInterval(loginCheckInterval);
     });
   } else {
-    console.log("不允許同步登入狀態");
+    // console.log("不允許同步登入狀態");
     allowLoginSync.value = false;
   }
 
@@ -784,7 +784,7 @@ onMounted(async () => {
   updateLoginStatus();
 
   if (isFromLoginPage) {
-    console.log("檢測到從登入頁面直接進入，清理舊的流程標記");
+    // console.log("檢測到從登入頁面直接進入，清理舊的流程標記");
     // 清理舊的流程標記，確保邏輯正確
     localStorage.removeItem("pet2025_normal_flow");
     localStorage.removeItem("pet2025_flow_token");
@@ -804,10 +804,10 @@ onMounted(async () => {
 
 // 處理登入後流程
 async function handlePostLogin() {
-  console.log("檢測到從登入頁面返回");
+  // console.log("檢測到從登入頁面返回");
 
   try {
-    console.log("檢查用戶問卷狀態...");
+    // console.log("檢查用戶問卷狀態...");
 
     loadingData.value = {
       message: "檢查中...",
@@ -821,7 +821,7 @@ async function handlePostLogin() {
       return;
     }
 
-    console.log("檢查流程有效性...");
+    // console.log("檢查流程有效性...");
 
     // 嚴格檢查：必須同時有這三個條件
     const justLoggedInFlag =
@@ -829,16 +829,16 @@ async function handlePostLogin() {
     const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
     const flowToken = securityManager.flow.get();
 
-    console.log("流程檢查:", {
-      justLoggedInFlag,
-      isNormalFlow,
-      hasFlowToken: !!flowToken,
-    });
+    // console.log("流程檢查:", {
+    //   justLoggedInFlag,
+    //   isNormalFlow,
+    //   hasFlowToken: !!flowToken,
+    // });
 
     // 區分不同的錯誤情況
     if (!justLoggedInFlag || !isNormalFlow) {
       // 沒有正常流程標記 = 非正常進入
-      console.log("檢測到非正常流程進入，立即登出");
+      // console.log("檢測到非正常流程進入，立即登出");
 
       localStorage.removeItem("pet2025_just_logged_in");
       localStorage.removeItem("pet2025_normal_flow");
@@ -856,7 +856,7 @@ async function handlePostLogin() {
       return;
     } else if (!flowToken) {
       // 有正常流程標記但令牌過期 = 停留時間過長
-      console.log("檢測到停留時間過長，令牌已過期");
+      // console.log("檢測到停留時間過長，令牌已過期");
 
       localStorage.removeItem("pet2025_just_logged_in");
       localStorage.removeItem("pet2025_normal_flow");
@@ -895,13 +895,13 @@ async function handlePostLogin() {
 async function checkExistingUser() {
   localStorage.setItem("login_checked", "true");
 
-  console.log("檢測到已登入用戶，檢查是否為非正常進入...");
+  // console.log("檢測到已登入用戶，檢查是否為非正常進入...");
 
   // 新增：如果用戶已完成問卷，跳過流程檢查
   const hasCompletedQuestionnaire =
     localStorage.getItem("pet2025_questionnaire_completed") === "true";
   if (hasCompletedQuestionnaire) {
-    console.log("用戶已完成問卷，跳過流程檢查");
+    // console.log("用戶已完成問卷，跳過流程檢查");
     return;
   }
 
@@ -911,15 +911,15 @@ async function checkExistingUser() {
   const isNormalFlow = localStorage.getItem("pet2025_normal_flow") === "true";
   const hasFlowToken = !!securityManager.flow.get();
 
-  console.log("非正常登入檢查:", {
-    justLoggedInFlag,
-    isNormalFlow,
-    hasFlowToken,
-  });
+  // console.log("非正常登入檢查:", {
+  // justLoggedInFlag,
+  // isNormalFlow,
+  // hasFlowToken,
+  // });
 
   // 如果沒有完整的正常流程標記，就是非正常進入
   if (!justLoggedInFlag || !isNormalFlow || !hasFlowToken) {
-    console.log("檢測到非正常登入，拒絕進入");
+    // console.log("檢測到非正常登入，拒絕進入");
 
     await showDialog({
       icon: "warning",
@@ -942,7 +942,7 @@ async function checkExistingUser() {
     const hasSubmitted = await checkSubmitted();
 
     if (hasSubmitted) {
-      console.log("用戶已填寫過問卷");
+      //console.log("用戶已填寫過問卷");
       // 清除標記
       localStorage.removeItem("pet2025_just_logged_in");
       localStorage.removeItem("pet2025_normal_flow");

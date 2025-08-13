@@ -7,6 +7,7 @@
     <div
       class="verification__popup"
       :class="{ 'verification__popup--closing': isClosing }"
+      :style="popupBgStyle"
     >
       <div class="verification__popup-inner">
         <!-- 內容區 -->
@@ -34,7 +35,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from "vue";
+import { ref, watch, onUnmounted, computed } from "vue";
+import { useImagePath } from "~/composables/useImagePath.js";
 
 const props = defineProps({
   isVisible: {
@@ -67,10 +69,15 @@ onUnmounted(() => {
     try {
       window.turnstile.remove(window.turnstileWidgetId);
     } catch (e) {
-      console.log("清理 Turnstile 時發生錯誤:", e);
+      // console.log("清理 Turnstile 時發生錯誤:", e);
     }
   }
 });
+
+// 新增：計算背景圖片樣式
+const popupBgStyle = computed(() => ({
+  backgroundImage: `url("${useImagePath("popup_bg_right.png")}"), url("${useImagePath("popup_bg_left.png")}")`,
+}));
 </script>
 
 <style lang="scss" scoped>
@@ -97,8 +104,8 @@ onUnmounted(() => {
 
   &__popup {
     background: #2f75c9;
-    background-image:
-      url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
+    // 移除這行
+    // background-image: url("/imgs/popup_bg_right.png"), url("/imgs/popup_bg_left.png");
     background-size: 40%, 40%;
     background-position:
       top right,
