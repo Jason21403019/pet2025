@@ -17,7 +17,7 @@
           <div class="completed-page__discount-content">
             <template v-if="hasDiscount">
               <p class="completed-page__message-text">
-                恭喜獲得汪喵星球限定<br />$100購物金電子序號
+                恭喜獲得汪喵星球限定<br />購物金$100電子序號
               </p>
               <p class="completed-page__code-section">
                 <span class="completed-page__code">【udndcsfans】</span><br />
@@ -122,13 +122,13 @@ async function checkDiscountStatus() {
 }
 
 onMounted(async () => {
-  // const hasCompletedQuestionnaire = localStorage.getItem(
-  //   "pet2025_questionnaire_completed",
-  // );
-  // if (!hasCompletedQuestionnaire) {
-  //   navigateTo("/");
-  //   return;
-  // }
+  const hasCompletedQuestionnaire = localStorage.getItem(
+    "pet2025_questionnaire_completed",
+  );
+  if (!hasCompletedQuestionnaire) {
+    navigateTo("/");
+    return;
+  }
 
   await checkDiscountStatus();
 
