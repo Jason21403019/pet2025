@@ -51,7 +51,7 @@
             分享
           </a>
           <a
-            href="https://pets.udn.com/pets/index"
+            href="https://pets.udn.com/pets/index?utm_source=udn&utm_medium=event&utm_campaign=bd_petsqa_2025"
             target="_blank"
             rel="noopener noreferrer"
             class="completed-page__btn"
