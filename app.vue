@@ -48,8 +48,8 @@ import Universal_popup from "./components/Universal_popup.vue";
 import Already_played_popup from "./components/Already_played_popup.vue";
 
 // 檢查當前路由是否為 admin 頁面
-// const route = useRoute();
-// const isAdminPage = computed(() => route.name === "admin");
+const route = useRoute();
+const isAdminPage = computed(() => route.name === "admin");
 
 // ==================== 基本狀態管理 ====================
 const config = useRuntimeConfig();
@@ -196,7 +196,7 @@ const loginUrl = computed(() => {
 
   if (hostname === "lab-event.udn.com") {
     redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
-    siteParam = "bd_pet2025"; // 測試環境仍使用舊的 site 參數
+    siteParam = "bd_petsqa_2025"; // 測試環境仍使用舊的 site 參數
   } else if (hostname === "event.udn.com") {
     redirectUrl = "https://event.udn.com/bd_petsqa_2025/";
     siteParam = "bd_petsqa_2025"; // 正式環境使用新的 site 參數
@@ -205,10 +205,10 @@ const loginUrl = computed(() => {
     hostname.startsWith("localhost")
   ) {
     redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
-    siteParam = "bd_pet2025"; // 本地開發使用測試環境設定
+    siteParam = "bd_petsqa_2025"; // 本地開發使用測試環境設定
   } else {
     redirectUrl = "https://lab-event.udn.com/bd_petsqa_2025/";
-    siteParam = "bd_pet2025"; // 預設使用測試環境設定
+    siteParam = "bd_petsqa_2025"; // 預設使用測試環境設定
   }
 
   return `https://member.udn.com/member/login.jsp?site=${siteParam}&again=y&redirect=${redirectUrl}`;
@@ -393,7 +393,7 @@ const securityManager = {
         // console.log("流程令牌獲取成功");
         return token;
       } catch (error) {
-        console.error("生成流程令牌錯誤:", error);
+        // console.error("生成流程令牌錯誤:", error);
         throw error;
       }
     },
@@ -487,11 +487,26 @@ async function checkSubmitted() {
 
 // 修改showSubmittedDialog函數，改用Already_played_popup組件
 async function showSubmittedDialog(data) {
+  // console.log("=== showSubmittedDialog 被調用 ===");
+  // console.log("收到的 data:", data);
+
   // 設定已填寫問卷的數據
   alreadyPlayedData.value = data;
+  // console.log("設定 alreadyPlayedData.value:", alreadyPlayedData.value);
 
   // 顯示已填寫問卷彈窗
   showAlreadyPlayedPopup.value = true;
+  //console.log(
+  //  "設定 showAlreadyPlayedPopup.value:",
+  //  showAlreadyPlayedPopup.value,
+  //);
+
+  // 確保 DOM 更新
+  await nextTick();
+  // console.log(
+  //   "DOM 更新後 showAlreadyPlayedPopup.value:",
+  //   showAlreadyPlayedPopup.value,
+  // );
 }
 
 // ==================== 流程控制函數 ====================
@@ -544,7 +559,7 @@ async function proceedToSubmit() {
     // 檢查流程安全令牌
     const flowToken = securityManager.flow.get();
     if (!flowToken) {
-      console.error("流程安全令牌不存在或已過期，強制登出");
+      // console.error("流程安全令牌不存在或已過期，強制登出");
 
       await showDialog({
         icon: "warning",
@@ -891,7 +906,7 @@ async function handlePostLogin() {
   }
 }
 
-// 檢查已登入用戶狀態 - 完全重寫
+// 檢查已登入用戶狀態
 async function checkExistingUser() {
   localStorage.setItem("login_checked", "true");
 
@@ -942,7 +957,7 @@ async function checkExistingUser() {
     const hasSubmitted = await checkSubmitted();
 
     if (hasSubmitted) {
-      //console.log("用戶已填寫過問卷");
+      console.log("用戶已填寫過問卷");
       // 清除標記
       localStorage.removeItem("pet2025_just_logged_in");
       localStorage.removeItem("pet2025_normal_flow");
