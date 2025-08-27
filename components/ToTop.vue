@@ -1,11 +1,12 @@
 <template>
   <transition name="fade">
     <button v-if="isVisible" @click="scrollToTop" class="totop">
-      <img
-        :src="getImgPath('toTop_btn.png')"
+      <!-- <img
+        :src="getImgPath('toTop_plus.png')"
         alt="回到頂部"
         class="totop__image"
-      />
+      /> -->
+      <img src="/imgs/toTop_plus.png" alt="回到頂部" class="totop__image" />
     </button>
   </transition>
 </template>
@@ -50,10 +51,9 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .totop {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
+  bottom: 10px;
+  right: -10px;
+  width: 200px;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -65,9 +65,16 @@ onUnmounted(() => {
   box-shadow: none;
   z-index: 999;
 
+  @media (max-width: 1110px) {
+    width: 150px;
+  }
+
   @media (max-width: 768px) {
-    width: 50px;
-    height: 50px;
+    width: 110px;
+  }
+
+  @media (max-width: 480px) {
+    width: 200px;
   }
 
   &:hover {
@@ -84,6 +91,9 @@ onUnmounted(() => {
     height: 100%;
     object-fit: contain;
     transition: all 0.3s ease;
+    @media (max-width: 480px) {
+      content: url("/imgs/toTop_plus_m.png");
+    }
   }
 }
 

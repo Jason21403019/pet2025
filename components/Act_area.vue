@@ -99,6 +99,19 @@
               <p>
                 所有完成問卷填寫參加者即可獲抽1次大獎機會，記得分享給親朋好友。
               </p>
+              <h4>
+                <img
+                  :src="getImgPath('li_icon.png')"
+                  alt=""
+                  class="act-area__li-icon"
+                /><span class="act-area__highlight"
+                  >人氣加碼獎-7-11購物金$100，抽100名。(電子票券)</span
+                >
+              </h4>
+              <p>
+                本獎項於活動獎項於活動開獎日陸續由客戶服務信箱 vaservice@udn.com
+                發送。
+              </p>
             </div>
           </div>
           <div class="act-area__section">
@@ -369,10 +382,10 @@ onMounted(() => {
       font-weight: bold;
       margin-bottom: 8px;
       margin-left: 36px;
+      line-height: 1.2;
       display: flex;
       align-items: center;
       @media (max-width: 480px) {
-        font-size: 16px;
         margin-left: 28px;
       }
     }
