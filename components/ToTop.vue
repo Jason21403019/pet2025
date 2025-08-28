@@ -1,6 +1,10 @@
 <template>
   <transition name="fade">
-    <button v-if="isVisible" @click="scrollToTop" class="totop">
+    <button
+      @click="scrollToTop"
+      class="totop"
+      :class="{ 'totop--at-bottom': isNearBottom }"
+    >
       <!-- <img
         :src="getImgPath('toTop_plus.png')"
         alt="回到頂部"
@@ -15,7 +19,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useImagePath } from "~/composables/useImagePath.js";
 
-const isVisible = ref(false);
+const isNearBottom = ref(false);
 
 function getImgPath(filename) {
   const config = useRuntimeConfig();
@@ -29,7 +33,11 @@ function getImgPath(filename) {
 }
 
 const handleScroll = () => {
-  isVisible.value = window.scrollY > 300;
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const clientHeight = window.innerHeight;
+
+  isNearBottom.value = scrollHeight - scrollTop - clientHeight < 100;
 };
 
 const scrollToTop = () => {
@@ -41,6 +49,7 @@ const scrollToTop = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
 });
 
 onUnmounted(() => {
@@ -74,16 +83,36 @@ onUnmounted(() => {
   }
 
   @media (max-width: 480px) {
+    bottom: 90px;
     width: 200px;
   }
 
+  @media (max-width: 460px) {
+    width: 75vw;
+    bottom: 0px;
+    right: 50%;
+    transform: translateX(50%);
+    &.totop--at-bottom {
+      bottom: 85px;
+    }
+  }
   &:hover {
-    transform: translateY(-3px) scale(1.05);
     filter: brightness(1.1);
+    @media (min-width: 461px) {
+      transform: translateY(-3px) scale(1.05);
+    }
+    @media (max-width: 460px) {
+      transform: translateX(50%) translateY(-3px) scale(1.05);
+    }
   }
 
   &:active {
-    transform: translateY(-1px) scale(1.02);
+    @media (min-width: 461px) {
+      transform: translateY(-1px) scale(1.02);
+    }
+    @media (max-width: 460px) {
+      transform: translateX(50%) translateY(-1px) scale(1.02);
+    }
   }
 
   &__image {

@@ -30,7 +30,7 @@
       left: 20%;
     }
     @media (max-width: 460px) {
-      left: 50%;
+      display: none;
     }
     &-img {
       width: auto;
@@ -45,12 +45,10 @@
 
   &__container {
     width: 100%;
-    padding: 10px 0;
+    padding: 40px 0;
     text-align: center;
-    padding-top: 40px;
-
-    @media (min-width: 768px) {
-      padding: 50px 0 40px 0;
+    @media (max-width: 460px) {
+      padding: 30px 0;
     }
   }
 

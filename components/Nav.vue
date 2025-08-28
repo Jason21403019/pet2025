@@ -245,6 +245,9 @@ onBeforeUnmount(() => {
     @media (max-width: 480px) {
       gap: 8px;
     }
+    @media (max-width: 360px) {
+      gap: 2px;
+    }
   }
 
   // 手機版導航區域
@@ -427,6 +430,10 @@ onBeforeUnmount(() => {
     @media (max-width: 460px) {
       width: 32px;
       height: 32px;
+    }
+    @media (max-width: 360px) {
+      width: 28px;
+      height: 28px;
     }
   }
 }

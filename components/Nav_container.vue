@@ -15,11 +15,14 @@
   box-sizing: border-box;
 
   @media (max-width: 480px) {
-    padding: 8px;
+    padding: 4px;
   }
 
   @media (max-width: 375px) {
-    padding: 8px;
+    padding: 4px;
+  }
+  @media (max-width: 360px) {
+    padding: 1px;
   }
 }
 </style>
